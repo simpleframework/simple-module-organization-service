@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-script>
+  <version>1.0.0</version>
+  <name>organization</name>
+  <description>organization database script.</description>
+  <tran-sql>
+    <description></description>
+    <![CDATA[
+      create table sf_organization_account (
+       	id char(32) not null,
+       	name varchar(32) not null,
+        password varchar(32) default '' not null,
+        status smallint not null,
+        accountmark smallint not null,
+        createdate datetime not null,
+        login smallint not null,
+        lastlogindate datetime,
+        lastloginip varchar(24),
+        logintimes int not null,
+        onlinemillis bigint not null,
+        mailbinding smallint not null,
+        mobilebinding smallint not null,
+        unique(name),
+        primary key(id)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+	    create table sf_organization_user (
+	      id char(32) not null,
+        departmentid char(32),
+	      text varchar(32) not null,
+	      sex varchar(2),
+	      birthday datetime,
+	      hometown varchar(32),
+	      email varchar(32),
+	      homephone varchar(16),
+	      officephone varchar(16),
+	      mobile varchar(16),
+	      address varchar(256),
+	      postcode varchar(8),
+	      qq varchar(16), 
+	      msn varchar(16),
+	      description varchar(256),
+	      oorder int not null,
+	      primary key(id)
+	    );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+    	create table sf_organization_user_lob (
+    		id char(32) not null,
+    		photo image,
+    		primary key(id)
+    	);
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+    	create table sf_organization_department (
+        id char(32) not null,
+        parentid char(32),
+        name varchar(32) not null,
+        text varchar(32) not null, 
+        departmenttype smallint not null,
+        description varchar(256),
+        oorder int not null,
+        primary key(id),
+        unique(name),
+        unique(parentid, text)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_role (
+        id char(32) not null,
+        parentid char(32),
+        rolechartid char(32) not null,
+        name varchar(64) not null,
+        text varchar(32) not null,
+        roletype smallint not null,
+        rolemark smallint not null,
+        rulehandler varchar(128),
+        rulescript text,
+        description varchar(256),
+       	oorder int not null,
+        primary key(id),
+        unique(rolechartid, name)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_rolechart (
+        id char(32) not null,
+        departmentid char(32),
+        name varchar(32) not null,
+        text varchar(32) not null,
+        chartmark smallint not null,
+        description varchar(256),
+        oorder int not null,
+        primary key(id),
+        unique (name),
+        unique (departmentid, text)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_rolemember (
+      	id char(32) not null,
+      	roleid char(32) not null,
+        membertype smallint not null,
+        memberid char(32) not null,
+        primaryrole smallint not null,
+        description varchar(256),
+        primary key(id),
+        unique (roleid, membertype, memberid)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_roleresource (
+      	id char(32) not null,
+        roleid char(32) not null,
+        resourcetype smallint not null,
+        resourceid char(32) not null,
+        resourcetext varchar(64),
+        description varchar(256),
+        primary key(id),
+        unique (roleid, resourcetype, resourceid)
+      );
+    ]]>
+  </tran-sql>
+</sql-script>
