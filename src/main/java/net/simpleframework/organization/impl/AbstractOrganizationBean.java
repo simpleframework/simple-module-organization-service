@@ -14,7 +14,7 @@ public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBe
 	private String name;
 
 	/** 排序 **/
-	private long oorder;
+	private int oorder;
 
 	public String getName() {
 		return name;
@@ -24,11 +24,11 @@ public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBe
 		this.name = name;
 	}
 
-	public long getOorder() {
+	public int getOorder() {
 		return oorder;
 	}
 
-	public void setOorder(final long oorder) {
+	public void setOorder(final int oorder) {
 		this.oorder = oorder;
 	}
 }

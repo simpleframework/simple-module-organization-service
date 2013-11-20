@@ -58,7 +58,7 @@ public class User extends AbstractTextDescriptionBean implements IUser {
 	private ID departmentId;
 
 	/** 排序 **/
-	private long oorder;
+	private int oorder;
 
 	@Override
 	public ID getDepartmentId() {
@@ -71,12 +71,12 @@ public class User extends AbstractTextDescriptionBean implements IUser {
 	}
 
 	@Override
-	public long getOorder() {
+	public int getOorder() {
 		return oorder;
 	}
 
 	@Override
-	public void setOorder(final long oorder) {
+	public void setOorder(final int oorder) {
 		this.oorder = oorder;
 	}
 
