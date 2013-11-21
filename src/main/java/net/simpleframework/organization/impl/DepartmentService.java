@@ -19,7 +19,7 @@ public class DepartmentService extends AbstractOrganizationService<IDepartment, 
 
 	@Override
 	public IDataQuery<IDepartment> queryAll() {
-		return query("1=1 order by oorder desc");
+		return query("1=1 order by oorder");
 	}
 
 	@Override
