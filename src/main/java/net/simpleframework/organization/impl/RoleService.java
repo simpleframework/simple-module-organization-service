@@ -155,7 +155,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 					return true;
 				}
 			} else {
-				if (_isMember(user, getBean(rr), variables)) {
+				if (_isMember(user, getRoleByName(rr), variables)) {
 					return true;
 				}
 			}
