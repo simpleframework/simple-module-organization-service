@@ -148,24 +148,25 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
 		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)
-				.append(" u on a.id=u.id");
+				.append(" u on a.id=u.id where 1=1");
 		if (type == ALL) {
-			sql.append(" where a.status<>?");
+			sql.append(" and a.status<>?");
 			params.add(EAccountStatus.delete);
 		} else if (type == ONLINE_ID) {
-			sql.append(" where a.login=? and a.status=?");
+			sql.append(" and a.login=? and a.status=?");
 			params.add(Boolean.TRUE);
 			params.add(EAccountStatus.normal);
 		} else if (type == NO_DEPARTMENT_ID) {
-			sql.append(" where u.departmentid is null and a.status<>?");
+			sql.append(" and u.departmentid is null and a.status<>?");
 			params.add(EAccountStatus.delete);
 		} else if (type == DEPARTMENT_ID) {
-			sql.append(" where u.departmentid is not null and a.status<>?");
+			sql.append(" and u.departmentid is not null and a.status<>?");
 			params.add(EAccountStatus.delete);
 		} else if (type >= STATE_DELETE_ID && type <= STATE_NORMAL_ID) {
-			sql.append(" where a.status=?");
+			sql.append(" and a.status=?");
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
+		sql.append(" order by a.createDate desc");
 		return getEntityManager().queryBeans(new SQLValue(sql.toString(), params.toArray()));
 	}
 
