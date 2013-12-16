@@ -44,7 +44,7 @@ public class RoleChart extends AbstractOrganizationBean implements IRoleChart {
 	}
 
 	public static DbEntityTable TBL = new DbEntityTable(RoleChart.class, "sf_organization_rolechart")
-			.setDefaultOrder(ColumnData.ORDER);
+			.setDefaultOrder(ColumnData.ASC("oorder"));
 
 	private static final long serialVersionUID = 7240516228770129459L;
 }

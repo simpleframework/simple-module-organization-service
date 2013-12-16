@@ -90,7 +90,7 @@ public class Role extends AbstractOrganizationBean implements IRole {
 	}
 
 	public static DbEntityTable TBL = new DbEntityTable(Role.class, "sf_organization_role")
-			.setDefaultOrder(ColumnData.ORDER);
+			.setDefaultOrder(ColumnData.ASC("oorder"));
 
 	private static final long serialVersionUID = -911479175612535742L;
 }
