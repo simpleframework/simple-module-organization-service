@@ -10,8 +10,8 @@ import static net.simpleframework.ctx.permission.IPermissionConst.ROLE_MANAGER;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.simpleframework.ado.IADOManagerFactory;
-import net.simpleframework.ado.db.DbManagerFactory;
+import net.simpleframework.ado.db.DbEntityTable;
+import net.simpleframework.ado.db.IDbEntityTableRegistry;
 import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
@@ -38,17 +38,12 @@ import net.simpleframework.organization.IUserService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class OrganizationContext extends AbstractADOModuleContext implements IOrganizationContext {
+public class OrganizationContext extends AbstractADOModuleContext implements IOrganizationContext,
+		IDbEntityTableRegistry {
 
 	@Override
 	public void onInit(final IApplicationContext application) throws Exception {
 		super.onInit(application);
-
-		final IADOManagerFactory aFactory = getADOManagerFactory();
-		if (aFactory instanceof DbManagerFactory) {
-			((DbManagerFactory) aFactory).regist(Account.TBL, User.TBL, UserLob.TBL, Department.TBL,
-					Role.TBL, RoleChart.TBL, RoleMember.TBL);
-		}
 
 		// 创建缺省视图及角色
 		final IRoleChartService rcService = getRoleChartService();
@@ -86,6 +81,12 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 		registRoleHandler(ROLE_ALL_ACCOUNT, BuiltInRole.All.class);
 		registRoleHandler(ROLE_LOCK_ACCOUNT, BuiltInRole.Lock.class);
 		registRoleHandler(ROLE_ANONYMOUS, BuiltInRole.Anonymous.class);
+	}
+
+	@Override
+	public DbEntityTable[] createEntityTables() {
+		return new DbEntityTable[] { Account.TBL, User.TBL, UserLob.TBL, Department.TBL, Role.TBL,
+				RoleChart.TBL, RoleMember.TBL };
 	}
 
 	@Override
