@@ -3,10 +3,9 @@ package net.simpleframework.organization;
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.coll.KVMap;
-import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.module.msg.MessageRef;
-import net.simpleframework.module.msg.plugin.NoticeMessageCategoryPlugin;
+import net.simpleframework.module.msg.plugin.NoticeMessageCategory;
 import net.simpleframework.module.msg.plugin.NoticeMessagePlugin;
 
 /**
@@ -17,7 +16,7 @@ import net.simpleframework.module.msg.plugin.NoticeMessagePlugin;
  */
 public class OrganizationMessageRef extends MessageRef {
 
-	protected NoticeMessageCategoryPlugin MC_ACCOUNT;
+	protected NoticeMessageCategory MC_ACCOUNT;
 
 	@Override
 	public void onInit(final IModuleContext context) throws Exception {
@@ -26,13 +25,13 @@ public class OrganizationMessageRef extends MessageRef {
 		final NoticeMessagePlugin plugin = getNoticeMessagePlugin();
 
 		// 创建帐号
-		MC_ACCOUNT = new NoticeMessageCategoryPlugin(ObjectUtils.hashInt("MC_ACCOUNT"),
-				$m("OrganizationMessageRef.0"), $m("OrganizationMessageRef.1"),
-				ClassUtils.getResourceAsString(OrganizationMessageRef.class, "MC_ACCOUNT.txt"));
-		plugin.registMessageCategoryPlugin(setGroup(MC_ACCOUNT));
+		MC_ACCOUNT = new NoticeMessageCategory("MC_ACCOUNT", $m("OrganizationMessageRef.0"),
+				$m("OrganizationMessageRef.1"), ClassUtils.getResourceAsString(
+						OrganizationMessageRef.class, "MC_ACCOUNT.txt"));
+		plugin.registMessageCategory(setGroup(MC_ACCOUNT));
 	}
 
-	protected NoticeMessageCategoryPlugin setGroup(final NoticeMessageCategoryPlugin plugin) {
+	protected NoticeMessageCategory setGroup(final NoticeMessageCategory plugin) {
 		plugin.setGroupText($m("OrganizationMessageRef.2"));
 		return plugin;
 	}
