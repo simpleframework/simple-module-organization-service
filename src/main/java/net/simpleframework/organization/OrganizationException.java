@@ -16,7 +16,7 @@ public class OrganizationException extends ModuleException {
 	}
 
 	public static ModuleException of(final Throwable throwable) {
-		return (ModuleException) _of(OrganizationException.class, null, throwable);
+		return _of(OrganizationException.class, null, throwable);
 	}
 
 	public static OrganizationException of(final String msg) {
