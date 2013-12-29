@@ -2,8 +2,7 @@ package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.Enumeration;
 import java.util.Map;
 
 import net.simpleframework.ado.IParamsValue;
@@ -13,6 +12,7 @@ import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.ctx.script.IScriptEval;
@@ -173,33 +173,51 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 		return isMember(user, IPermissionConst.ROLE_MANAGER, variables);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<? extends IUser> users(final IRole role, final Map<String, Object> variables) {
-		final LinkedHashSet<IUser> users = new LinkedHashSet<IUser>();
-		if (role != null) {
-			final ERoleType jt = role.getRoleType();
-			if (jt == ERoleType.normal) {
-				final IDataQuery<? extends IRoleMember> dq = members(role);
-				IRoleMember jm;
-				while ((jm = dq.next()) != null) {
-					final ID memberId = jm.getMemberId();
-					if (jm.getMemberType() == ERoleMemberType.user) {
-						final IUser user = getUserService().getBean(memberId);
-						if (user != null) {
-							users.add(user);
-						}
-					} else {
-						users.addAll(users(getBean(memberId), variables));
+	public Enumeration<IUser> users(final IRole role, final Map<String, Object> variables) {
+		final ERoleType jt = role.getRoleType();
+		if (jt == ERoleType.normal) {
+			final UserService uService = getUserService();
+			final IDataQuery<? extends IRoleMember> dq = members(role);
+			return new Enumeration<IUser>() {
+				@Override
+				public boolean hasMoreElements() {
+					if (nest != null && nest.hasMoreElements()) {
+						user = nest.nextElement();
+						return true;
 					}
+					IRoleMember jm;
+					while ((jm = dq.next()) != null) {
+						final ID memberId = jm.getMemberId();
+						if (jm.getMemberType() == ERoleMemberType.user) {
+							user = uService.getBean(memberId);
+							if (user != null) {
+								return true;
+							}
+						} else {
+							nest = users(getBean(memberId), variables);
+						}
+					}
+					return false;
 				}
-			} else if (jt == ERoleType.handle) {
-				final IRoleHandler rHandler = getRoleHandler(role);
-				if (rHandler != null) {
-					users.addAll(rHandler.members(variables));
+
+				@Override
+				public IUser nextElement() {
+					return user;
 				}
+
+				IUser user = null;
+
+				Enumeration<IUser> nest = null;
+			};
+		} else if (jt == ERoleType.handle) {
+			final IRoleHandler rHandler = getRoleHandler(role);
+			if (rHandler != null) {
+				return rHandler.members(variables);
 			}
 		}
-		return users;
+		return CollectionUtils.EMPTY_ENUMERATION;
 	}
 
 	@Override

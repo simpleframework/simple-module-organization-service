@@ -2,6 +2,7 @@ package net.simpleframework.organization.impl;
 
 import java.util.ArrayList;
 
+import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.IRole;
@@ -19,6 +20,9 @@ public class RoleMemberService extends AbstractOrganizationService<IRoleMember, 
 
 	@Override
 	public IDataQuery<? extends IRoleMember> queryMembers(final IRole role) {
+		if (role == null) {
+			return DataQueryUtils.nullQuery();
+		}
 		return query("roleid=?", role.getId());
 	}
 

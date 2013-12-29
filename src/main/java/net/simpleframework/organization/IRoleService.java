@@ -1,6 +1,6 @@
 package net.simpleframework.organization;
 
-import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
@@ -119,5 +119,5 @@ public interface IRoleService extends IDbBeanService<IRole>, IADOTreeBeanService
 	 * @param variables
 	 * @return
 	 */
-	Collection<? extends IUser> users(IRole role, Map<String, Object> variables);
+	Enumeration<IUser> users(IRole role, Map<String, Object> variables);
 }

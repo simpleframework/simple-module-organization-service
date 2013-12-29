@@ -1,6 +1,6 @@
 package net.simpleframework.organization;
 
-import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
 
 /**
@@ -21,10 +21,10 @@ public interface IRoleHandler {
 	boolean isMember(IUser user, Map<String, Object> variables);
 
 	/**
-	 * 当前规则角色中的成员，一般可不实现此方法
+	 * 当前规则角色中的成员
 	 * 
 	 * @param variables
 	 * @return
 	 */
-	Collection<IUser> members(Map<String, Object> variables);
+	Enumeration<IUser> members(Map<String, Object> variables);
 }
