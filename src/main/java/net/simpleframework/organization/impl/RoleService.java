@@ -196,7 +196,10 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 								return true;
 							}
 						} else {
-							nest = users(getBean(memberId), variables);
+							if ((nest = users(getBean(memberId), variables)).hasMoreElements()) {
+								user = nest.nextElement();
+								return true;
+							}
 						}
 					}
 					return false;

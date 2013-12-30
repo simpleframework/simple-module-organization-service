@@ -1,6 +1,7 @@
 package net.simpleframework.organization.impl;
 
-import net.simpleframework.ado.bean.AbstractIdBean;
+import net.simpleframework.ado.bean.AbstractDescriptionBean;
+import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
@@ -17,7 +18,7 @@ import net.simpleframework.organization.IRoleService;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleMember extends AbstractIdBean implements IRoleMember {
+public class RoleMember extends AbstractDescriptionBean implements IRoleMember, IOrderBeanAware {
 	private ID roleId;
 
 	private ERoleMemberType memberType;
@@ -26,7 +27,8 @@ public class RoleMember extends AbstractIdBean implements IRoleMember {
 
 	private boolean primaryRole;
 
-	private String description;
+	/** 排序 **/
+	private int oorder;
 
 	@Override
 	public ID getRoleId() {
@@ -69,13 +71,13 @@ public class RoleMember extends AbstractIdBean implements IRoleMember {
 	}
 
 	@Override
-	public String getDescription() {
-		return description;
+	public int getOorder() {
+		return oorder;
 	}
 
 	@Override
-	public void setDescription(final String description) {
-		this.description = description;
+	public void setOorder(final int oorder) {
+		this.oorder = oorder;
 	}
 
 	@Override

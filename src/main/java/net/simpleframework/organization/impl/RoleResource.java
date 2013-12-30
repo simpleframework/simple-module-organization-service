@@ -1,6 +1,6 @@
 package net.simpleframework.organization.impl;
 
-import net.simpleframework.ado.bean.AbstractIdBean;
+import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 import net.simpleframework.organization.IRoleResource;
@@ -12,7 +12,7 @@ import net.simpleframework.organization.IRoleResource;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleResource extends AbstractIdBean implements IRoleResource {
+public class RoleResource extends AbstractDescriptionBean implements IRoleResource {
 	private ID roleId;
 
 	private int resourceType;
@@ -20,8 +20,6 @@ public class RoleResource extends AbstractIdBean implements IRoleResource {
 	private ID resourceId;
 
 	private String resourceText;
-
-	private String description;
 
 	@Override
 	public ID getRoleId() {
@@ -61,16 +59,6 @@ public class RoleResource extends AbstractIdBean implements IRoleResource {
 	@Override
 	public void setResourceText(final String resourceText) {
 		this.resourceText = resourceText;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	@Override
-	public void setDescription(final String description) {
-		this.description = description;
 	}
 
 	private static final long serialVersionUID = 6142589899318910488L;
