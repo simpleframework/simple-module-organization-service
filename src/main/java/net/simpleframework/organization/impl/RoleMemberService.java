@@ -23,7 +23,7 @@ public class RoleMemberService extends AbstractOrganizationService<IRoleMember, 
 		if (role == null) {
 			return DataQueryUtils.nullQuery();
 		}
-		return query("roleid=?", role.getId());
+		return query("roleid=? order by oorder", role.getId());
 	}
 
 	@Override
