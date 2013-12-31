@@ -68,10 +68,12 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 		this.departmentId = departmentId;
 	}
 
+	@Override
 	public int getOorder() {
 		return oorder;
 	}
 
+	@Override
 	public void setOorder(final int oorder) {
 		this.oorder = oorder;
 	}
