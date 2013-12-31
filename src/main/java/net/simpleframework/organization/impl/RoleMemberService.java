@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.organization.ERoleMemberType;
-import net.simpleframework.organization.IRole;
-import net.simpleframework.organization.IRoleMember;
 import net.simpleframework.organization.IRoleMemberService;
+import net.simpleframework.organization.Role;
+import net.simpleframework.organization.RoleMember;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -15,11 +15,11 @@ import net.simpleframework.organization.IRoleMemberService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleMemberService extends AbstractOrganizationService<IRoleMember, RoleMember>
-		implements IRoleMemberService {
+public class RoleMemberService extends AbstractOrganizationService<RoleMember> implements
+		IRoleMemberService {
 
 	@Override
-	public IDataQuery<? extends IRoleMember> queryMembers(final IRole role) {
+	public IDataQuery<RoleMember> queryMembers(final Role role) {
 		if (role == null) {
 			return DataQueryUtils.nullQuery();
 		}
@@ -27,19 +27,19 @@ public class RoleMemberService extends AbstractOrganizationService<IRoleMember, 
 	}
 
 	@Override
-	public void setPrimary(final IRoleMember member) {
+	public void setPrimary(final RoleMember member) {
 		if (member == null || member.getMemberType() != ERoleMemberType.user
 				|| member.isPrimaryRole()) {
 			return;
 		}
 
-		final ArrayList<IRoleMember> beans = new ArrayList<IRoleMember>();
+		final ArrayList<RoleMember> beans = new ArrayList<RoleMember>();
 		member.setPrimaryRole(true);
 		beans.add(member);
 
-		final IDataQuery<? extends IRoleMember> qd = query("membertype=? and memberid=?",
-				ERoleMemberType.user, member.getMemberId());
-		IRoleMember member2;
+		final IDataQuery<RoleMember> qd = query("membertype=? and memberid=?", ERoleMemberType.user,
+				member.getMemberId());
+		RoleMember member2;
 		while ((member2 = qd.next()) != null) {
 			if (!member2.getId().equals(member.getId()) && member2.isPrimaryRole()) {
 				member2.setPrimaryRole(false);
@@ -47,6 +47,6 @@ public class RoleMemberService extends AbstractOrganizationService<IRoleMember, 
 			}
 		}
 
-		update(new String[] { "primaryrole" }, beans.toArray(new IRoleMember[beans.size()]));
+		update(new String[] { "primaryrole" }, beans.toArray(new RoleMember[beans.size()]));
 	}
 }

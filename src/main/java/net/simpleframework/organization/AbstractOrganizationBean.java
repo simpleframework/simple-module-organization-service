@@ -1,6 +1,7 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization;
 
 import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
+import net.simpleframework.ado.bean.IOrderBeanAware;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -9,7 +10,8 @@ import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings("serial")
-public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBean {
+public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBean implements
+		IOrderBeanAware {
 
 	private String name;
 
@@ -24,10 +26,12 @@ public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBe
 		this.name = name;
 	}
 
+	@Override
 	public int getOorder() {
 		return oorder;
 	}
 
+	@Override
 	public void setOorder(final int oorder) {
 		this.oorder = oorder;
 	}

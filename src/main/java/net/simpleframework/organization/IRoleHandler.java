@@ -18,7 +18,7 @@ public interface IRoleHandler {
 	 * @param variables
 	 * @return
 	 */
-	boolean isMember(IUser user, Map<String, Object> variables);
+	boolean isMember(User user, Map<String, Object> variables);
 
 	/**
 	 * 当前规则角色中的成员
@@ -26,5 +26,5 @@ public interface IRoleHandler {
 	 * @param variables
 	 * @return
 	 */
-	Enumeration<IUser> members(Map<String, Object> variables);
+	Enumeration<User> members(Map<String, Object> variables);
 }

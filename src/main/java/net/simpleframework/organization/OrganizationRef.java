@@ -22,11 +22,11 @@ public class OrganizationRef extends AbstractModuleRef {
 	}
 
 	protected void createRole_SystemChart(final String name, final String text, final ERoleType rType) {
-		final IRoleChart sc = getModuleContext().getSystemChart();
+		final RoleChart sc = getModuleContext().getSystemChart();
 		final String[] arr = PermissionRole.split(name);
 		final String r = arr != null && arr.length == 2 ? arr[1] : name;
 		final IRoleService service = getRoleService();
-		IRole role = service.getRoleByName(sc, r);
+		Role role = service.getRoleByName(sc, r);
 		if (role == null) {
 			role = service.createBean();
 			role.setName(r);
@@ -39,7 +39,7 @@ public class OrganizationRef extends AbstractModuleRef {
 	}
 
 	public String toOrgText(final Object id) {
-		final IDepartment dept = getDepartmentService().getBean(id);
+		final Department dept = getDepartmentService().getBean(id);
 		return dept != null ? dept.toString() : null;
 	}
 

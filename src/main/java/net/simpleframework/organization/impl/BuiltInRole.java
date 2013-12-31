@@ -2,9 +2,9 @@ package net.simpleframework.organization.impl;
 
 import java.util.Map;
 
+import net.simpleframework.organization.Account;
 import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.IAccount;
-import net.simpleframework.organization.IUser;
+import net.simpleframework.organization.User;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -17,8 +17,8 @@ public abstract class BuiltInRole {
 	public static class All extends AbstractRoleHandler {
 
 		@Override
-		public boolean isMember(final IUser user, final Map<String, Object> variables) {
-			final IAccount account = context.getUserService().getAccount(user.getId());
+		public boolean isMember(final User user, final Map<String, Object> variables) {
+			final Account account = context.getUserService().getAccount(user.getId());
 			return account != null && account.getStatus() == EAccountStatus.normal;
 		}
 	}
@@ -26,8 +26,8 @@ public abstract class BuiltInRole {
 	public static class Lock extends AbstractRoleHandler {
 
 		@Override
-		public boolean isMember(final IUser user, final Map<String, Object> variables) {
-			final IAccount account = context.getUserService().getAccount(user.getId());
+		public boolean isMember(final User user, final Map<String, Object> variables) {
+			final Account account = context.getUserService().getAccount(user.getId());
 			return account != null && account.getStatus() == EAccountStatus.locked;
 		}
 	}
@@ -35,7 +35,7 @@ public abstract class BuiltInRole {
 	public static class Anonymous extends AbstractRoleHandler {
 
 		@Override
-		public boolean isMember(final IUser user, final Map<String, Object> variables) {
+		public boolean isMember(final User user, final Map<String, Object> variables) {
 			return true;
 		}
 	}

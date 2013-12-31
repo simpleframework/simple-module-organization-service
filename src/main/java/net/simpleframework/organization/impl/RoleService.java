@@ -17,17 +17,17 @@ import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
+import net.simpleframework.organization.Account;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.ERoleType;
-import net.simpleframework.organization.IAccount;
-import net.simpleframework.organization.IRole;
-import net.simpleframework.organization.IRoleChart;
 import net.simpleframework.organization.IRoleHandler;
-import net.simpleframework.organization.IRoleMember;
 import net.simpleframework.organization.IRoleService;
-import net.simpleframework.organization.IUser;
 import net.simpleframework.organization.OrganizationException;
+import net.simpleframework.organization.Role;
+import net.simpleframework.organization.RoleChart;
+import net.simpleframework.organization.RoleMember;
+import net.simpleframework.organization.User;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -36,20 +36,20 @@ import net.simpleframework.organization.OrganizationException;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleService extends AbstractOrganizationService<IRole, Role> implements IRoleService {
+public class RoleService extends AbstractOrganizationService<Role> implements IRoleService {
 
 	@Override
-	public IRoleChart getRoleChart(final IRole role) {
+	public RoleChart getRoleChart(final Role role) {
 		return role == null ? null : getRoleChartService().getBean(role.getRoleChartId());
 	}
 
 	@Override
-	public String toUniqueName(final IRole role) {
+	public String toUniqueName(final Role role) {
 		return PermissionRole.toUniqueRolename(getRoleChart(role).getName(), role.getName());
 	}
 
 	@Override
-	public IRole getRoleByName(final String name) {
+	public Role getRoleByName(final String name) {
 		final String[] arr = PermissionRole.split(name);
 		if (arr == null || arr.length != 2) {
 			throw OrganizationException.of($m("RoleService.2"));
@@ -58,7 +58,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public IRole getRoleByName(final IRoleChart roleChart, final String name) {
+	public Role getRoleByName(final RoleChart roleChart, final String name) {
 		if (roleChart == null) {
 			return null;
 		}
@@ -66,7 +66,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public IDataQuery<IRole> queryRoot(final IRoleChart roleChart) {
+	public IDataQuery<Role> queryRoot(final RoleChart roleChart) {
 		if (roleChart == null) {
 			return DataQueryUtils.nullQuery();
 		}
@@ -74,7 +74,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public IDataQuery<IRole> queryRoles(final IRoleChart roleChart) {
+	public IDataQuery<Role> queryRoles(final RoleChart roleChart) {
 		if (roleChart == null) {
 			return DataQueryUtils.nullQuery();
 		}
@@ -82,7 +82,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public IRoleHandler getRoleHandler(final IRole role) {
+	public IRoleHandler getRoleHandler(final Role role) {
 		final Class<?> rHandleClass = OrganizationContext.rHandleRegistry.get(toUniqueName(role));
 		if (rHandleClass != null) {
 			return (IRoleHandler) singleton(rHandleClass);
@@ -95,14 +95,14 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public boolean isMember(final IUser user, final IRole role, final Map<String, Object> variables) {
+	public boolean isMember(final User user, final Role role, final Map<String, Object> variables) {
 		if (isManager(user, variables)) {
 			return true;
 		}
 		return _isMember(user, role, variables);
 	}
 
-	private boolean _isMember(final IUser user, final IRole role, final Map<String, Object> variables) {
+	private boolean _isMember(final User user, final Role role, final Map<String, Object> variables) {
 		if (user == null || role == null) {
 			return false;
 		}
@@ -111,8 +111,8 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
-			final IDataQuery<? extends IRoleMember> dq = members(role);
-			IRoleMember jm;
+			final IDataQuery<RoleMember> dq = members(role);
+			RoleMember jm;
 			while ((jm = dq.next()) != null) {
 				final ID memberId = jm.getMemberId();
 				if (jm.getMemberType() == ERoleMemberType.user) {
@@ -143,14 +143,14 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public boolean isMember(final IUser user, final String roleRule,
+	public boolean isMember(final User user, final String roleRule,
 			final Map<String, Object> variables) {
 		if (!StringUtils.hasText(roleRule)) {
 			return false;
 		}
 		for (final String rr : StringUtils.split(roleRule)) {
 			if (rr.startsWith("#")) { // #开头则认为是用户名
-				final IUser user2 = getUserService().getBean(rr.substring(1));
+				final User user2 = getUserService().getBean(rr.substring(1));
 				if (user2 != null && user2.getId().equals(user.getId())) {
 					return true;
 				}
@@ -164,8 +164,8 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public boolean isManager(final IUser user, final Map<String, Object> variables) {
-		IAccount account;
+	public boolean isManager(final User user, final Map<String, Object> variables) {
+		Account account;
 		if (user != null && (account = getUserService().getAccount(user.getId())) != null
 				&& account.isAdmin()) {
 			return true;
@@ -175,19 +175,19 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Enumeration<IUser> users(final IRole role, final Map<String, Object> variables) {
+	public Enumeration<User> users(final Role role, final Map<String, Object> variables) {
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
 			final UserService uService = getUserService();
-			final IDataQuery<? extends IRoleMember> dq = members(role);
-			return new Enumeration<IUser>() {
+			final IDataQuery<RoleMember> dq = members(role);
+			return new Enumeration<User>() {
 				@Override
 				public boolean hasMoreElements() {
 					if (nest != null && nest.hasMoreElements()) {
 						user = nest.nextElement();
 						return true;
 					}
-					IRoleMember jm;
+					RoleMember jm;
 					while ((jm = dq.next()) != null) {
 						final ID memberId = jm.getMemberId();
 						if (jm.getMemberType() == ERoleMemberType.user) {
@@ -206,13 +206,13 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 				}
 
 				@Override
-				public IUser nextElement() {
+				public User nextElement() {
 					return user;
 				}
 
-				IUser user = null;
+				User user = null;
 
-				Enumeration<IUser> nest = null;
+				Enumeration<User> nest = null;
 			};
 		} else if (jt == ERoleType.handle) {
 			final IRoleHandler rHandler = getRoleHandler(role);
@@ -224,7 +224,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 	}
 
 	@Override
-	public IDataQuery<? extends IRoleMember> members(final IRole role) {
+	public IDataQuery<RoleMember> members(final Role role) {
 		return getRoleMemberService().queryMembers(role);
 	}
 
@@ -237,7 +237,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 					final IParamsValue paramsValue) {
 				super.onBeforeDelete(service, paramsValue);
 
-				for (final IRole role : coll(paramsValue)) {
+				for (final Role role : coll(paramsValue)) {
 					// 含有孩子
 					if (queryChildren(role).getCount() > 0) {
 						throw OrganizationException.of($m("RoleService.1"));
@@ -258,7 +258,7 @@ public class RoleService extends AbstractOrganizationService<IRole, Role> implem
 					final Object[] beans) {
 				super.onBeforeUpdate(manager, columns, beans);
 				for (final Object o : beans) {
-					assertParentId((IRole) o);
+					assertParentId((Role) o);
 				}
 			}
 		});

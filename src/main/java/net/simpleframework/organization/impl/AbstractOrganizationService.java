@@ -9,8 +9,8 @@ import net.simpleframework.organization.IOrganizationContextAware;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class AbstractOrganizationService<T, M extends T> extends AbstractDbBeanService<T>
-		implements IOrganizationContextAware {
+public abstract class AbstractOrganizationService<T> extends AbstractDbBeanService<T> implements
+		IOrganizationContextAware {
 
 	protected AccountService getAccountService() {
 		return (AccountService) context.getAccountService();

@@ -1,12 +1,10 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization;
 
 import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.bean.ITreeBeanAware;
 import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
-import net.simpleframework.organization.ERoleMark;
-import net.simpleframework.organization.ERoleType;
-import net.simpleframework.organization.IRole;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -15,7 +13,7 @@ import net.simpleframework.organization.IRole;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class Role extends AbstractOrganizationBean implements IRole {
+public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 	/**
 	 * 关联的角色视图id
 	 */
@@ -39,52 +37,42 @@ public class Role extends AbstractOrganizationBean implements IRole {
 		this.parentId = parentId;
 	}
 
-	@Override
 	public ERoleType getRoleType() {
 		return roleType == null ? ERoleType.normal : roleType;
 	}
 
-	@Override
 	public void setRoleType(final ERoleType roleType) {
 		this.roleType = roleType;
 	}
 
-	@Override
 	public ID getRoleChartId() {
 		return roleChartId;
 	}
 
-	@Override
 	public void setRoleChartId(final ID roleChartId) {
 		this.roleChartId = roleChartId;
 	}
 
-	@Override
 	public String getRuleHandler() {
 		return ruleHandler;
 	}
 
-	@Override
 	public void setRuleHandler(final String ruleHandler) {
 		this.ruleHandler = ruleHandler;
 	}
 
-	@Override
 	public String getRuleScript() {
 		return ruleScript;
 	}
 
-	@Override
 	public void setRuleScript(final String ruleScript) {
 		this.ruleScript = ruleScript;
 	}
 
-	@Override
 	public ERoleMark getRoleMark() {
 		return roleMark == null ? ERoleMark.normal : roleMark;
 	}
 
-	@Override
 	public void setRoleMark(final ERoleMark roleMark) {
 		this.roleMark = roleMark;
 	}

@@ -1,13 +1,13 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization;
 
 import java.util.Date;
 
 import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
+import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
-import net.simpleframework.organization.IUser;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -17,7 +17,7 @@ import net.simpleframework.organization.IUser;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityUpdateLogAdapter",
 		"net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class User extends AbstractTextDescriptionBean implements IUser {
+public class User extends AbstractTextDescriptionBean implements IOrderBeanAware {
 	private static final long serialVersionUID = -4938630954415307539L;
 
 	/** 性别 **/
@@ -60,27 +60,22 @@ public class User extends AbstractTextDescriptionBean implements IUser {
 	/** 排序 **/
 	private int oorder;
 
-	@Override
 	public ID getDepartmentId() {
 		return departmentId;
 	}
 
-	@Override
 	public void setDepartmentId(final ID departmentId) {
 		this.departmentId = departmentId;
 	}
 
-	@Override
 	public int getOorder() {
 		return oorder;
 	}
 
-	@Override
 	public void setOorder(final int oorder) {
 		this.oorder = oorder;
 	}
 
-	@Override
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -89,7 +84,6 @@ public class User extends AbstractTextDescriptionBean implements IUser {
 		this.birthday = birthday;
 	}
 
-	@Override
 	public String getSex() {
 		return sex;
 	}
@@ -106,22 +100,18 @@ public class User extends AbstractTextDescriptionBean implements IUser {
 		this.hometown = hometown;
 	}
 
-	@Override
 	public String getEmail() {
 		return email;
 	}
 
-	@Override
 	public void setEmail(final String email) {
 		this.email = email;
 	}
 
-	@Override
 	public String getMobile() {
 		return mobile;
 	}
 
-	@Override
 	public void setMobile(final String mobile) {
 		this.mobile = mobile;
 	}

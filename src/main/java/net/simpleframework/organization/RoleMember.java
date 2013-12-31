@@ -1,4 +1,4 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization;
 
 import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
@@ -6,10 +6,6 @@ import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.ModuleContextFactory;
-import net.simpleframework.organization.ERoleMemberType;
-import net.simpleframework.organization.IOrganizationContext;
-import net.simpleframework.organization.IRoleMember;
-import net.simpleframework.organization.IRoleService;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -18,7 +14,7 @@ import net.simpleframework.organization.IRoleService;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleMember extends AbstractDescriptionBean implements IRoleMember, IOrderBeanAware {
+public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAware {
 	private ID roleId;
 
 	private ERoleMemberType memberType;
@@ -30,42 +26,51 @@ public class RoleMember extends AbstractDescriptionBean implements IRoleMember, 
 	/** 排序 **/
 	private int oorder;
 
-	@Override
+	/**
+	 * 成员的角色id，角色类型一定为 {@link ERoleType}.normal
+	 * 
+	 * @return
+	 */
 	public ID getRoleId() {
 		return roleId;
 	}
 
-	@Override
 	public void setRoleId(final ID roleId) {
 		this.roleId = roleId;
 	}
 
-	@Override
+	/**
+	 * 获取成员的类型， {@link ERoleMemberType}.role可能会产生嵌套
+	 * 
+	 * @return
+	 */
 	public ERoleMemberType getMemberType() {
 		return memberType;
 	}
 
-	@Override
 	public void setMemberType(final ERoleMemberType memberType) {
 		this.memberType = memberType;
 	}
 
-	@Override
 	public ID getMemberId() {
 		return memberId;
 	}
 
-	@Override
 	public void setMemberId(final ID memberId) {
 		this.memberId = memberId;
 	}
 
-	@Override
+	/**
+	 * 当前角色是否为成员的主要角色。
+	 * 
+	 * 此含义为用户存在多个角色时，又没有具体明确需要的角色，则使用该主要角色
+	 * 
+	 * @return
+	 */
 	public boolean isPrimaryRole() {
 		return primaryRole;
 	}
 
-	@Override
 	public void setPrimaryRole(final boolean primaryRole) {
 		this.primaryRole = primaryRole;
 	}

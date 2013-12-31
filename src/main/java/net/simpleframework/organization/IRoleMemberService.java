@@ -9,7 +9,7 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IRoleMemberService extends IDbBeanService<IRoleMember> {
+public interface IRoleMemberService extends IDbBeanService<RoleMember> {
 
 	/**
 	 * 获取指定角色的成员
@@ -17,12 +17,12 @@ public interface IRoleMemberService extends IDbBeanService<IRoleMember> {
 	 * @param role
 	 * @return 当角色类型为规则角色时，返回空集合
 	 */
-	IDataQuery<? extends IRoleMember> queryMembers(IRole role);
+	IDataQuery<RoleMember> queryMembers(Role role);
 
 	/**
 	 * 设置当前成员为主要成员
 	 * 
 	 * @param member
 	 */
-	void setPrimary(IRoleMember member);
+	void setPrimary(RoleMember member);
 }

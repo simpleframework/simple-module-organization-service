@@ -36,7 +36,7 @@ public class OrganizationMessageRef extends MessageRef {
 		return plugin;
 	}
 
-	public void doAccountCreatedMessage(final IAccount account) {
+	public void doAccountCreatedMessage(final Account account) {
 		if (MC_ACCOUNT == null) {
 			return;
 		}

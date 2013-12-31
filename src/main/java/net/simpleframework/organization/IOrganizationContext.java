@@ -18,7 +18,7 @@ public interface IOrganizationContext extends IModuleContext {
 	 * 
 	 * @return
 	 */
-	IRoleChart getSystemChart();
+	RoleChart getSystemChart();
 
 	/**
 	 * 获取账号管理器

@@ -12,7 +12,7 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IAccountService extends IDbBeanService<IAccount> {
+public interface IAccountService extends IDbBeanService<Account> {
 	static final int ALL = -1, STATE_NORMAL_ID = -11, STATE_REGISTRATION_ID = -12,
 			STATE_LOCKED_ID = -13, STATE_DELETE_ID = -14;
 
@@ -22,7 +22,7 @@ public interface IAccountService extends IDbBeanService<IAccount> {
 
 	static final int DEPARTMENT_ID = -4;
 
-	IAccount getAccountByName(String name);
+	Account getAccountByName(String name);
 
 	/**
 	 * 根据账号获取用户
@@ -30,7 +30,7 @@ public interface IAccountService extends IDbBeanService<IAccount> {
 	 * @param account
 	 * @return
 	 */
-	IUser getUser(Object id);
+	User getUser(Object id);
 
 	/**
 	 * 账号保存及插入操作
@@ -108,7 +108,7 @@ public interface IAccountService extends IDbBeanService<IAccount> {
 	 * @param password
 	 * @return
 	 */
-	boolean verifyPassword(IAccount account, String password);
+	boolean verifyPassword(Account account, String password);
 
 	/**
 	 * 根据类型获取账号列表。
@@ -116,7 +116,7 @@ public interface IAccountService extends IDbBeanService<IAccount> {
 	 * @param type
 	 * @return
 	 */
-	IDataQuery<? extends IAccount> query(int type);
+	IDataQuery<Account> query(int type);
 
 	/**
 	 * 获取部门下的账号
@@ -124,7 +124,7 @@ public interface IAccountService extends IDbBeanService<IAccount> {
 	 * @param dept
 	 * @return
 	 */
-	IDataQuery<? extends IAccount> query(IDepartment dept);
+	IDataQuery<Account> query(Department dept);
 
 	/**
 	 * 获取部门下的账号数量
@@ -132,5 +132,5 @@ public interface IAccountService extends IDbBeanService<IAccount> {
 	 * @param dept
 	 * @return
 	 */
-	int count(IDepartment dept);
+	int count(Department dept);
 }

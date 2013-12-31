@@ -8,12 +8,13 @@ import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.IAccount;
 import net.simpleframework.organization.IAccountService;
-import net.simpleframework.organization.IDepartment;
-import net.simpleframework.organization.IUser;
 import net.simpleframework.organization.IUserService;
+import net.simpleframework.organization.User;
+import net.simpleframework.organization.UserLob;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -21,16 +22,16 @@ import net.simpleframework.organization.IUserService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class UserService extends AbstractOrganizationService<IUser, User> implements IUserService {
+public class UserService extends AbstractOrganizationService<User> implements IUserService {
 
 	@Override
-	public IAccount getAccount(final Object id) {
-		IUser user = null;
-		if (id instanceof IUser) {
-			user = (IUser) id;
+	public Account getAccount(final Object id) {
+		User user = null;
+		if (id instanceof User) {
+			user = (User) id;
 		}
 		final IAccountService service = getAccountService();
-		IAccount account = service.getBean(user != null ? user.getId() : id);
+		Account account = service.getBean(user != null ? user.getId() : id);
 		if (account == null && (user != null || (user = getBean(id)) != null)) {
 			account = service.createBean();
 			account.setId(user.getId());
@@ -41,7 +42,7 @@ public class UserService extends AbstractOrganizationService<IUser, User> implem
 	}
 
 	@Override
-	public InputStream getPhoto(final IUser user) {
+	public InputStream getPhoto(final User user) {
 		UserLob lob;
 		if (user != null && (lob = getEntityManager(UserLob.class).getBean(user.getId())) != null) {
 			return lob.getPhoto();
@@ -65,12 +66,12 @@ public class UserService extends AbstractOrganizationService<IUser, User> implem
 	}
 
 	@Override
-	public IUser getUserByMail(final String mail) {
+	public User getUserByMail(final String mail) {
 		return getEntityManager().queryForBean(new ExpressionValue("email=?", mail));
 	}
 
 	@Override
-	public IDataQuery<? extends IUser> query(final IDepartment dept) {
+	public IDataQuery<User> query(final Department dept) {
 		return getEntityManager().queryBeans(
 				new SQLValue("select u.* from " + User.TBL.getName() + " u left join "
 						+ Account.TBL.getName()

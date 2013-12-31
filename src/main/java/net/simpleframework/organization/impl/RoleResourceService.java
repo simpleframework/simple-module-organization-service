@@ -1,7 +1,7 @@
 package net.simpleframework.organization.impl;
 
-import net.simpleframework.organization.IRoleResource;
 import net.simpleframework.organization.IRoleResourceService;
+import net.simpleframework.organization.RoleResource;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -9,6 +9,6 @@ import net.simpleframework.organization.IRoleResourceService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleResourceService extends AbstractOrganizationService<IRoleResource, RoleResource>
-		implements IRoleResourceService {
+public class RoleResourceService extends AbstractOrganizationService<RoleResource> implements
+		IRoleResourceService {
 }

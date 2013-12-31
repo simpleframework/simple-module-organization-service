@@ -9,7 +9,7 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IRoleChartService extends IDbBeanService<IRoleChart> {
+public interface IRoleChartService extends IDbBeanService<RoleChart> {
 
 	/**
 	 * 获取部门下的角色视图
@@ -18,7 +18,7 @@ public interface IRoleChartService extends IDbBeanService<IRoleChart> {
 	 *           null返回全局视图
 	 * @return
 	 */
-	IDataQuery<? extends IRoleChart> query(IDepartment dept);
+	IDataQuery<RoleChart> query(Department dept);
 
 	/**
 	 * 根据名称获取视图
@@ -26,5 +26,5 @@ public interface IRoleChartService extends IDbBeanService<IRoleChart> {
 	 * @param name
 	 * @return
 	 */
-	IRoleChart getRoleChartByName(String name);
+	RoleChart getRoleChartByName(String name);
 }

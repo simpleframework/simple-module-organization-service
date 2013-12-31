@@ -17,19 +17,19 @@ import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
+import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountMark;
 import net.simpleframework.organization.EAccountStatus;
 import net.simpleframework.organization.ERoleMemberType;
-import net.simpleframework.organization.IAccount;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountSession;
-import net.simpleframework.organization.IDepartment;
 import net.simpleframework.organization.IOrganizationContext;
-import net.simpleframework.organization.IUser;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.LoginObject;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.OrganizationMessageRef;
+import net.simpleframework.organization.User;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -37,22 +37,22 @@ import net.simpleframework.organization.OrganizationMessageRef;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountService extends AbstractOrganizationService<IAccount, Account> implements
+public class AccountService extends AbstractOrganizationService<Account> implements
 		IAccountService, IPermissionConst {
 
 	@Override
-	public IAccount getAccountByName(final String name) {
+	public Account getAccountByName(final String name) {
 		return getBean("name=?", name);
 	}
 
 	@Override
-	public IUser getUser(final Object id) {
-		IAccount account = null;
-		if (id instanceof IAccount) {
-			account = (IAccount) id;
+	public User getUser(final Object id) {
+		Account account = null;
+		if (id instanceof Account) {
+			account = (Account) id;
 		}
 		final IUserService service = getUserService();
-		IUser user = service.getBean(account != null ? account.getId() : id);
+		User user = service.getBean(account != null ? account.getId() : id);
 		if (user == null && (account != null || (account = getBean(id)) != null)) {
 			user = service.createBean();
 			user.setId(account.getId());
@@ -66,7 +66,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 	public ID getLoginId(final IAccountSession accountSession) {
 		final LoginObject lObj = accountSession.getLogin();
 		if (lObj != null) {
-			final IAccount account;
+			final Account account;
 			if ((account = getBean(lObj.getAccountId())) != null && account.isLogin()) {
 				return account.getId();
 			} else {
@@ -78,7 +78,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 
 	@Override
 	public void setLogin(final IAccountSession accountSession, final LoginObject oLogin) {
-		final IAccount login = getBean(oLogin.getAccountId());
+		final Account login = getBean(oLogin.getAccountId());
 		if (login != null) {
 			login.setLogin(true);
 			login.setLastLoginIP(accountSession.getRemoteAddr());
@@ -93,7 +93,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 	@Override
 	public void logout(final IAccountSession accountSession) {
 		final LoginObject lObj = accountSession.getLogin();
-		final IAccount account;
+		final Account account;
 		if (lObj != null && (account = getBean(lObj.getAccountId())) != null) {
 			account.setOnlineMillis(account.getOnlineMillis() + accountSession.getOnlineMillis());
 			account.setLogin(false);
@@ -103,16 +103,16 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 	}
 
 	@Override
-	public boolean verifyPassword(final IAccount account, final String password) {
+	public boolean verifyPassword(final Account account, final String password) {
 		return account.getPassword().equals(Account.encrypt(password));
 	}
 
 	@Override
-	public IDataQuery<? extends IAccount> query(final IDepartment dept) {
+	public IDataQuery<Account> query(final Department dept) {
 		final StringBuilder sql = new StringBuilder();
 		sql.append("select a.* from ").append(Account.TBL.getName()).append(" a left join ")
 				.append(User.TBL.getName())
-				.append(" u on a.id=u.id where u.departmentid=? and a.status<>?");
+				.append(" u on a.id=u.id where u.departmentid=? and a.status<>? order by u.oorder");
 		return getEntityManager().queryBeans(
 				new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
 	}
@@ -120,7 +120,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 	private final Map<String, Integer> countCache = new HashMap<String, Integer>();
 
 	@Override
-	public int count(final IDepartment dept) {
+	public int count(final Department dept) {
 		if (countCache.size() == 0) {
 			final StringBuilder sql = new StringBuilder();
 			sql.append("select count(*) as cc, u.departmentid as dept from ")
@@ -142,7 +142,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 	}
 
 	@Override
-	public IDataQuery<? extends IAccount> query(final int type) {
+	public IDataQuery<Account> query(final int type) {
 		final String uTable = User.TBL.getName();
 		final String aTable = Account.TBL.getName();
 		final StringBuilder sql = new StringBuilder();
@@ -166,7 +166,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 			sql.append(" and a.status=?");
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
-		sql.append(" order by a.createDate desc");
+		sql.append(" order by u.oorder");
 		return getEntityManager().queryBeans(new SQLValue(sql.toString(), params.toArray()));
 	}
 
@@ -174,7 +174,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 	public void doSave(final Object id, final String name, final String password,
 			final EAccountMark accountMark, final EAccountStatus status,
 			final Map<String, Object> userData) {
-		IAccount account = getBean(id);
+		Account account = getBean(id);
 		final boolean insert = account == null;
 		if (insert) {
 			account = createBean();
@@ -195,7 +195,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 		}
 
 		final IUserService service = getUserService();
-		IUser user = service.getBean(id);
+		User user = service.getBean(id);
 		if (user == null) {
 			user = service.createBean();
 			user.setId(account.getId());
@@ -224,7 +224,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 		}
 		int i = 0;
 		for (final Object id : ids) {
-			final IAccount account = getBean(id);
+			final Account account = getBean(id);
 			if (account == null) {
 				continue;
 			}
@@ -264,7 +264,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 		}
 		int i = 0;
 		for (final Object id : ids) {
-			final IAccount account = getBean(id);
+			final Account account = getBean(id);
 			if (account == null || account.isAdmin()) {
 				continue;
 			}
@@ -280,7 +280,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 
 	@Override
 	public void onInit() throws Exception {
-		final IAccount admin = getAccountByName(ADMIN);
+		final Account admin = getAccountByName(ADMIN);
 		if (admin == null) {
 			doSave(null, ADMIN, ADMIN, EAccountMark.builtIn, null, new KVMap().add("text", ADMIN));
 		}
@@ -290,7 +290,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 			public void onBeforeDelete(final IDbEntityManager<?> service,
 					final IParamsValue paramsValue) {
 				super.onBeforeDelete(service, paramsValue);
-				for (final IAccount account : coll(paramsValue)) {
+				for (final Account account : coll(paramsValue)) {
 					if (account.getAccountMark() == EAccountMark.builtIn) {
 						throw OrganizationException.of($m("AccountService.0"));
 					}
@@ -302,7 +302,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 					final Object[] beans) {
 				super.onBeforeUpdate(service, columns, beans);
 				for (final Object bean : beans) {
-					final IAccount account = (IAccount) bean;
+					final Account account = (Account) bean;
 					if (account.getStatus() == EAccountStatus.delete
 							&& account.getAccountMark() == EAccountMark.builtIn) {
 						throw OrganizationException.of($m("AccountService.0"));
@@ -310,7 +310,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 				}
 			}
 
-			private void deleteMember(final IAccount account) {
+			private void deleteMember(final Account account) {
 				// 删除成员角色
 				getRoleMemberService().deleteWith("membertype=? and memberid=?", ERoleMemberType.user,
 						account.getId());
@@ -319,7 +319,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 			@Override
 			public void onAfterDelete(final IDbEntityManager<?> service, final IParamsValue paramsValue) {
 				super.onAfterDelete(service, paramsValue);
-				for (final IAccount account : coll(paramsValue)) {
+				for (final Account account : coll(paramsValue)) {
 					// 删除用户
 					getUserService().delete(account.getId());
 					deleteMember(account);
@@ -331,7 +331,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 					final Object[] beans) {
 				super.onAfterUpdate(service, columns, beans);
 				for (final Object bean : beans) {
-					final IAccount account = (IAccount) bean;
+					final Account account = (Account) bean;
 					if (account.getStatus() == EAccountStatus.delete) {
 						// 删除成员角色
 						deleteMember(account);
@@ -343,7 +343,7 @@ public class AccountService extends AbstractOrganizationService<IAccount, Accoun
 			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans) {
 				super.onAfterInsert(manager, beans);
 				for (final Object bean : beans) {
-					final IAccount account = (IAccount) bean;
+					final Account account = (Account) bean;
 					final IModuleRef ref = ((IOrganizationContext) getModuleContext()).getMessageRef();
 					if (ref != null) {
 						((OrganizationMessageRef) ref).doAccountCreatedMessage(account);

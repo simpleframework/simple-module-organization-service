@@ -4,11 +4,11 @@ import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleChartMark;
-import net.simpleframework.organization.IDepartment;
-import net.simpleframework.organization.IRoleChart;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
+import net.simpleframework.organization.RoleChart;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -16,16 +16,16 @@ import net.simpleframework.organization.OrganizationException;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleChartService extends AbstractOrganizationService<IRoleChart, RoleChart> implements
+public class RoleChartService extends AbstractOrganizationService<RoleChart> implements
 		IRoleChartService {
 
 	@Override
-	public IDataQuery<? extends IRoleChart> query(final IDepartment dept) {
+	public IDataQuery<RoleChart> query(final Department dept) {
 		return dept == null ? query("departmentid is null") : query("departmentid=?", dept.getId());
 	}
 
 	@Override
-	public IRoleChart getRoleChartByName(final String name) {
+	public RoleChart getRoleChartByName(final String name) {
 		return getBean("name=?", name);
 	}
 
@@ -37,7 +37,7 @@ public class RoleChartService extends AbstractOrganizationService<IRoleChart, Ro
 					final IParamsValue paramsValue) {
 				super.onBeforeDelete(service, paramsValue);
 
-				for (final IRoleChart chart : coll(paramsValue)) {
+				for (final RoleChart chart : coll(paramsValue)) {
 					// 内置视图
 					if (chart.getChartMark() == ERoleChartMark.builtIn) {
 						throw OrganizationException.of($m("RoleChartService.2"));

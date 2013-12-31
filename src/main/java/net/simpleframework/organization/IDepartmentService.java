@@ -9,6 +9,6 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IDepartmentService extends IDbBeanService<IDepartment>,
-		IADOTreeBeanServiceAware<IDepartment> {
+public interface IDepartmentService extends IDbBeanService<Department>,
+		IADOTreeBeanServiceAware<Department> {
 }

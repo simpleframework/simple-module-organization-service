@@ -11,7 +11,7 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IUserService extends IDbBeanService<IUser> {
+public interface IUserService extends IDbBeanService<User> {
 
 	/**
 	 * 根据用户获取账号
@@ -19,7 +19,7 @@ public interface IUserService extends IDbBeanService<IUser> {
 	 * @param user
 	 * @return
 	 */
-	IAccount getAccount(Object id);
+	Account getAccount(Object id);
 
 	/**
 	 * 获取用户的头像
@@ -27,7 +27,7 @@ public interface IUserService extends IDbBeanService<IUser> {
 	 * @param user
 	 * @return
 	 */
-	InputStream getPhoto(IUser user);
+	InputStream getPhoto(User user);
 
 	/**
 	 * 根据email获取用户
@@ -35,7 +35,7 @@ public interface IUserService extends IDbBeanService<IUser> {
 	 * @param mail
 	 * @return
 	 */
-	IUser getUserByMail(String mail);
+	User getUserByMail(String mail);
 
 	/**
 	 * 更改用户的照片
@@ -51,5 +51,5 @@ public interface IUserService extends IDbBeanService<IUser> {
 	 * @param dept
 	 * @return
 	 */
-	IDataQuery<? extends IUser> query(IDepartment dept);
+	IDataQuery<User> query(Department dept);
 }

@@ -1,9 +1,8 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization;
 
 import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
-import net.simpleframework.organization.IRoleResource;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -12,7 +11,7 @@ import net.simpleframework.organization.IRoleResource;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleResource extends AbstractDescriptionBean implements IRoleResource {
+public class RoleResource extends AbstractDescriptionBean {
 	private ID roleId;
 
 	private int resourceType;
@@ -21,42 +20,44 @@ public class RoleResource extends AbstractDescriptionBean implements IRoleResour
 
 	private String resourceText;
 
-	@Override
+	/**
+	 * 与资源关联的角色id
+	 * 
+	 * @return
+	 */
 	public ID getRoleId() {
 		return roleId;
 	}
 
-	@Override
 	public void setRoleId(final ID roleId) {
 		this.roleId = roleId;
 	}
 
-	@Override
+	/**
+	 * 资源类型被定义一个整型，由使用者确定其具体值
+	 * 
+	 * @return
+	 */
 	public int getResourceType() {
 		return resourceType;
 	}
 
-	@Override
 	public void setResourceType(final int resourceType) {
 		this.resourceType = resourceType;
 	}
 
-	@Override
 	public ID getResourceId() {
 		return resourceId;
 	}
 
-	@Override
 	public void setResourceId(final ID resourceId) {
 		this.resourceId = resourceId;
 	}
 
-	@Override
 	public String getResourceText() {
 		return resourceText;
 	}
 
-	@Override
 	public void setResourceText(final String resourceText) {
 		this.resourceText = resourceText;
 	}

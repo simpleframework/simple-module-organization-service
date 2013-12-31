@@ -18,19 +18,24 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
+import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleType;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IDepartmentService;
 import net.simpleframework.organization.IOrganizationContext;
-import net.simpleframework.organization.IRole;
-import net.simpleframework.organization.IRoleChart;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.IRoleHandler;
 import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.IUserService;
+import net.simpleframework.organization.Role;
+import net.simpleframework.organization.RoleChart;
+import net.simpleframework.organization.RoleMember;
+import net.simpleframework.organization.User;
+import net.simpleframework.organization.UserLob;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -47,7 +52,7 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 
 		// 创建缺省视图及角色
 		final IRoleChartService rcService = getRoleChartService();
-		IRoleChart roleChart = rcService.getRoleChartByName(ROLECHART_SYSTEM);
+		RoleChart roleChart = rcService.getRoleChartByName(ROLECHART_SYSTEM);
 		if (roleChart == null) {
 			roleChart = rcService.createBean();
 			roleChart.setName(ROLECHART_SYSTEM);
@@ -61,7 +66,7 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 		for (final String r : new String[] { ROLE_ALL_ACCOUNT, ROLE_LOCK_ACCOUNT, ROLE_ANONYMOUS,
 				ROLE_MANAGER }) {
 			final String name = PermissionRole.split(r)[1];
-			IRole role = rService.getRoleByName(roleChart, name);
+			Role role = rService.getRoleByName(roleChart, name);
 			if (role == null) {
 				role = rService.createBean();
 				role.setName(name);
@@ -90,7 +95,7 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 	}
 
 	@Override
-	public IRoleChart getSystemChart() {
+	public RoleChart getSystemChart() {
 		return getRoleChartService().getRoleChartByName(ROLECHART_SYSTEM);
 	}
 

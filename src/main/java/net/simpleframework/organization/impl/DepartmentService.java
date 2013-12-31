@@ -4,7 +4,7 @@ import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.organization.IDepartment;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IDepartmentService;
 import net.simpleframework.organization.OrganizationException;
 
@@ -14,11 +14,11 @@ import net.simpleframework.organization.OrganizationException;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class DepartmentService extends AbstractOrganizationService<IDepartment, Department>
-		implements IDepartmentService {
+public class DepartmentService extends AbstractOrganizationService<Department> implements
+		IDepartmentService {
 
 	@Override
-	public IDataQuery<IDepartment> queryAll() {
+	public IDataQuery<Department> queryAll() {
 		return query("1=1 order by oorder");
 	}
 
@@ -30,7 +30,7 @@ public class DepartmentService extends AbstractOrganizationService<IDepartment, 
 					final IParamsValue paramsValue) {
 				super.onBeforeDelete(service, paramsValue);
 
-				for (final IDepartment dept : coll(paramsValue)) {
+				for (final Department dept : coll(paramsValue)) {
 					// 存在子部门
 					if (queryChildren(dept).getCount() > 0) {
 						throw OrganizationException.of($m("DepartmentService.0"));
@@ -47,7 +47,7 @@ public class DepartmentService extends AbstractOrganizationService<IDepartment, 
 					final Object[] beans) {
 				super.onBeforeUpdate(manager, columns, beans);
 				for (final Object o : beans) {
-					assertParentId((IDepartment) o);
+					assertParentId((Department) o);
 				}
 			}
 		});
