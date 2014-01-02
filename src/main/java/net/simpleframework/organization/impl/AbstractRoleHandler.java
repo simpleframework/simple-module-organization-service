@@ -20,7 +20,7 @@ public abstract class AbstractRoleHandler extends ObjectEx implements IRoleHandl
 
 	@Override
 	public Enumeration<User> members(final Map<String, Object> variables) {
-		final IDataQuery<User> dq = context.getUserService().queryAll();
+		final IDataQuery<User> dq = context.getUserService().queryAll().setFetchSize(0);
 		return new Enumeration<User>() {
 			@Override
 			public boolean hasMoreElements() {
