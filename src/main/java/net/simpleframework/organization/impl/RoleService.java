@@ -173,6 +173,11 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return isMember(user, IPermissionConst.ROLE_MANAGER, variables);
 	}
 
+	@Override
+	public IDataQuery<RoleMember> members(final Role role) {
+		return getRoleMemberService().queryMembers(role);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration<User> users(final Role role, final Map<String, Object> variables) {
@@ -224,8 +229,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	}
 
 	@Override
-	public IDataQuery<RoleMember> members(final Role role) {
-		return getRoleMemberService().queryMembers(role);
+	public Enumeration<Role> roles(final User user, final Map<String, Object> variables) {
+		return null;
 	}
 
 	@Override

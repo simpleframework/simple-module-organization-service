@@ -120,4 +120,13 @@ public interface IRoleService extends IDbBeanService<Role>, IADOTreeBeanServiceA
 	 * @return
 	 */
 	Enumeration<User> users(Role role, Map<String, Object> variables);
+
+	/**
+	 * 获取指定用户的角色
+	 * 
+	 * @param user
+	 * @param variables
+	 * @return
+	 */
+	Enumeration<Role> roles(User user, Map<String, Object> variables);
 }
