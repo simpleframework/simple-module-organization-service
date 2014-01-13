@@ -228,9 +228,30 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return CollectionUtils.EMPTY_ENUMERATION;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration<Role> roles(final User user, final Map<String, Object> variables) {
-		return null;
+		return CollectionUtils.EMPTY_ENUMERATION;
+	}
+
+	@Override
+	public Role getPrimaryRole(final User user) {
+		Role r = null;
+		final RoleMember rm = getRoleMemberService().getBean(
+				"memberType=? and memberId=? and primaryRole=?", ERoleMemberType.user, user.getId(),
+				true);
+		if (rm != null) {
+			r = getBean(rm.getRoleId());
+		} else {
+			final Enumeration<Role> enumeration = roles(user, null);
+			if (enumeration.hasMoreElements()) {
+				r = enumeration.nextElement();
+			}
+		}
+		if (r == null) {
+			r = getRoleByName(IPermissionConst.ROLE_ALL_ACCOUNT);
+		}
+		return r;
 	}
 
 	@Override
