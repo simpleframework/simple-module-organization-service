@@ -14,9 +14,8 @@ import net.simpleframework.common.ID;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
 public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
-	/**
-	 * 关联的角色视图id
-	 */
+
+	/* 关联的角色视图id */
 	private ID roleChartId;
 
 	private ID parentId;
@@ -26,6 +25,9 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 	private String ruleHandler, ruleScript;
 
 	private ERoleMark roleMark;
+
+	/* 标识用户识别的角色，比如，全体注册用户，这个用户是不能理解的，也没有意义的 */
+	private boolean userRole;
 
 	@Override
 	public ID getParentId() {
@@ -75,6 +77,14 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 
 	public void setRoleMark(final ERoleMark roleMark) {
 		this.roleMark = roleMark;
+	}
+
+	public boolean isUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(final boolean userRole) {
+		this.userRole = userRole;
 	}
 
 	public static DbEntityTable TBL = new DbEntityTable(Role.class, "sf_organization_role")

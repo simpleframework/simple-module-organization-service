@@ -83,6 +83,7 @@
         text varchar(32) not null,
         roletype int2 not null,
         rolemark int2 not null,
+        userrole bool not null,
         rulehandler varchar(128),
         rulescript text,
         description varchar(256),
