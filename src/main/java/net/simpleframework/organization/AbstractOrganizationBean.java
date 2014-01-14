@@ -1,6 +1,7 @@
 package net.simpleframework.organization;
 
 import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
+import net.simpleframework.ado.bean.INameBeanAware;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 
 /**
@@ -11,7 +12,7 @@ import net.simpleframework.ado.bean.IOrderBeanAware;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBean implements
-		IOrderBeanAware {
+		INameBeanAware, IOrderBeanAware {
 
 	private String name;
 
