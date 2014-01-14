@@ -19,10 +19,12 @@ public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBe
 	/** 排序 **/
 	private int oorder;
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void setName(final String name) {
 		this.name = name;
 	}
