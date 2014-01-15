@@ -231,6 +231,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration<Role> roles(final User user, final Map<String, Object> variables) {
+
 		return CollectionUtils.EMPTY_ENUMERATION;
 	}
 
