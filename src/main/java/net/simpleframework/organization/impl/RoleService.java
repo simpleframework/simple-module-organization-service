@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.Map;
 
 import net.simpleframework.ado.IParamsValue;
+import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.ado.query.DataQueryUtils;
@@ -228,11 +229,45 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return CollectionUtils.EMPTY_ENUMERATION;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Enumeration<Role> roles(final User user, final Map<String, Object> variables) {
+	public Enumeration<Role> roles(final User user, final Map<String, Object> variables,
+			final boolean ruleRole) {
+		final IDbDataQuery<RoleMember> dq = getRoleMemberService().query(
+				"memberType=? and memberId=?", ERoleMemberType.user, user.getId());
+		return new Enumeration<Role>() {
+			@Override
+			public boolean hasMoreElements() {
+				RoleMember jm;
+				while ((jm = dq.next()) != null) {
+					role = getBean(jm.getRoleId());
+					if (user != null) {
+						return true;
+					}
+				}
+				if (ruleRole) {
+					if (qd2 == null) {
+						qd2 = query("roleType=? or roleType=?", ERoleType.handle, ERoleType.script);
+					}
+					Role r;
+					while ((r = qd2.next()) != null) {
+						if (isMember(user, r, variables)) {
+							role = r;
+							return true;
+						}
+					}
+				}
+				return false;
+			}
 
-		return CollectionUtils.EMPTY_ENUMERATION;
+			@Override
+			public Role nextElement() {
+				return role;
+			}
+
+			Role role = null;
+
+			IDbDataQuery<Role> qd2 = null;
+		};
 	}
 
 	@Override
@@ -244,7 +279,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
 		} else {
-			final Enumeration<Role> enumeration = roles(user, null);
+			final Enumeration<Role> enumeration = roles(user, null, false);
 			if (enumeration.hasMoreElements()) {
 				r = enumeration.nextElement();
 			}
