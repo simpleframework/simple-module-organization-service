@@ -11,6 +11,7 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.CollectionUtils;
@@ -230,8 +231,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	}
 
 	@Override
-	public Enumeration<Role> roles(final User user, final Map<String, Object> variables,
-			final boolean ruleRole) {
+	public Enumeration<Role> roles(final User user, final Map<String, Object> variables) {
 		final IDbDataQuery<RoleMember> dq = getRoleMemberService().query(
 				"memberType=? and memberId=?", ERoleMemberType.user, user.getId());
 		return new Enumeration<Role>() {
@@ -240,11 +240,12 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				RoleMember jm;
 				while ((jm = dq.next()) != null) {
 					role = getBean(jm.getRoleId());
-					if (user != null) {
+					final boolean userRole = Convert.toBool(variables.get("userRole"), false);
+					if (role != null && (!userRole || role.isUserRole())) {
 						return true;
 					}
 				}
-				if (ruleRole) {
+				if (Convert.toBool(variables.get("ruleRole"), false)) {
 					if (qd2 == null) {
 						qd2 = query("roleType=? or roleType=?", ERoleType.handle, ERoleType.script);
 					}
@@ -279,7 +280,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
 		} else {
-			final Enumeration<Role> enumeration = roles(user, null, false);
+			final Enumeration<Role> enumeration = roles(user, null);
 			if (enumeration.hasMoreElements()) {
 				r = enumeration.nextElement();
 			}
