@@ -15,6 +15,7 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.CollectionUtils;
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.ctx.script.IScriptEval;
@@ -280,7 +281,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
 		} else {
-			final Enumeration<Role> enumeration = roles(user, null);
+			final Enumeration<Role> enumeration = roles(user, new KVMap());
 			if (enumeration.hasMoreElements()) {
 				r = enumeration.nextElement();
 			}
