@@ -1,7 +1,5 @@
 package net.simpleframework.organization;
 
-import net.simpleframework.ado.ColumnData;
-import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 
@@ -36,9 +34,6 @@ public class RoleChart extends AbstractOrganizationBean {
 	public void setChartMark(final ERoleChartMark chartMark) {
 		this.chartMark = chartMark;
 	}
-
-	public static DbEntityTable TBL = new DbEntityTable(RoleChart.class, "sf_organization_rolechart")
-			.setDefaultOrder(ColumnData.ASC("oorder"));
 
 	private static final long serialVersionUID = 7240516228770129459L;
 }

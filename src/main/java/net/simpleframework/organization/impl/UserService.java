@@ -73,8 +73,8 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	@Override
 	public IDataQuery<User> query(final Department dept) {
 		return getEntityManager().queryBeans(
-				new SQLValue("select u.* from " + User.TBL.getName() + " u left join "
-						+ Account.TBL.getName()
+				new SQLValue("select u.* from " + getTablename(User.class) + " u left join "
+						+ getTablename(Account.class)
 						+ " a on u.id=a.id where u.DEPARTMENTID=? and a.status<>?", dept.getId(),
 						EAccountStatus.delete));
 	}

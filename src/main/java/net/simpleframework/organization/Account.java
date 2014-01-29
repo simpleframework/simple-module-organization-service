@@ -4,7 +4,6 @@ import java.util.Date;
 
 import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractNameBean;
-import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.AlgorithmUtils;
 import net.simpleframework.common.StringUtils;
@@ -156,8 +155,6 @@ public class Account extends AbstractNameBean {
 	public static String encrypt(final String password) {
 		return AlgorithmUtils.md5Hex(password == null ? "" : password.trim());
 	}
-
-	public static DbEntityTable TBL = new DbEntityTable(Account.class, "sf_organization_account");
 
 	private static final long serialVersionUID = -2003319378229277570L;
 }

@@ -1,7 +1,6 @@
 package net.simpleframework.organization;
 
 import net.simpleframework.ado.bean.ITreeBeanAware;
-import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 
@@ -35,9 +34,6 @@ public class Department extends AbstractOrganizationBean implements ITreeBeanAwa
 	public void setDepartmentType(final EDepartmentType departmentType) {
 		this.departmentType = departmentType;
 	}
-
-	public static DbEntityTable TBL = new DbEntityTable(Department.class,
-			"sf_organization_department");
 
 	private static final long serialVersionUID = 4763200601974069965L;
 }

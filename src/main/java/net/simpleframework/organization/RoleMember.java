@@ -2,7 +2,6 @@ package net.simpleframework.organization;
 
 import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
-import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.ModuleContextFactory;
@@ -99,9 +98,6 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 		}
 		return sb.toString();
 	}
-
-	public static DbEntityTable TBL = new DbEntityTable(RoleMember.class,
-			"sf_organization_rolemember");
 
 	private static final long serialVersionUID = -6268885963912176924L;
 }

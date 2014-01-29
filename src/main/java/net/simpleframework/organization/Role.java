@@ -1,8 +1,6 @@
 package net.simpleframework.organization;
 
-import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.bean.ITreeBeanAware;
-import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 
@@ -86,9 +84,6 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 	public void setUserRole(final boolean userRole) {
 		this.userRole = userRole;
 	}
-
-	public static DbEntityTable TBL = new DbEntityTable(Role.class, "sf_organization_role")
-			.setDefaultOrder(ColumnData.ASC("oorder"));
 
 	private static final long serialVersionUID = -911479175612535742L;
 }

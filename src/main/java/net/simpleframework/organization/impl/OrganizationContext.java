@@ -10,6 +10,7 @@ import static net.simpleframework.ctx.permission.IPermissionConst.ROLE_MANAGER;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.IDbEntityTableRegistry;
 import net.simpleframework.ctx.AbstractADOModuleContext;
@@ -90,8 +91,16 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 
 	@Override
 	public DbEntityTable[] createEntityTables() {
-		return new DbEntityTable[] { Account.TBL, User.TBL, UserLob.TBL, Department.TBL, Role.TBL,
-				RoleChart.TBL, RoleMember.TBL };
+		return new DbEntityTable[] {
+				new DbEntityTable(Account.class, "sf_organization_account"),
+				new DbEntityTable(User.class, "sf_organization_user"),
+				new DbEntityTable(UserLob.class, "sf_organization_user_lob").setNoCache(true),
+				new DbEntityTable(Department.class, "sf_organization_department"),
+				new DbEntityTable(Role.class, "sf_organization_role").setDefaultOrder(ColumnData
+						.ASC("oorder")),
+				new DbEntityTable(RoleChart.class, "sf_organization_rolechart")
+						.setDefaultOrder(ColumnData.ASC("oorder")),
+				new DbEntityTable(RoleMember.class, "sf_organization_rolemember") };
 	}
 
 	@Override

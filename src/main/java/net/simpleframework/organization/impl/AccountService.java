@@ -110,8 +110,8 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	@Override
 	public IDataQuery<Account> query(final Department dept) {
 		final StringBuilder sql = new StringBuilder();
-		sql.append("select a.* from ").append(Account.TBL.getName()).append(" a left join ")
-				.append(User.TBL.getName())
+		sql.append("select a.* from ").append(getTablename(Account.class)).append(" a left join ")
+				.append(getTablename(User.class))
 				.append(" u on a.id=u.id where u.departmentid=? and a.status<>? order by u.oorder");
 		return getEntityManager().queryBeans(
 				new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
@@ -124,7 +124,8 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		if (countCache.size() == 0) {
 			final StringBuilder sql = new StringBuilder();
 			sql.append("select count(*) as cc, u.departmentid as dept from ")
-					.append(Account.TBL.getName()).append(" a left join ").append(User.TBL.getName())
+					.append(getTablename(Account.class)).append(" a left join ")
+					.append(getTablename(User.class))
 					.append(" u on a.id=u.id where a.status<>? group by u.departmentid");
 			final IDataQuery<Map<String, Object>> rs = getEntityManager().queryMapSet(
 					new SQLValue(sql.toString(), EAccountStatus.delete));
@@ -143,8 +144,8 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	@Override
 	public IDataQuery<Account> query(final int type) {
-		final String uTable = User.TBL.getName();
-		final String aTable = Account.TBL.getName();
+		final String uTable = getTablename(User.class);
+		final String aTable = getTablename(Account.class);
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
 		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)

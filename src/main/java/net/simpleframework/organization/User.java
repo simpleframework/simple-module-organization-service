@@ -5,7 +5,6 @@ import java.util.Date;
 import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
-import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 
@@ -165,6 +164,4 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 	public void setMsn(final String msn) {
 		this.msn = msn;
 	}
-
-	public static DbEntityTable TBL = new DbEntityTable(User.class, "sf_organization_user");
 }
