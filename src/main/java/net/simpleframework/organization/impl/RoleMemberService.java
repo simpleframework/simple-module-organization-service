@@ -41,7 +41,7 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 				member.getMemberId());
 		RoleMember member2;
 		while ((member2 = qd.next()) != null) {
-			if (!member2.getId().equals(member.getId()) && member2.isPrimaryRole()) {
+			if (!member2.equals(member) && member2.isPrimaryRole()) {
 				member2.setPrimaryRole(false);
 				beans.add(member2);
 			}
