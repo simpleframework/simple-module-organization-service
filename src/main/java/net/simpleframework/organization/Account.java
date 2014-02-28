@@ -149,7 +149,8 @@ public class Account extends AbstractNameBean {
 
 	@Override
 	public String toString() {
-		return StringUtils.text(getName(), super.toString());
+		final String name = getName();
+		return StringUtils.hasText(name) ? name : super.toString();
 	}
 
 	public static String encrypt(final String password) {

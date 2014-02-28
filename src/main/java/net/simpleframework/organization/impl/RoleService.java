@@ -86,13 +86,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public IRoleHandler getRoleHandler(final Role role) {
-		final Class<?> rHandleClass = OrganizationContext.rHandleRegistry.get(toUniqueName(role));
-		if (rHandleClass != null) {
-			return (IRoleHandler) singleton(rHandleClass);
+		final Class<?> rHandlerClass = OrganizationContext.rHandleRegistry.get(toUniqueName(role));
+		if (rHandlerClass != null) {
+			return (IRoleHandler) singleton(rHandlerClass);
 		}
-		final String sHandleClass = role.getRuleHandler();
-		if (StringUtils.hasText(sHandleClass)) {
-			return (IRoleHandler) singleton(sHandleClass);
+		final String sHandlerClass = role.getRuleHandler();
+		if (StringUtils.hasText(sHandlerClass)) {
+			return (IRoleHandler) singleton(sHandlerClass);
 		}
 		return null;
 	}

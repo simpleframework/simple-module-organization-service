@@ -159,7 +159,7 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 	}
 
 	public static void registRoleHandler(final String role,
-			final Class<? extends IRoleHandler> rHandleClass) {
-		rHandleRegistry.put(role, rHandleClass);
+			final Class<? extends IRoleHandler> rHandlerClass) {
+		rHandleRegistry.put(role, rHandlerClass);
 	}
 }
