@@ -15,7 +15,8 @@ import net.simpleframework.common.ID;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityUpdateLogAdapter",
-		"net.simpleframework.module.log.EntityDeleteLogAdapter" })
+		"net.simpleframework.module.log.EntityDeleteLogAdapter" }, columns = { "text", "email",
+		"mobile", "departmentId" })
 public class User extends AbstractTextDescriptionBean implements IOrderBeanAware {
 	private static final long serialVersionUID = -4938630954415307539L;
 
