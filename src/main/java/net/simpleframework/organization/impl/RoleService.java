@@ -151,7 +151,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (!StringUtils.hasText(roleRule)) {
 			return false;
 		}
-		for (final String rr : StringUtils.split(roleRule)) {
+		for (final String rr : StringUtils.split(roleRule, ";")) {
 			if (rr.startsWith("#")) { // #开头则认为是用户名
 				final User user2 = getUserService().getBean(rr.substring(1));
 				if (user2 != null && user2.equals(user)) {
