@@ -1,6 +1,6 @@
 package net.simpleframework.organization;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -26,5 +26,5 @@ public interface IRoleHandler {
 	 * @param variables
 	 * @return
 	 */
-	Enumeration<User> members(Map<String, Object> variables);
+	Iterator<User> members(Map<String, Object> variables);
 }

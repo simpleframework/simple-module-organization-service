@@ -1,9 +1,10 @@
 package net.simpleframework.organization.impl;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IRoleHandler;
@@ -19,16 +20,16 @@ public abstract class AbstractRoleHandler extends ObjectEx implements IRoleHandl
 		IOrganizationContextAware {
 
 	@Override
-	public Enumeration<User> members(final Map<String, Object> variables) {
+	public Iterator<User> members(final Map<String, Object> variables) {
 		final IDataQuery<User> dq = context.getUserService().queryAll().setFetchSize(0);
-		return new Enumeration<User>() {
+		return new AbstractIterator<User>() {
 			@Override
-			public boolean hasMoreElements() {
+			public boolean hasNext() {
 				return (user = dq.next()) != null && isMember(user, variables);
 			}
 
 			@Override
-			public User nextElement() {
+			public User next() {
 				return user;
 			}
 

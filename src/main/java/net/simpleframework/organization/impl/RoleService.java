@@ -2,11 +2,10 @@ package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.simpleframework.ado.IParamsValue;
-import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.ado.query.DataQueryUtils;
@@ -15,6 +14,7 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.CollectionUtils;
+import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
@@ -183,16 +183,16 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Enumeration<User> users(final Role role, final Map<String, Object> variables) {
+	public Iterator<User> users(final Role role, final Map<String, Object> variables) {
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
 			final UserService uService = getUserService();
 			final IDataQuery<RoleMember> dq = members(role);
-			return new Enumeration<User>() {
+			return new AbstractIterator<User>() {
 				@Override
-				public boolean hasMoreElements() {
-					if (nest != null && nest.hasMoreElements()) {
-						user = nest.nextElement();
+				public boolean hasNext() {
+					if (nest != null && nest.hasNext()) {
+						user = nest.next();
 						return true;
 					}
 					RoleMember jm;
@@ -204,8 +204,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 								return true;
 							}
 						} else {
-							if ((nest = users(getBean(memberId), variables)).hasMoreElements()) {
-								user = nest.nextElement();
+							if ((nest = users(getBean(memberId), variables)).hasNext()) {
+								user = nest.next();
 								return true;
 							}
 						}
@@ -214,13 +214,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				}
 
 				@Override
-				public User nextElement() {
+				public User next() {
 					return user;
 				}
 
 				User user = null;
 
-				Enumeration<User> nest = null;
+				Iterator<User> nest = null;
 			};
 		} else if (jt == ERoleType.handle) {
 			final IRoleHandler rHandler = getRoleHandler(role);
@@ -228,16 +228,16 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				return rHandler.members(variables);
 			}
 		}
-		return CollectionUtils.EMPTY_ENUMERATION;
+		return CollectionUtils.EMPTY_ITERATOR;
 	}
 
 	@Override
-	public Enumeration<Role> roles(final User user, final Map<String, Object> variables) {
-		final IDbDataQuery<RoleMember> dq = getRoleMemberService().query(
-				"memberType=? and memberId=?", ERoleMemberType.user, user.getId());
-		return new Enumeration<Role>() {
+	public Iterator<Role> roles(final User user, final Map<String, Object> variables) {
+		final IDataQuery<RoleMember> dq = getRoleMemberService().query("memberType=? and memberId=?",
+				ERoleMemberType.user, user.getId());
+		return new AbstractIterator<Role>() {
 			@Override
-			public boolean hasMoreElements() {
+			public boolean hasNext() {
 				RoleMember jm;
 				while ((jm = dq.next()) != null) {
 					role = getBean(jm.getRoleId());
@@ -262,13 +262,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 			}
 
 			@Override
-			public Role nextElement() {
+			public Role next() {
 				return role;
 			}
 
 			Role role = null;
 
-			IDbDataQuery<Role> qd2 = null;
+			IDataQuery<Role> qd2 = null;
 		};
 	}
 
@@ -281,9 +281,9 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
 		} else {
-			final Enumeration<Role> enumeration = roles(user, new KVMap());
-			if (enumeration.hasMoreElements()) {
-				r = enumeration.nextElement();
+			final Iterator<Role> it = roles(user, new KVMap());
+			if (it.hasNext()) {
+				r = it.next();
 			}
 		}
 		if (r == null) {

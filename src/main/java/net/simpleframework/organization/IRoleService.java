@@ -1,6 +1,6 @@
 package net.simpleframework.organization;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
@@ -119,7 +119,7 @@ public interface IRoleService extends IDbBeanService<Role>, IADOTreeBeanServiceA
 	 * @param variables
 	 * @return
 	 */
-	Enumeration<User> users(Role role, Map<String, Object> variables);
+	Iterator<User> users(Role role, Map<String, Object> variables);
 
 	/**
 	 * 获取指定用户的角色
@@ -131,7 +131,7 @@ public interface IRoleService extends IDbBeanService<Role>, IADOTreeBeanServiceA
 	 *           userRole: 是否仅返回用户角色
 	 * @return
 	 */
-	Enumeration<Role> roles(User user, Map<String, Object> variables);
+	Iterator<Role> roles(User user, Map<String, Object> variables);
 
 	/**
 	 * 获取用户的主要角色
