@@ -45,12 +45,15 @@ public interface IAccountService extends IDbBeanService<Account> {
 	void doSave(Object id, String name, String password, EAccountMark accountMark,
 			EAccountStatus status, Map<String, Object> userData);
 
+	void doSave(Object id, String name, String password, EAccountStatus status,
+			Map<String, Object> userData);
+
 	/**
 	 * 注册帐号
 	 * 
 	 * @param username
 	 * @param password
-	 * @param email
+	 * @param userData
 	 */
 	void regist(String username, String password, Map<String, Object> userData);
 

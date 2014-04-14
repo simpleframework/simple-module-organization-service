@@ -173,6 +173,12 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	@Override
 	public void doSave(final Object id, final String name, final String password,
+			final EAccountStatus status, final Map<String, Object> userData) {
+		doSave(id, name, password, EAccountMark.normal, status, userData);
+	}
+
+	@Override
+	public void doSave(final Object id, final String name, final String password,
 			final EAccountMark accountMark, final EAccountStatus status,
 			final Map<String, Object> userData) {
 		Account account = getBean(id);
