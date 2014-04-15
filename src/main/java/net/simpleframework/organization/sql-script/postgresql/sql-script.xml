@@ -20,6 +20,8 @@
         onlinemillis int8 not null,
         mailbinding bool not null,
         mobilebinding bool not null,
+        longitude double not null,
+        latitude double not null,
         unique(name),
         primary key(id)
       );

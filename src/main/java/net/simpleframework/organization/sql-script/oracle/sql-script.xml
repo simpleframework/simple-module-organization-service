@@ -20,6 +20,8 @@
         onlinemillis number(20) not null,
         mailbinding number(1) not null,
         mobilebinding number(1) not null,
+        longitude number(20, 14) not null,
+        latitude number(20, 14) not null,
         unique(name),
         primary key(id)
       );

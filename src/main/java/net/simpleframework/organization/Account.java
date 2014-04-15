@@ -54,6 +54,12 @@ public class Account extends AbstractNameBean {
 	/* 是否绑定手机号 */
 	private boolean mobilebinding;
 
+	/* 账号位置信息经度 */
+	private double longitude;
+
+	/* 账号位置信息纬度 */
+	private double latitude;
+
 	@ColumnMeta(ignore = true)
 	public boolean isAdmin() {
 		return IPermissionConst.ADMIN.equals(getName());
@@ -145,6 +151,22 @@ public class Account extends AbstractNameBean {
 
 	public void setMobilebinding(final boolean mobilebinding) {
 		this.mobilebinding = mobilebinding;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(final double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(final double latitude) {
+		this.latitude = latitude;
 	}
 
 	@Override
