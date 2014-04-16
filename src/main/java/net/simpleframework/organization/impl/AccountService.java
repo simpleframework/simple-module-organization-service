@@ -108,7 +108,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
-	public void updateLatLng(final Account account, final long lat, final long lng) {
+	public void updateLatLng(final Account account, final double lat, final double lng) {
 		if (account.getLatitude() == lat && account.getLongitude() == lng) {
 			return;
 		}

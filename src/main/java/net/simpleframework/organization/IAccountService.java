@@ -118,7 +118,7 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * 
 	 * @param account
 	 */
-	void updateLatLng(Account account, long lat, long lng);
+	void updateLatLng(Account account, double lat, double lng);
 
 	/**
 	 * 根据类型获取账号列表。
