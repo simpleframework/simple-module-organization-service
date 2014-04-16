@@ -108,6 +108,16 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
+	public void updateLatLng(final Account account, final long lat, final long lng) {
+		if (account.getLatitude() == lat && account.getLongitude() == lng) {
+			return;
+		}
+		account.setLatitude(lat);
+		account.setLongitude(lng);
+		update(new String[] { "latitude", "longitude" }, account);
+	}
+
+	@Override
 	public IDataQuery<Account> query(final Department dept) {
 		final StringBuilder sql = new StringBuilder();
 		sql.append("select a.* from ").append(getTablename(Account.class)).append(" a left join ")

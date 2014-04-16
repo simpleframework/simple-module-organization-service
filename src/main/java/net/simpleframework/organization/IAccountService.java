@@ -114,6 +114,13 @@ public interface IAccountService extends IDbBeanService<Account> {
 	boolean verifyPassword(Account account, String password);
 
 	/**
+	 * 更新经纬度
+	 * 
+	 * @param account
+	 */
+	void updateLatLng(Account account, long lat, long lng);
+
+	/**
 	 * 根据类型获取账号列表。
 	 * 
 	 * @param type
