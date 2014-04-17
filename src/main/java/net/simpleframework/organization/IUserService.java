@@ -43,7 +43,7 @@ public interface IUserService extends IDbBeanService<User> {
 	 * @param id
 	 * @param photo
 	 */
-	void updatePhoto(Object id, InputStream photo);
+	void updatePhoto(User user, InputStream photo);
 
 	/**
 	 * 获取部门下的用户

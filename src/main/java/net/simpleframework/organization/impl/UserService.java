@@ -51,12 +51,13 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	}
 
 	@Override
-	public void updatePhoto(final Object id, final InputStream photo) {
+	public void updatePhoto(final User user, final InputStream photo) {
 		final IDbEntityManager<UserLob> entity = getEntityManager(UserLob.class);
-		UserLob lob = entity.getBean(id);
+		final ID userId = user.getId();
+		UserLob lob = entity.getBean(userId);
 		if (lob == null) {
 			lob = new UserLob();
-			lob.setId(ID.of(id));
+			lob.setId(userId);
 			lob.setPhoto(photo);
 			entity.insert(lob);
 		} else {

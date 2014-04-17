@@ -182,16 +182,15 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
-	public void doSave(final Object id, final String name, final String password,
+	public void doSave(final Account account, final String name, final String password,
 			final EAccountStatus status, final Map<String, Object> userData) {
-		doSave(id, name, password, EAccountMark.normal, status, userData);
+		doSave(account, name, password, EAccountMark.normal, status, userData);
 	}
 
 	@Override
-	public void doSave(final Object id, final String name, final String password,
+	public void doSave(Account account, final String name, final String password,
 			final EAccountMark accountMark, final EAccountStatus status,
 			final Map<String, Object> userData) {
-		Account account = getBean(id);
 		final boolean insert = account == null;
 		if (insert) {
 			account = createBean();
@@ -212,7 +211,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		}
 
 		final IUserService service = getUserService();
-		User user = service.getBean(id);
+		User user = service.getBean(account.getId());
 		if (user == null) {
 			user = service.createBean();
 			user.setId(account.getId());
