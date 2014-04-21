@@ -3,7 +3,6 @@ package net.simpleframework.organization.impl;
 import java.io.InputStream;
 
 import net.simpleframework.ado.db.IDbEntityManager;
-import net.simpleframework.ado.db.common.ExpressionValue;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
@@ -67,8 +66,13 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	}
 
 	@Override
-	public User getUserByMail(final String mail) {
-		return getEntityManager().queryForBean(new ExpressionValue("email=?", mail));
+	public User getUserByEmail(final String email) {
+		return query("email=?", email).next();
+	}
+
+	@Override
+	public User getUserByMobile(final String mobile) {
+		return query("mobile=?", mobile).next();
 	}
 
 	@Override

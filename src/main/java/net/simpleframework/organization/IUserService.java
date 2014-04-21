@@ -35,7 +35,15 @@ public interface IUserService extends IDbBeanService<User> {
 	 * @param mail
 	 * @return
 	 */
-	User getUserByMail(String mail);
+	User getUserByEmail(String email);
+
+	/**
+	 * 根据手机号获取用户
+	 * 
+	 * @param mobile
+	 * @return
+	 */
+	User getUserByMobile(String mobile);
 
 	/**
 	 * 更改用户的照片
