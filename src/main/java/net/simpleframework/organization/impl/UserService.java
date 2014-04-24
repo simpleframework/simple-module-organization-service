@@ -67,12 +67,12 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 
 	@Override
 	public User getUserByEmail(final String email) {
-		return query("email=?", email).next();
+		return getBean("email=?", email);
 	}
 
 	@Override
 	public User getUserByMobile(final String mobile) {
-		return query("mobile=?", mobile).next();
+		return getBean("mobile=?", mobile);
 	}
 
 	@Override

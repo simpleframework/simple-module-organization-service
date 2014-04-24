@@ -46,7 +46,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	@Override
 	public Account getAccountByName(final String name) {
-		return query("name=?", name).next();
+		return getBean("name=?", name);
 	}
 
 	@Override
