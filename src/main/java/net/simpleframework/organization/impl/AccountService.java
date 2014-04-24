@@ -10,10 +10,14 @@ import java.util.Map;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
+import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.LngLatUtils;
+import net.simpleframework.common.LngLatUtils.Around;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
@@ -118,7 +122,28 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
-	public IDataQuery<Account> query(final Department dept) {
+	public IDataQuery<Account> queryAccounts(final double lng, final double lat, final double dis,
+			final String sex) {
+		if ((lat == 0 && lng == 0) || dis == 0) {
+			return DataQueryUtils.nullQuery();
+		}
+		final Around around = LngLatUtils.getAround(lng, lat, dis);
+		final StringBuilder sql = new StringBuilder(
+				"(longitude between ? and ?) and (latitude between ? and ?)");
+		final ArrayList<Object> params = new ArrayList<Object>();
+		params.add(around.lng_min);
+		params.add(around.lng_max);
+		params.add(around.lat_min);
+		params.add(around.lat_max);
+		if (StringUtils.hasText(sex)) {
+			sql.append(" and sex=?");
+			params.add(sex);
+		}
+		return query(sql.toString(), params.toArray());
+	}
+
+	@Override
+	public IDataQuery<Account> queryAccounts(final Department dept) {
 		final StringBuilder sql = new StringBuilder();
 		sql.append("select a.* from ").append(getTablename(Account.class)).append(" a left join ")
 				.append(getTablename(User.class))
@@ -153,7 +178,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
-	public IDataQuery<Account> query(final int type) {
+	public IDataQuery<Account> queryAccounts(final int type) {
 		final String uTable = getTablename(User.class);
 		final String aTable = getTablename(Account.class);
 		final StringBuilder sql = new StringBuilder();

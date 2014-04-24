@@ -114,19 +114,12 @@ public interface IAccountService extends IDbBeanService<Account> {
 	boolean verifyPassword(Account account, String password);
 
 	/**
-	 * 更新经纬度
-	 * 
-	 * @param account
-	 */
-	void updateLatLng(Account account, double lat, double lng);
-
-	/**
 	 * 根据类型获取账号列表。
 	 * 
 	 * @param type
 	 * @return
 	 */
-	IDataQuery<Account> query(int type);
+	IDataQuery<Account> queryAccounts(int type);
 
 	/**
 	 * 获取部门下的账号
@@ -134,7 +127,7 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @param dept
 	 * @return
 	 */
-	IDataQuery<Account> query(Department dept);
+	IDataQuery<Account> queryAccounts(Department dept);
 
 	/**
 	 * 获取部门下的账号数量
@@ -143,4 +136,22 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @return
 	 */
 	int count(Department dept);
+
+	/**
+	 * 更新经纬度
+	 * 
+	 * @param account
+	 */
+	void updateLatLng(Account account, double lat, double lng);
+
+	/**
+	 * 查找附近的账号
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param dis
+	 * @param sex
+	 * @return
+	 */
+	IDataQuery<Account> queryAccounts(double lng, double lat, double dis, String sex);
 }
