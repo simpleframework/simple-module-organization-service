@@ -18,7 +18,7 @@ public abstract class BuiltInRole {
 
 		@Override
 		public boolean isMember(final User user, final Map<String, Object> variables) {
-			final Account account = context.getUserService().getAccount(user.getId());
+			final Account account = orgContext.getUserService().getAccount(user.getId());
 			return account != null && account.getStatus() == EAccountStatus.normal;
 		}
 	}
@@ -27,7 +27,7 @@ public abstract class BuiltInRole {
 
 		@Override
 		public boolean isMember(final User user, final Map<String, Object> variables) {
-			final Account account = context.getUserService().getAccount(user.getId());
+			final Account account = orgContext.getUserService().getAccount(user.getId());
 			return account != null && account.getStatus() == EAccountStatus.locked;
 		}
 	}

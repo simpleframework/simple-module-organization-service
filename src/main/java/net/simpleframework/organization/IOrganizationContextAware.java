@@ -11,5 +11,5 @@ import net.simpleframework.ctx.ModuleContextFactory;
  */
 public interface IOrganizationContextAware extends IModuleContextAware {
 
-	static final IOrganizationContext context = ModuleContextFactory.get(IOrganizationContext.class);
+	static final IOrganizationContext orgContext = ModuleContextFactory.get(IOrganizationContext.class);
 }

@@ -13,26 +13,26 @@ public abstract class AbstractOrganizationService<T> extends AbstractDbBeanServi
 		IOrganizationContextAware {
 
 	protected AccountService getAccountService() {
-		return (AccountService) context.getAccountService();
+		return (AccountService) orgContext.getAccountService();
 	}
 
 	protected UserService getUserService() {
-		return (UserService) context.getUserService();
+		return (UserService) orgContext.getUserService();
 	}
 
 	protected DepartmentService getDepartmentService() {
-		return (DepartmentService) context.getDepartmentService();
+		return (DepartmentService) orgContext.getDepartmentService();
 	}
 
 	protected RoleChartService getRoleChartService() {
-		return (RoleChartService) context.getRoleChartService();
+		return (RoleChartService) orgContext.getRoleChartService();
 	}
 
 	protected RoleService getRoleService() {
-		return (RoleService) context.getRoleService();
+		return (RoleService) orgContext.getRoleService();
 	}
 
 	protected RoleMemberService getRoleMemberService() {
-		return (RoleMemberService) context.getRoleMemberService();
+		return (RoleMemberService) orgContext.getRoleMemberService();
 	}
 }
