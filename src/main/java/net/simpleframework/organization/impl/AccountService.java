@@ -21,6 +21,7 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
+import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountMark;
@@ -29,7 +30,7 @@ import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountSession;
 import net.simpleframework.organization.IOrganizationContext;
-import net.simpleframework.organization.IUserService;
+import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.LoginObject;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.OrganizationMessageRef;
@@ -41,8 +42,8 @@ import net.simpleframework.organization.User;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountService extends AbstractOrganizationService<Account> implements
-		IAccountService, IPermissionConst {
+public class AccountService extends AbstractDbBeanService<Account> implements IAccountService,
+		IPermissionConst, IOrganizationContextAware {
 
 	@Override
 	public Account getAccountByName(final String name) {
@@ -55,13 +56,12 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		if (id instanceof Account) {
 			account = (Account) id;
 		}
-		final IUserService service = getUserService();
-		User user = service.getBean(account != null ? account.getId() : id);
+		User user = uService.getBean(account != null ? account.getId() : id);
 		if (user == null && (account != null || (account = getBean(id)) != null)) {
-			user = service.createBean();
+			user = uService.createBean();
 			user.setId(account.getId());
 			user.setText(account.getName());
-			service.insert(user);
+			uService.insert(user);
 		}
 		return user;
 	}
@@ -235,20 +235,19 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			update(account);
 		}
 
-		final IUserService service = getUserService();
-		User user = service.getBean(account.getId());
+		User user = uService.getBean(account.getId());
 		if (user == null) {
-			user = service.createBean();
+			user = uService.createBean();
 			user.setId(account.getId());
 			for (final Map.Entry<String, Object> e : userData.entrySet()) {
 				BeanUtils.setProperty(user, e.getKey(), e.getValue());
 			}
-			service.insert(user);
+			uService.insert(user);
 		} else {
 			for (final Map.Entry<String, Object> e : userData.entrySet()) {
 				BeanUtils.setProperty(user, e.getKey(), e.getValue());
 			}
-			service.update(user);
+			uService.update(user);
 		}
 	}
 
@@ -353,7 +352,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 			private void deleteMember(final Account account) {
 				// 删除成员角色
-				getRoleMemberService().deleteWith("membertype=? and memberid=?", ERoleMemberType.user,
+				rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user,
 						account.getId());
 			}
 
@@ -362,7 +361,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				super.onAfterDelete(service, paramsValue);
 				for (final Account account : coll(paramsValue)) {
 					// 删除用户
-					getUserService().delete(account.getId());
+					uService.delete(account.getId());
 					deleteMember(account);
 				}
 			}

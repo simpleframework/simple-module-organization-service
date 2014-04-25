@@ -20,10 +20,12 @@ import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
+import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.ERoleType;
+import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IRoleHandler;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.OrganizationException;
@@ -39,11 +41,12 @@ import net.simpleframework.organization.User;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleService extends AbstractOrganizationService<Role> implements IRoleService {
+public class RoleService extends AbstractDbBeanService<Role> implements IRoleService,
+		IOrganizationContextAware {
 
 	@Override
 	public RoleChart getRoleChart(final Role role) {
-		return role == null ? null : getRoleChartService().getBean(role.getRoleChartId());
+		return role == null ? null : rcService.getBean(role.getRoleChartId());
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (arr == null || arr.length != 2) {
 			throw OrganizationException.of($m("RoleService.2"));
 		}
-		return getRoleByName(getRoleChartService().getRoleChartByName(arr[0]), arr[1]);
+		return getRoleByName(rcService.getRoleChartByName(arr[0]), arr[1]);
 	}
 
 	@Override
@@ -153,7 +156,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		}
 		for (final String rr : StringUtils.split(roleRule, ";")) {
 			if (rr.startsWith("#")) { // #开头则认为是用户名
-				final User user2 = getUserService().getBean(rr.substring(1));
+				final User user2 = uService.getBean(rr.substring(1));
 				if (user2 != null && user2.equals(user)) {
 					return true;
 				}
@@ -169,7 +172,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@Override
 	public boolean isManager(final User user, final Map<String, Object> variables) {
 		Account account;
-		if (user != null && (account = getUserService().getAccount(user.getId())) != null
+		if (user != null && (account = uService.getAccount(user.getId())) != null
 				&& account.isAdmin()) {
 			return true;
 		}
@@ -178,7 +181,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public IDataQuery<RoleMember> members(final Role role) {
-		return getRoleMemberService().queryMembers(role);
+		return rmService.queryMembers(role);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -186,7 +189,6 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	public Iterator<User> users(final Role role, final Map<String, Object> variables) {
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
-			final UserService uService = getUserService();
 			final IDataQuery<RoleMember> dq = members(role);
 			return new AbstractIterator<User>() {
 				@Override
@@ -233,7 +235,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public Iterator<Role> roles(final User user, final Map<String, Object> variables) {
-		final IDataQuery<RoleMember> dq = getRoleMemberService().query("memberType=? and memberId=?",
+		final IDataQuery<RoleMember> dq = rmService.query("memberType=? and memberId=?",
 				ERoleMemberType.user, user.getId());
 		return new AbstractIterator<Role>() {
 			@Override
@@ -275,9 +277,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@Override
 	public Role getPrimaryRole(final User user) {
 		Role r = null;
-		final RoleMember rm = getRoleMemberService().getBean(
-				"memberType=? and memberId=? and primaryRole=?", ERoleMemberType.user, user.getId(),
-				true);
+		final RoleMember rm = rmService.getBean("memberType=? and memberId=? and primaryRole=?",
+				ERoleMemberType.user, user.getId(), true);
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
 		} else {
@@ -312,7 +313,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					}
 
 					final ID rid = role.getId();
-					getRoleMemberService().deleteWith("roleId=? or (membertype=? and memberid=?)", rid,
+					rmService.deleteWith("roleId=? or (membertype=? and memberid=?)", rid,
 							ERoleMemberType.role, rid);
 				}
 			}

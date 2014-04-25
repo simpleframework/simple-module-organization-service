@@ -7,10 +7,11 @@ import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.IAccountService;
+import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
@@ -21,7 +22,8 @@ import net.simpleframework.organization.UserLob;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class UserService extends AbstractOrganizationService<User> implements IUserService {
+public class UserService extends AbstractDbBeanService<User> implements IUserService,
+		IOrganizationContextAware {
 
 	@Override
 	public Account getAccount(final Object id) {
@@ -29,13 +31,13 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 		if (id instanceof User) {
 			user = (User) id;
 		}
-		final IAccountService service = getAccountService();
-		Account account = service.getBean(user != null ? user.getId() : id);
+
+		Account account = aService.getBean(user != null ? user.getId() : id);
 		if (account == null && (user != null || (user = getBean(id)) != null)) {
-			account = service.createBean();
+			account = aService.createBean();
 			account.setId(user.getId());
 			account.setName(ObjectUtils.hashStr(user));
-			service.insert(account);
+			aService.insert(account);
 		}
 		return account;
 	}

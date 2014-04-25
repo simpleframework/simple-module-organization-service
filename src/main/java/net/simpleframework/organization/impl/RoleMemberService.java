@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.ERoleMemberType;
+import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleMember;
@@ -15,8 +17,8 @@ import net.simpleframework.organization.RoleMember;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleMemberService extends AbstractOrganizationService<RoleMember> implements
-		IRoleMemberService {
+public class RoleMemberService extends AbstractDbBeanService<RoleMember> implements
+		IRoleMemberService, IOrganizationContextAware {
 
 	@Override
 	public IDataQuery<RoleMember> queryMembers(final Role role) {
