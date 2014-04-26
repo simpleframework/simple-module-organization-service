@@ -25,7 +25,6 @@ import net.simpleframework.organization.Account;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.ERoleType;
-import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IRoleHandler;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.OrganizationException;
@@ -42,7 +41,7 @@ import net.simpleframework.organization.User;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
 public class RoleService extends AbstractDbBeanService<Role> implements IRoleService,
-		IOrganizationContextAware {
+		IOrganizationServiceAware {
 
 	@Override
 	public RoleChart getRoleChart(final Role role) {

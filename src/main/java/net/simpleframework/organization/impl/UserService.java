@@ -11,7 +11,6 @@ import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
@@ -23,7 +22,7 @@ import net.simpleframework.organization.UserLob;
  *         http://www.simpleframework.net
  */
 public class UserService extends AbstractDbBeanService<User> implements IUserService,
-		IOrganizationContextAware {
+		IOrganizationServiceAware {
 
 	@Override
 	public Account getAccount(final Object id) {

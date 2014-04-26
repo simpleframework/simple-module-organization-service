@@ -30,7 +30,6 @@ import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountSession;
 import net.simpleframework.organization.IOrganizationContext;
-import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.LoginObject;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.OrganizationMessageRef;
@@ -43,7 +42,7 @@ import net.simpleframework.organization.User;
  *         http://www.simpleframework.net
  */
 public class AccountService extends AbstractDbBeanService<Account> implements IAccountService,
-		IPermissionConst, IOrganizationContextAware {
+		IPermissionConst, IOrganizationServiceAware {
 
 	@Override
 	public Account getAccountByName(final String name) {

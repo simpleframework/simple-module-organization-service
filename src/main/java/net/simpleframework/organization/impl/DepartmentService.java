@@ -7,7 +7,6 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IDepartmentService;
-import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.OrganizationException;
 
 /**
@@ -17,7 +16,7 @@ import net.simpleframework.organization.OrganizationException;
  *         http://www.simpleframework.net
  */
 public class DepartmentService extends AbstractDbBeanService<Department> implements
-		IDepartmentService, IOrganizationContextAware {
+		IDepartmentService, IOrganizationServiceAware {
 
 	@Override
 	public IDataQuery<Department> queryAll() {
