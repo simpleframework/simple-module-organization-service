@@ -42,7 +42,7 @@ import net.simpleframework.organization.User;
  *         http://www.simpleframework.net
  */
 public class AccountService extends AbstractDbBeanService<Account> implements IAccountService,
-		IPermissionConst, IOrganizationServiceAware {
+		IPermissionConst, IOrganizationServiceImplAware {
 
 	@Override
 	public Account getAccountByName(final String name) {

@@ -41,7 +41,7 @@ import net.simpleframework.organization.User;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
 public class RoleService extends AbstractDbBeanService<Role> implements IRoleService,
-		IOrganizationServiceAware {
+		IOrganizationServiceImplAware {
 
 	@Override
 	public RoleChart getRoleChart(final Role role) {

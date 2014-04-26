@@ -22,7 +22,7 @@ import net.simpleframework.organization.UserLob;
  *         http://www.simpleframework.net
  */
 public class UserService extends AbstractDbBeanService<User> implements IUserService,
-		IOrganizationServiceAware {
+		IOrganizationServiceImplAware {
 
 	@Override
 	public Account getAccount(final Object id) {

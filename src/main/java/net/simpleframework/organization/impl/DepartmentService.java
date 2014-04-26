@@ -16,7 +16,7 @@ import net.simpleframework.organization.OrganizationException;
  *         http://www.simpleframework.net
  */
 public class DepartmentService extends AbstractDbBeanService<Department> implements
-		IDepartmentService, IOrganizationServiceAware {
+		IDepartmentService, IOrganizationServiceImplAware {
 
 	@Override
 	public IDataQuery<Department> queryAll() {

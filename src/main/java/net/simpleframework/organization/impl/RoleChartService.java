@@ -18,7 +18,7 @@ import net.simpleframework.organization.RoleChart;
  *         http://www.simpleframework.net
  */
 public class RoleChartService extends AbstractDbBeanService<RoleChart> implements
-		IRoleChartService, IOrganizationServiceAware {
+		IRoleChartService, IOrganizationServiceImplAware {
 
 	@Override
 	public IDataQuery<RoleChart> query(final Department dept) {
