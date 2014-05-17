@@ -60,6 +60,9 @@ public class Account extends AbstractNameBean {
 	/* 账号位置信息纬度 */
 	private double latitude;
 
+	/* 第三方帐号id */
+	private String openid;
+
 	@ColumnMeta(ignore = true)
 	public boolean isAdmin() {
 		return IPermissionConst.ADMIN.equals(getName());
@@ -167,6 +170,14 @@ public class Account extends AbstractNameBean {
 
 	public void setLatitude(final double latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(final String openid) {
+		this.openid = openid;
 	}
 
 	@Override
