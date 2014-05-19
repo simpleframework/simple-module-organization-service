@@ -60,6 +60,8 @@ public class Account extends AbstractNameBean {
 	/* 账号位置信息纬度 */
 	private double latitude;
 
+	/* 第三方帐号服务商 */
+	private String openprovider;
 	/* 第三方帐号id */
 	private String openid;
 
@@ -170,6 +172,14 @@ public class Account extends AbstractNameBean {
 
 	public void setLatitude(final double latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getOpenprovider() {
+		return openprovider;
+	}
+
+	public void setOpenprovider(final String openprovider) {
+		this.openprovider = openprovider;
 	}
 
 	public String getOpenid() {

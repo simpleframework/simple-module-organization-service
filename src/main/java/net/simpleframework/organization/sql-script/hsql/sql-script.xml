@@ -22,6 +22,7 @@
         mobilebinding bit not null,
         longitude double not null,
         latitude double not null,
+        openprovider varchar(16),
         openid varchar(64),
         unique(name),
         primary key(id)
