@@ -48,8 +48,7 @@
 	      msn varchar(16),
 	      description varchar(256),
 	      oorder int4 not null,
-	      primary key(id),
-        unique (oorder)
+	      primary key(id)
 	    );
     ]]>
 	</tran-sql>
@@ -74,8 +73,7 @@
         oorder int4 not null,
         primary key(id),
         unique(name),
-        unique(parentid, text),
-        unique (oorder)
+        unique(parentid, text)
       );
     ]]>
 	</tran-sql>
@@ -95,8 +93,7 @@
         description varchar(256),
        	oorder int4 not null,
         primary key(id),
-        unique(rolechartid, name),
-        unique (oorder)
+        unique(rolechartid, name)
       );
     ]]>
 	</tran-sql>
@@ -112,8 +109,7 @@
         oorder int4 not null,
         primary key(id),
         unique (name),
-        unique (departmentid, text),
-        unique (oorder)
+        unique (departmentid, text)
       );
     ]]>
 	</tran-sql>
@@ -128,8 +124,7 @@
         description varchar(256),
         oorder int4 not null,
         primary key(id),
-        unique (roleid, membertype, memberid),
-        unique (oorder)
+        unique (roleid, membertype, memberid)
       );
     ]]>
   </tran-sql>
