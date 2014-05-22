@@ -135,10 +135,18 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		params.add(around.lat_min);
 		params.add(around.lat_max);
 		if (StringUtils.hasText(sex)) {
-			sql.append(" and sex=?");
+			final StringBuilder sql2 = new StringBuilder();
+			sql2.append("select a.* from ")
+					.append(getTablename(Account.class))
+					.append(" a left join ")
+					.append(getTablename(User.class))
+					.append(" u on a.id=u.id where ")
+					.append("(a.longitude between ? and ?) and (a.latitude between ? and ?) and u.sex=?");
 			params.add(sex);
+			return getEntityManager().queryBeans(new SQLValue(sql2.toString(), params.toArray()));
+		} else {
+			return query(sql.toString(), params.toArray());
 		}
-		return query(sql.toString(), params.toArray());
 	}
 
 	@Override
