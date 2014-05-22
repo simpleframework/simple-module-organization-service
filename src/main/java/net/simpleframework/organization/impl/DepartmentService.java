@@ -42,15 +42,6 @@ public class DepartmentService extends AbstractDbBeanService<Department> impleme
 					}
 				}
 			}
-
-			@Override
-			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) {
-				super.onBeforeUpdate(manager, columns, beans);
-				for (final Object o : beans) {
-					assertParentId((Department) o);
-				}
-			}
 		});
 	}
 }
