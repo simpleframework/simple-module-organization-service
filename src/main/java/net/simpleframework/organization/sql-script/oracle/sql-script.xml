@@ -35,7 +35,7 @@
 	      id char(32) not null,
         departmentid char(32),
 	      text varchar2(32 char) not null,
-	      sex varchar2(2 char),
+	      sex varchar2(2 char) not null,
 	      birthday date,
 	      hometown varchar2(32 char),
 	      email varchar2(32 char),

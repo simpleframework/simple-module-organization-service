@@ -1,5 +1,7 @@
 package net.simpleframework.organization;
 
+import static net.simpleframework.common.I18n.$m;
+
 import java.util.Date;
 
 import net.simpleframework.ado.ColumnMeta;
@@ -87,7 +89,7 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 	}
 
 	public String getSex() {
-		return sex;
+		return sex != null ? sex : $m("User.3");
 	}
 
 	public void setSex(final String sex) {
