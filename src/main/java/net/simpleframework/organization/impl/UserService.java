@@ -2,6 +2,7 @@ package net.simpleframework.organization.impl;
 
 import java.io.InputStream;
 
+import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.IDataQuery;
@@ -23,6 +24,11 @@ import net.simpleframework.organization.UserLob;
  */
 public class UserService extends AbstractDbBeanService<User> implements IUserService,
 		IOrganizationServiceImplAware {
+
+	@Override
+	protected ColumnData[] getDefaultOrderColumns() {
+		return ORDER_OORDER;
+	}
 
 	@Override
 	public Account getAccount(final Object id) {

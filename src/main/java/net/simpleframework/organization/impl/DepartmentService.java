@@ -1,9 +1,9 @@
 package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
+import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
-import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IDepartmentService;
@@ -19,8 +19,8 @@ public class DepartmentService extends AbstractDbBeanService<Department> impleme
 		IDepartmentService, IOrganizationServiceImplAware {
 
 	@Override
-	public IDataQuery<Department> queryAll() {
-		return query("1=1 order by oorder");
+	protected ColumnData[] getDefaultOrderColumns() {
+		return ORDER_OORDER;
 	}
 
 	@Override
