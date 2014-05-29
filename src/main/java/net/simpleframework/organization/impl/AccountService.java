@@ -128,8 +128,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		}
 		final Around around = LngLatUtils.getAround(lng, lat, dis);
 		final StringBuilder sql = new StringBuilder(
-				"(longitude between ? and ?) and (latitude between ? and ?)");
+				"(longitude<>0 and latitude<>0 and status=? and accountmark=?) and ")
+				.append("(longitude between ? and ?) and (latitude between ? and ?)");
 		final ArrayList<Object> params = new ArrayList<Object>();
+		params.add(EAccountStatus.normal);
+		params.add(EAccountMark.normal);
 		params.add(around.lng_min);
 		params.add(around.lng_max);
 		params.add(around.lat_min);
@@ -141,6 +144,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 					.append(" a left join ")
 					.append(getTablename(User.class))
 					.append(" u on a.id=u.id where ")
+					.append("(a.longitude<>0 and a.latitude<>0 and a.status=? and a.accountmark=?) and ")
 					.append("(a.longitude between ? and ?) and (a.latitude between ? and ?) and u.sex=?");
 			params.add(sex);
 			return getEntityManager().queryBeans(new SQLValue(sql2.toString(), params.toArray()));
