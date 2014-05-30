@@ -50,6 +50,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public Account getAccountByOpenid(final String openid) {
+		return openid == null ? null : getBean("openid=?", openid);
+	}
+
+	@Override
 	public User getUser(final Object id) {
 		Account account = null;
 		if (id instanceof Account) {
@@ -238,6 +243,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		}
 		account.setAccountMark(accountMark);
 		account.setStatus(status);
+
+		final String openid = (String) userData.get("openid");
+		if (StringUtils.hasText(openid)) {
+			account.setOpenid(openid);
+		}
 
 		if (insert) {
 			account.setName(name); // 不允许修改

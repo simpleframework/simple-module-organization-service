@@ -25,6 +25,14 @@ public interface IAccountService extends IDbBeanService<Account> {
 	Account getAccountByName(String name);
 
 	/**
+	 * 由openid获取帐号
+	 * 
+	 * @param openid
+	 * @return
+	 */
+	Account getAccountByOpenid(String openid);
+
+	/**
 	 * 根据账号获取用户
 	 * 
 	 * @param account
