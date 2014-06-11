@@ -25,6 +25,8 @@ public class DepartmentService extends AbstractDbBeanService<Department> impleme
 
 	@Override
 	public void onInit() throws Exception {
+		super.onInit();
+
 		addListener(new DbEntityAdapterEx() {
 			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,

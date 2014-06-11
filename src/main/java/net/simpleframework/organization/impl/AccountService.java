@@ -341,6 +341,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public void onInit() throws Exception {
+		super.onInit();
+
 		final Account admin = getAccountByName(ADMIN);
 		if (admin == null) {
 			doSave(null, ADMIN, ADMIN, EAccountMark.builtIn, null, new KVMap().add("text", ADMIN));

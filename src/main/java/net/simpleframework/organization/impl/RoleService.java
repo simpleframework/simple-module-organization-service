@@ -294,6 +294,8 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 
 	@Override
 	public void onInit() throws Exception {
+		super.onInit();
+
 		addListener(new DbEntityAdapterEx() {
 
 			@Override
