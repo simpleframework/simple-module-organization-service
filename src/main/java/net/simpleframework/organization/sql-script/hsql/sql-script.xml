@@ -42,6 +42,7 @@
 	      homephone varchar(16),
 	      officephone varchar(16),
 	      mobile varchar(16),
+        mobile2 varchar(16),
 	      address varchar(256),
 	      postcode varchar(8),
 	      qq varchar(16), 

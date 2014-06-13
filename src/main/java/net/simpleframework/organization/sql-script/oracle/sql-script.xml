@@ -42,6 +42,7 @@
 	      homephone varchar2(16 char),
 	      officephone varchar2(16 char),
 	      mobile varchar2(16 char),
+        mobile2 varchar2(16 char),
 	      address varchar2(256 char),
 	      postcode varchar2(8 char),
 	      qq varchar2(16 char), 

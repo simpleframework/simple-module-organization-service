@@ -9,6 +9,7 @@ import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.StringUtils;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -42,6 +43,9 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 	/** 移动电话 **/
 	@ColumnMeta(columnText = "#(User.1)")
 	private String mobile;
+
+	/** 移动电话2 **/
+	private String mobile2;
 
 	/** 地址 **/
 	@ColumnMeta(columnText = "#(User.2)")
@@ -118,6 +122,14 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 
 	public void setMobile(final String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getMobile2() {
+		return StringUtils.hasText(mobile2) ? mobile2 : getMobile();
+	}
+
+	public void setMobile2(final String mobile2) {
+		this.mobile2 = mobile2;
 	}
 
 	public String getHomePhone() {
