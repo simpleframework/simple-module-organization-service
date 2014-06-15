@@ -11,6 +11,13 @@ public interface IAccountSession {
 	static final String LOGIN_KEY = "$$login";
 
 	/**
+	 * 获取session id
+	 * 
+	 * @return
+	 */
+	String getSessionId();
+
+	/**
 	 * 获取登录对象
 	 * 
 	 * @return

@@ -55,6 +55,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public Account getAccountBySessionid(final String sessionid) {
+		return sessionid == null ? null : getBean("sessionid=?", sessionid);
+	}
+
+	@Override
 	public User getUser(final Object id) {
 		Account account = null;
 		if (id instanceof Account) {
@@ -89,11 +94,13 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		final Account login = getBean(oLogin.getAccountId());
 		if (login != null) {
 			login.setLogin(true);
+			login.setSessionid(accountSession.getSessionId());
 			login.setLastLoginIP(accountSession.getRemoteAddr());
 			login.setLastLoginDate(new Date());
 			login.setLoginTimes(login.getLoginTimes() + 1);
-
-			update(new String[] { "login", "lastLoginIP", "lastLoginDate", "loginTimes" }, login);
+			update(
+					new String[] { "login", "sessionid", "lastLoginIP", "lastLoginDate", "loginTimes" },
+					login);
 			accountSession.setLogin(oLogin);
 		}
 	}
@@ -105,7 +112,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		if (lObj != null && (account = getBean(lObj.getAccountId())) != null) {
 			account.setOnlineMillis(account.getOnlineMillis() + accountSession.getOnlineMillis());
 			account.setLogin(false);
-			update(new String[] { "login", "onlineMillis" }, account);
+			account.setSessionid("");
+			update(new String[] { "login", "sessionid", "onlineMillis" }, account);
 		}
 		accountSession.logout();
 	}

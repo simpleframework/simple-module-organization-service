@@ -36,6 +36,9 @@ public class Account extends AbstractNameBean {
 	/* 是否登录 */
 	private boolean login;
 
+	/* 用户会话id */
+	private String sessionid;
+
 	/* 最后一次登录时间 */
 	private Date lastLoginDate;
 
@@ -100,6 +103,14 @@ public class Account extends AbstractNameBean {
 
 	public void setLogin(final boolean login) {
 		this.login = login;
+	}
+
+	public String getSessionid() {
+		return sessionid;
+	}
+
+	public void setSessionid(final String sessionid) {
+		this.sessionid = sessionid;
 	}
 
 	public int getLoginTimes() {
