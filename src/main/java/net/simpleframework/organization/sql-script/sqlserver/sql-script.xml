@@ -14,6 +14,7 @@
         accountmark tinyint not null,
         createdate datetime not null,
         login bit not null,
+        sessionid varchar(32),
         lastlogindate datetime,
         lastloginip varchar(24),
         logintimes int not null,
