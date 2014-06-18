@@ -48,6 +48,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		return account;
 	}
 
+	// 避免每次从数据库获取lob
 	final HashSet<ID> NULL_LOBs = new HashSet<ID>();
 
 	@Override
