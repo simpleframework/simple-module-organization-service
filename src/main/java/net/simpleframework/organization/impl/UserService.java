@@ -1,7 +1,6 @@
 package net.simpleframework.organization.impl;
 
 import java.io.InputStream;
-import java.util.HashSet;
 
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.IDbEntityManager;
@@ -48,22 +47,11 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		return account;
 	}
 
-	// 避免每次从数据库获取lob
-	final HashSet<ID> NULL_LOBs = new HashSet<ID>();
-
 	@Override
 	public InputStream getPhoto(final User user) {
-		if (user != null) {
-			final ID userId = user.getId();
-			if (NULL_LOBs.contains(userId)) {
-				return null;
-			}
-			final UserLob lob = getEntityManager(UserLob.class).getBean(userId);
-			if (lob != null) {
-				return lob.getPhoto();
-			} else {
-				NULL_LOBs.add(userId);
-			}
+		UserLob lob;
+		if (user != null && (lob = getEntityManager(UserLob.class).getBean(user.getId())) != null) {
+			return lob.getPhoto();
 		}
 		return null;
 	}
@@ -80,7 +68,6 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 			entity.insert(lob);
 		} else {
 			lob.setPhoto(photo);
-			NULL_LOBs.remove(userId);
 			entity.update(lob);
 		}
 	}
