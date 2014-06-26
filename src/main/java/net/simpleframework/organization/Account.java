@@ -106,7 +106,8 @@ public class Account extends AbstractNameBean {
 	}
 
 	public String getSessionid() {
-		return sessionid;
+		// 不允许为null
+		return StringUtils.blank(sessionid);
 	}
 
 	public void setSessionid(final String sessionid) {
