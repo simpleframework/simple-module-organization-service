@@ -105,14 +105,18 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public void logout(final IAccountSession accountSession) {
+	public void logout(final IAccountSession accountSession, final boolean clearSession) {
 		final LoginObject lObj = accountSession.getLogin();
 		final Account account;
 		if (lObj != null && (account = getBean(lObj.getAccountId())) != null) {
 			account.setOnlineMillis(account.getOnlineMillis() + accountSession.getOnlineMillis());
 			account.setLogin(false);
-			account.setSessionid("");
-			update(new String[] { "login", "sessionid", "onlineMillis" }, account);
+			if (clearSession) {
+				account.setSessionid("");
+				update(new String[] { "login", "sessionid", "onlineMillis" }, account);
+			} else {
+				update(new String[] { "login", "onlineMillis" }, account);
+			}
 		}
 		accountSession.logout();
 	}

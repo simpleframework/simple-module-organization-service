@@ -123,8 +123,9 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * 注销
 	 * 
 	 * @param accountSession
+	 * @param clearSession
 	 */
-	void logout(IAccountSession accountSession);
+	void logout(IAccountSession accountSession, boolean clearSession);
 
 	/**
 	 * 检测密码是否正确
