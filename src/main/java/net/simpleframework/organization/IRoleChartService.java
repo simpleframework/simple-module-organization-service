@@ -15,7 +15,7 @@ public interface IRoleChartService extends IDbBeanService<RoleChart> {
 	 * 获取部门下的角色视图
 	 * 
 	 * @param dept
-	 *           null返回全局视图
+	 *        null返回全局视图
 	 * @return
 	 */
 	IDataQuery<RoleChart> query(Department dept);

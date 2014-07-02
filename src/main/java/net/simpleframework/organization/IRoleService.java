@@ -79,7 +79,7 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 * @param user
 	 * @param role
 	 * @param variables
-	 *           环境变量
+	 *        环境变量
 	 * @return
 	 */
 	boolean isMember(User user, Role role, Map<String, Object> variables);
@@ -89,7 +89,7 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 * 
 	 * @param user
 	 * @param roleRule
-	 *           按规则指定的角色，目前形式为 role1;role2;#user1, 当以#开头表示用户名
+	 *        按规则指定的角色，目前形式为 role1;role2;#user1, 当以#开头表示用户名
 	 * @param variables
 	 * @return
 	 */
@@ -126,9 +126,9 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 * 
 	 * @param user
 	 * @param variables
-	 *           ruleRole: 是否返回规则角色
+	 *        ruleRole: 是否返回规则角色
 	 * 
-	 *           userRole: 是否仅返回用户角色
+	 *        userRole: 是否仅返回用户角色
 	 * @return
 	 */
 	Iterator<Role> roles(User user, Map<String, Object> variables);

@@ -12,9 +12,6 @@ import net.simpleframework.common.object.DescriptionObject;
  *         http://www.simpleframework.net
  */
 public class LoginObject extends DescriptionObject<LoginObject> implements Serializable {
-	{
-		enableAttributes();
-	}
 
 	private final ID accountId;
 
