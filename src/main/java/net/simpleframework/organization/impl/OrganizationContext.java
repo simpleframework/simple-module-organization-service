@@ -17,7 +17,6 @@ import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
-import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
@@ -106,11 +105,6 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 	@Override
 	public RoleChart getSystemChart() {
 		return getRoleChartService().getRoleChartByName(ROLECHART_SYSTEM);
-	}
-
-	@Override
-	public String getManagerRole() {
-		return IPermissionConst.ROLE_MANAGER;
 	}
 
 	@Override
