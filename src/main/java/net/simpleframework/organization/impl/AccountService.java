@@ -5,6 +5,7 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.simpleframework.ado.IParamsValue;
@@ -18,6 +19,7 @@ import net.simpleframework.common.ID;
 import net.simpleframework.common.LngLatUtils;
 import net.simpleframework.common.LngLatUtils.Around;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
@@ -146,13 +148,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		final StringBuilder sql = new StringBuilder(
 				"(longitude<>0 and latitude<>0 and status=? and accountmark=?) and ")
 				.append("(longitude between ? and ?) and (latitude between ? and ?)");
-		final ArrayList<Object> params = new ArrayList<Object>();
-		params.add(EAccountStatus.normal);
-		params.add(EAccountMark.normal);
-		params.add(around.lng_min);
-		params.add(around.lng_max);
-		params.add(around.lat_min);
-		params.add(around.lat_max);
+		final List<Object> params = ArrayUtils.toParams(EAccountStatus.normal, EAccountMark.normal,
+				around.lng_min, around.lng_max, around.lat_min, around.lat_max);
 		if (StringUtils.hasText(sex)) {
 			final StringBuilder sql2 = new StringBuilder();
 			sql2.append("select a.* from ")
