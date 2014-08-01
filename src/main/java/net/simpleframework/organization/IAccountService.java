@@ -46,6 +46,8 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 */
 	Account getAccountBySessionid(String sessionid);
 
+	Account getAdmin();
+
 	/**
 	 * 根据账号获取用户
 	 * 

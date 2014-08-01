@@ -52,6 +52,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public Account getAdmin() {
+		return getAccountByName(IPermissionConst.ADMIN);
+	}
+
+	@Override
 	public Account getAccountByOpenid(final String openid) {
 		return openid == null ? null : getBean("openid=?", openid);
 	}
