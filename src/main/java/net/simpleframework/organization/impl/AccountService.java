@@ -212,7 +212,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		final String aTable = getTablename(Account.class);
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
-		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)
+		sql.append("select a.* from ").append(aTable).append(" a right join ").append(uTable)
 				.append(" u on a.id=u.id where 1=1");
 		if (type == ALL) {
 			sql.append(" and a.status<>?");
