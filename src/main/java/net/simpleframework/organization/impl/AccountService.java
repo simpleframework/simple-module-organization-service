@@ -134,13 +134,12 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public void updateLatLng(final Account account, final double lat, final double lng) {
-		if (account.getLatitude() == lat && account.getLongitude() == lng) {
-			return;
-		}
+	public void updateLatLng(final Account account, final double lat, final double lng,
+			final String cityCode) {
 		account.setLatitude(lat);
 		account.setLongitude(lng);
-		update(new String[] { "latitude", "longitude" }, account);
+		account.setCityCode(cityCode);
+		update(new String[] { "latitude", "longitude", "citycode" }, account);
 	}
 
 	@Override
