@@ -63,6 +63,9 @@ public class Account extends AbstractNameBean {
 	/* 账号位置信息纬度 */
 	private double latitude;
 
+	/* 所在的城市编码 */
+	private String cityCode;
+
 	/* 第三方帐号服务商 */
 	private String openprovider;
 	/* 第三方帐号id */
@@ -184,6 +187,14 @@ public class Account extends AbstractNameBean {
 
 	public void setLatitude(final double latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(final String cityCode) {
+		this.cityCode = cityCode;
 	}
 
 	public String getOpenprovider() {

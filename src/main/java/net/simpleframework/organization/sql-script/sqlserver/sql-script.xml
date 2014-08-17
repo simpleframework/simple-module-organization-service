@@ -23,6 +23,7 @@
         mobilebinding bit not null,
         longitude float not null,
         latitude float not null,
+        citycode varchar(16),
         openprovider varchar(16),
         openid varchar(64),
         unique(name),
