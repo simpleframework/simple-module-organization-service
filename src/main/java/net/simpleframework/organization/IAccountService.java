@@ -168,9 +168,16 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @param account
 	 * @param lat
 	 * @param lng
+	 */
+	void updateLatLng(Account account, double lat, double lng);
+
+	/**
+	 * 更新所在城市
+	 * 
+	 * @param account
 	 * @param cityCode
 	 */
-	void updateLatLng(Account account, double lat, double lng, String cityCode);
+	void updateCityCode(Account account, String cityCode);
 
 	/**
 	 * 查找附近的账号

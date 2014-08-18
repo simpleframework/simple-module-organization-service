@@ -21,6 +21,7 @@ import net.simpleframework.common.LngLatUtils.Around;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
@@ -134,12 +135,21 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public void updateLatLng(final Account account, final double lat, final double lng,
-			final String cityCode) {
+	public void updateLatLng(final Account account, final double lat, final double lng) {
+		if (account.getLatitude() == lat && account.getLongitude() == lng) {
+			return;
+		}
 		account.setLatitude(lat);
 		account.setLongitude(lng);
-		account.setCityCode(cityCode);
-		update(new String[] { "latitude", "longitude", "citycode" }, account);
+		update(new String[] { "latitude", "longitude" }, account);
+	}
+
+	@Override
+	public void updateCityCode(final Account account, final String cityCode) {
+		if (!ObjectUtils.objectEquals(cityCode, account.getCityCode())) {
+			account.setCityCode(cityCode);
+			update(new String[] { "citycode" }, account);
+		}
 	}
 
 	@Override
