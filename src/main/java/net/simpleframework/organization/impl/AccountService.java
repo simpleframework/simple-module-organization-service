@@ -240,7 +240,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			sql.append(" and a.status=?");
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
-		sql.append(" order by u.oorder");
+		sql.append(" order by a.createdate");
 		return getEntityManager().queryBeans(new SQLValue(sql.toString(), params.toArray()));
 	}
 
