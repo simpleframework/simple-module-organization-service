@@ -162,6 +162,8 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 */
 	int count(Department dept);
 
+	int count(int type);
+
 	/**
 	 * 更新经纬度
 	 * 

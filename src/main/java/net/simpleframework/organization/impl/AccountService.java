@@ -216,6 +216,27 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public int count(final int type) {
+		final StringBuilder sql = new StringBuilder();
+		final ArrayList<Object> params = new ArrayList<Object>();
+		if (type == ALL) {
+			sql.append("status<>?");
+			params.add(EAccountStatus.delete);
+		} else if (type == ONLINE_ID) {
+			sql.append("login=? and status=?");
+			params.add(Boolean.TRUE);
+			params.add(EAccountStatus.normal);
+		} else if (type >= STATE_DELETE_ID && type <= STATE_NORMAL_ID) {
+			sql.append("status=?");
+			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
+		}
+		if (sql.length() > 0) {
+			return count(sql.toString(), params.toArray());
+		}
+		return 0;
+	}
+
+	@Override
 	public IDataQuery<Account> queryAccounts(final int type) {
 		final String uTable = getTablename(User.class);
 		final String aTable = getTablename(Account.class);
