@@ -269,13 +269,13 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public void doSave(final Account account, final String name, final String password,
+	public Account doSave(final Account account, final String name, final String password,
 			final EAccountStatus status, final Map<String, Object> userData) {
-		doSave(account, name, password, EAccountMark.normal, status, userData);
+		return doSave(account, name, password, EAccountMark.normal, status, userData);
 	}
 
 	@Override
-	public void doSave(Account account, final String name, final String password,
+	public Account doSave(Account account, final String name, final String password,
 			final EAccountMark accountMark, final EAccountStatus status,
 			final Map<String, Object> userData) {
 		final boolean insert = account == null;
@@ -316,6 +316,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			}
 			uService.update(user);
 		}
+		return account;
 	}
 
 	@Override

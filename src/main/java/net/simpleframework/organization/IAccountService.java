@@ -66,10 +66,10 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @param status
 	 * @param userData
 	 */
-	void doSave(Account account, String name, String password, EAccountMark accountMark,
+	Account doSave(Account account, String name, String password, EAccountMark accountMark,
 			EAccountStatus status, Map<String, Object> userData);
 
-	void doSave(Account account, String name, String password, EAccountStatus status,
+	Account doSave(Account account, String name, String password, EAccountStatus status,
 			Map<String, Object> userData);
 
 	/**
