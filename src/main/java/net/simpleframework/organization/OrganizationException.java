@@ -22,6 +22,4 @@ public class OrganizationException extends RuntimeExceptionEx {
 	public static OrganizationException of(final String msg) {
 		return _of(OrganizationException.class, msg);
 	}
-
-	public static int CODE_LOGGED = 1;
 }
