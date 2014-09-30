@@ -17,7 +17,6 @@ import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.LngLatUtils;
-import net.simpleframework.common.LngLatUtils.Around;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
@@ -158,12 +157,12 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		if ((lat == 0 && lng == 0) || dis == 0) {
 			return DataQueryUtils.nullQuery();
 		}
-		final Around around = LngLatUtils.getAround(lng, lat, dis);
+		final double[] around = LngLatUtils.getRange(lng, lat, dis);
 		final StringBuilder sql = new StringBuilder(
 				"(longitude<>0 and latitude<>0 and status=? and accountmark=?) and ")
 				.append("(longitude between ? and ?) and (latitude between ? and ?)");
 		final List<Object> params = ArrayUtils.toParams(EAccountStatus.normal, EAccountMark.normal,
-				around.lng_min, around.lng_max, around.lat_min, around.lat_max);
+				around[0], around[1], around[2], around[3]);
 		if (StringUtils.hasText(sex)) {
 			final StringBuilder sql2 = new StringBuilder();
 			sql2.append("select a.* from ")
