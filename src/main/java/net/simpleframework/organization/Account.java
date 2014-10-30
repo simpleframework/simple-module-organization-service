@@ -71,6 +71,9 @@ public class Account extends AbstractNameBean {
 	/* 第三方帐号id */
 	private String openid;
 
+	/* 移动设备号 */
+	private String mdevid;
+
 	@ColumnMeta(ignore = true)
 	public boolean isAdmin() {
 		return IPermissionConst.ADMIN.equals(getName());
@@ -211,6 +214,14 @@ public class Account extends AbstractNameBean {
 
 	public void setOpenid(final String openid) {
 		this.openid = openid;
+	}
+
+	public String getMdevid() {
+		return mdevid;
+	}
+
+	public void setMdevid(final String mdevid) {
+		this.mdevid = mdevid;
 	}
 
 	@Override
