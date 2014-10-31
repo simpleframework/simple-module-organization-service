@@ -135,7 +135,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public void updateLatLng(final Account account, final double lat, final double lng) {
-		if (account.getLatitude() == lat && account.getLongitude() == lng) {
+		if (account == null || (account.getLatitude() == lat && account.getLongitude() == lng)) {
 			return;
 		}
 		account.setLatitude(lat);
@@ -145,20 +145,22 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public void updateCityCode(final Account account, final String cityCode) {
-		if (!ObjectUtils.objectEquals(cityCode, account.getCityCode())) {
-			account.setCityCode(cityCode);
-			update(new String[] { "citycode" }, account);
+		if (account == null || ObjectUtils.objectEquals(cityCode, account.getCityCode())) {
+			return;
 		}
+		account.setCityCode(cityCode);
+		update(new String[] { "citycode" }, account);
 	}
 
 	@Override
 	public void updateMdevid(final Account account, final String mdevid) {
-		if (ObjectUtils.objectEquals(mdevid, account.getMdevid())) {
+		if (account == null || ObjectUtils.objectEquals(mdevid, account.getMdevid())) {
 			return;
 		}
 		if (StringUtils.hasText(mdevid)) {
-			final Account account2 = query("mdevid=?", mdevid).next();
-			if (account2 != null) {
+			final IDataQuery<Account> dq = query("mdevid=?", mdevid);
+			Account account2;
+			while ((account2 = dq.next()) != null) {
 				account2.setMdevid(null);
 				update(new String[] { "mdevid" }, account2);
 			}
