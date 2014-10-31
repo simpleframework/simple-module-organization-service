@@ -181,6 +181,8 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 */
 	void updateCityCode(Account account, String cityCode);
 
+	void updateMdevid(Account account, String mdevid);
+
 	/**
 	 * 查找附近的账号
 	 * 

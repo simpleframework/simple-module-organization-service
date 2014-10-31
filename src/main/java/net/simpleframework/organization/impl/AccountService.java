@@ -152,6 +152,22 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public void updateMdevid(final Account account, final String mdevid) {
+		if (ObjectUtils.objectEquals(mdevid, account.getMdevid())) {
+			return;
+		}
+		if (StringUtils.hasText(mdevid)) {
+			final Account account2 = query("mdevid=?", mdevid).next();
+			if (account2 != null) {
+				account2.setMdevid(null);
+				update(new String[] { "mdevid" }, account2);
+			}
+		}
+		account.setMdevid(mdevid);
+		update(new String[] { "mdevid" }, account);
+	}
+
+	@Override
 	public IDataQuery<Account> queryAccounts(final double lng, final double lat, final double dis,
 			final String sex) {
 		if ((lat == 0 && lng == 0) || dis == 0) {
