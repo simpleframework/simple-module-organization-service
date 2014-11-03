@@ -67,6 +67,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public Account getAccountByMdevid(final String mdevid) {
+		return mdevid == null ? null : getBean("mdevid=?", mdevid);
+	}
+
+	@Override
 	public User getUser(final Object id) {
 		Account account = null;
 		if (id instanceof Account) {
@@ -157,13 +162,10 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		if (account == null || ObjectUtils.objectEquals(mdevid, account.getMdevid())) {
 			return;
 		}
-		if (StringUtils.hasText(mdevid)) {
-			final IDataQuery<Account> dq = query("mdevid=?", mdevid);
-			Account account2;
-			while ((account2 = dq.next()) != null) {
-				account2.setMdevid(null);
-				update(new String[] { "mdevid" }, account2);
-			}
+		final Account account2 = getAccountByMdevid(mdevid);
+		if (account2 != null) {
+			account2.setMdevid(null);
+			update(new String[] { "mdevid" }, account2);
 		}
 		account.setMdevid(mdevid);
 		update(new String[] { "mdevid" }, account);
@@ -200,9 +202,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	@Override
 	public IDataQuery<Account> queryAccounts(final Department dept) {
 		final StringBuilder sql = new StringBuilder();
-		sql.append("select a.* from ").append(getTablename(Account.class)).append(" a left join ")
+		sql.append("select a.* from ")
+				.append(getTablename(Account.class))
+				.append(" a left join ")
 				.append(getTablename(User.class))
-				.append(" u on a.id=u.id where u.departmentid=? and a.status<>? order by u.oorder");
+				.append(" u on a.id=u.id where u.departmentid=? and a.status<>? order by u.oorder desc");
 		return getEntityManager().queryBeans(
 				new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
 	}
@@ -257,7 +261,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			sql.append(" and a.status=?");
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
-		sql.append(" order by a.createdate");
+		sql.append(toOrderSQL(getDefaultOrderColumns()));
 		final IDataQuery<Account> dq = getEntityManager().queryBeans(
 				new SQLValue(sql.toString(), params.toArray()));
 		dq.setCount(count(type));

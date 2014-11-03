@@ -46,6 +46,14 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 */
 	Account getAccountBySessionid(String sessionid);
 
+	/**
+	 * 通过设备id获取帐号
+	 * 
+	 * @param mdevid
+	 * @return
+	 */
+	Account getAccountByMdevid(String mdevid);
+
 	Account getAdmin();
 
 	/**
