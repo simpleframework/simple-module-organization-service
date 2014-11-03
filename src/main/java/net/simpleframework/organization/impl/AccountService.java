@@ -67,6 +67,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
+	public Account getAccountByMdevid(final String mdevid) {
+		return mdevid == null ? null : getBean("mdevid=?", mdevid);
+	}
+
+	@Override
 	public User getUser(final Object id) {
 		Account account = null;
 		if (id instanceof Account) {
@@ -157,13 +162,10 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		if (account == null || ObjectUtils.objectEquals(mdevid, account.getMdevid())) {
 			return;
 		}
-		if (StringUtils.hasText(mdevid)) {
-			final IDataQuery<Account> dq = query("mdevid=?", mdevid);
-			Account account2;
-			while ((account2 = dq.next()) != null) {
-				account2.setMdevid(null);
-				update(new String[] { "mdevid" }, account2);
-			}
+		final Account account2 = getAccountByMdevid(mdevid);
+		if (account2 != null) {
+			account2.setMdevid(null);
+			update(new String[] { "mdevid" }, account2);
 		}
 		account.setMdevid(mdevid);
 		update(new String[] { "mdevid" }, account);
