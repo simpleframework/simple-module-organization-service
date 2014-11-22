@@ -262,6 +262,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
 		sql.append(toOrderSQL(getDefaultOrderColumns()));
+
 		final IDataQuery<Account> dq = getEntityManager().queryBeans(
 				new SQLValue(sql.toString(), params.toArray()));
 		dq.setCount(count(type));
