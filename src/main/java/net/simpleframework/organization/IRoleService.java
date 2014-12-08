@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.ITreeBeanServiceAware;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 
@@ -116,10 +117,12 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 * 获取角色的成员列表，和{@link #members(IRole)}的区别：members返回成员的关系，而users返回用户
 	 * 
 	 * @param role
+	 * @param deptId
+	 *        返回指定部门的用户
 	 * @param variables
 	 * @return
 	 */
-	Iterator<User> users(Role role, Map<String, Object> variables);
+	Iterator<User> users(Role role, ID deptId, Map<String, Object> variables);
 
 	/**
 	 * 获取指定用户的角色

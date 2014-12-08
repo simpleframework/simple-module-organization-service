@@ -185,7 +185,7 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Iterator<User> users(final Role role, final Map<String, Object> variables) {
+	public Iterator<User> users(final Role role, final ID deptId, final Map<String, Object> variables) {
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
 			final IDataQuery<RoleMember> dq = members(role);
@@ -201,11 +201,11 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 						final ID memberId = jm.getMemberId();
 						if (jm.getMemberType() == ERoleMemberType.user) {
 							user = uService.getBean(memberId);
-							if (user != null) {
+							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
 								return true;
 							}
 						} else {
-							if ((nest = users(getBean(memberId), variables)).hasNext()) {
+							if ((nest = users(getBean(memberId), deptId, variables)).hasNext()) {
 								user = nest.next();
 								return true;
 							}
