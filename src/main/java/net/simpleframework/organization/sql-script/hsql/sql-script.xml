@@ -123,6 +123,7 @@
       	roleid char(32) not null,
         membertype tinyint not null,
         memberid char(32) not null,
+        deptid char(32),
         primaryrole bit not null,
         description varchar(256),
         oorder int not null,

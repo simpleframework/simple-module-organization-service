@@ -20,6 +20,8 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 
 	private ID memberId;
 
+	private ID deptId;
+
 	private boolean primaryRole;
 
 	/** 排序 **/
@@ -72,6 +74,14 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 
 	public void setPrimaryRole(final boolean primaryRole) {
 		this.primaryRole = primaryRole;
+	}
+
+	public ID getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(final ID deptId) {
+		this.deptId = deptId;
 	}
 
 	@Override

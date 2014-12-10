@@ -123,6 +123,7 @@
         roleid char(32) not null,
         membertype number(4) not null,
         memberid char(32) not null,
+        deptid char(32),
         primaryrole number(1) not null,
         description varchar2(256 char),
         oorder number(11) not null,
