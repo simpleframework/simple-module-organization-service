@@ -30,8 +30,13 @@ public class RoleMemberService extends AbstractDbBeanService<RoleMember> impleme
 
 	@Override
 	public void setPrimary(final RoleMember member) {
-		if (member == null || member.getMemberType() != ERoleMemberType.user
-				|| member.isPrimaryRole()) {
+		if (member == null || member.getMemberType() != ERoleMemberType.user) {
+			return;
+		}
+
+		if (member.isPrimaryRole()) {
+			member.setPrimaryRole(false);
+			update(new String[] { "primaryrole" }, member);
 			return;
 		}
 
