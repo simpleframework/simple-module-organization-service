@@ -116,16 +116,15 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
-			final IDataQuery<RoleMember> dq = members(role);
-			RoleMember jm;
-			while ((jm = dq.next()) != null) {
-				final ID memberId = jm.getMemberId();
-				if (jm.getMemberType() == ERoleMemberType.user) {
-					if (user.getId().equals(memberId)) {
-						return true;
-					}
-				} else {
-					if (_isMember(user, getBean(memberId), variables)) {
+			if (rmService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
+					ERoleMemberType.user, user.getId()) != null) {
+				return true;
+			} else {
+				final IDataQuery<RoleMember> dq = rmService.query("roleid=? and membertype=?",
+						role.getId(), ERoleMemberType.role);
+				RoleMember jm;
+				while ((jm = dq.next()) != null) {
+					if (_isMember(user, getBean(jm.getMemberId()), variables)) {
 						return true;
 					}
 				}
