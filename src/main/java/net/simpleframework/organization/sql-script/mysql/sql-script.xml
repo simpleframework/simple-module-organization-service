@@ -26,6 +26,7 @@
         citycode varchar(16),
         openprovider varchar(16),
         openid varchar(64),
+        mdevid varchar(32),
         unique(name),
         primary key(id)
       );
