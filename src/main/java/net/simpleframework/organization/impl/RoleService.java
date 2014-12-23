@@ -17,6 +17,7 @@ import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.permission.IPermissionConst;
+import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
@@ -118,6 +119,7 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 		if (jt == ERoleType.normal) {
 			if (rmService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
 					ERoleMemberType.user, user.getId()) != null) {
+				variables.put(IPermissionHandler.CTX_ROLEID, role.getId());
 				return true;
 			} else {
 				final IDataQuery<RoleMember> dq = rmService.query("roleid=? and membertype=?",
@@ -201,6 +203,7 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 						if (jm.getMemberType() == ERoleMemberType.user) {
 							user = uService.getBean(memberId);
 							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
+								variables.put(IPermissionHandler.CTX_ROLEID, role.getId());
 								return true;
 							}
 						} else {
