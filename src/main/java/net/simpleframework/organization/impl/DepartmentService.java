@@ -2,10 +2,13 @@ package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Department;
+import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.IDepartmentService;
 import net.simpleframework.organization.OrganizationException;
 
@@ -17,6 +20,17 @@ import net.simpleframework.organization.OrganizationException;
  */
 public class DepartmentService extends AbstractDbBeanService<Department> implements
 		IDepartmentService, IOrganizationServiceImplAware {
+
+	@Override
+	public IDataQuery<Department> queryChildren(final Department parent,
+			final EDepartmentType departmentType, final ColumnData... orderColumns) {
+		final FilterItems items = FilterItems.of().addEqual("parentid",
+				parent == null ? null : parent.getId());
+		if (departmentType != null) {
+			items.addEqual("departmentType=?", departmentType);
+		}
+		return queryByParams(items, orderColumns);
+	}
 
 	@Override
 	protected ColumnData[] getDefaultOrderColumns() {

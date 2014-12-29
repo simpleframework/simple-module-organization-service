@@ -1,5 +1,7 @@
 package net.simpleframework.organization;
 
+import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.ITreeBeanServiceAware;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 
@@ -11,4 +13,14 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  */
 public interface IDepartmentService extends IDbBeanService<Department>,
 		ITreeBeanServiceAware<Department> {
+
+	/**
+	 * 
+	 * @param parent
+	 * @param departmentType
+	 * @param orderColumns
+	 * @return
+	 */
+	IDataQuery<Department> queryChildren(Department parent, EDepartmentType departmentType,
+			ColumnData... orderColumns);
 }
