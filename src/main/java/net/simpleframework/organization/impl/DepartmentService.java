@@ -27,7 +27,7 @@ public class DepartmentService extends AbstractDbBeanService<Department> impleme
 		final FilterItems items = FilterItems.of().addEqual("parentid",
 				parent == null ? null : parent.getId());
 		if (departmentType != null) {
-			items.addEqual("departmentType=?", departmentType);
+			items.addEqual("departmentType", departmentType);
 		}
 		return queryByParams(items, orderColumns);
 	}
