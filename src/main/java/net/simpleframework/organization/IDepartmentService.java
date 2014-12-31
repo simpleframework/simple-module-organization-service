@@ -14,6 +14,8 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 public interface IDepartmentService extends IDbBeanService<Department>,
 		ITreeBeanServiceAware<Department> {
 
+	Department getDepartmentByName(String name);
+
 	/**
 	 * 
 	 * @param parent

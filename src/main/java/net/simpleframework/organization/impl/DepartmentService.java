@@ -22,6 +22,11 @@ public class DepartmentService extends AbstractDbBeanService<Department> impleme
 		IDepartmentService, IOrganizationServiceImplAware {
 
 	@Override
+	public Department getDepartmentByName(final String name) {
+		return getBean("name=?", name);
+	}
+
+	@Override
 	public IDataQuery<Department> queryChildren(final Department parent,
 			final EDepartmentType departmentType, final ColumnData... orderColumns) {
 		final FilterItems items = FilterItems.of().addEqual("parentid",
