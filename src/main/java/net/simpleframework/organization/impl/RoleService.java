@@ -204,6 +204,7 @@ public class RoleService extends AbstractDbBeanService<Role> implements IRoleSer
 							user = uService.getBean(memberId);
 							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
 								variables.put(IPermissionHandler.CTX_ROLEID, role.getId());
+								variables.put(IPermissionHandler.CTX_DEPTID, jm.getDeptId());
 								return true;
 							}
 						} else {
