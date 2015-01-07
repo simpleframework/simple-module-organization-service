@@ -17,6 +17,7 @@ import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
+import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
@@ -109,7 +110,9 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 
 	@Override
 	protected Module createModule() {
-		return new Module().setName(MODULE_NAME).setText($m("OrganizationContext.0")).setOrder(11);
+		return new Module().setRole(IPermissionConst.ROLE_MANAGER)
+				.setManagerRole(IPermissionConst.ROLE_MANAGER).setName(MODULE_NAME)
+				.setText($m("OrganizationContext.0")).setOrder(11);
 	}
 
 	@Override
