@@ -1,5 +1,7 @@
 package net.simpleframework.organization.impl;
 
+import static net.simpleframework.common.I18n.$m;
+
 import java.io.InputStream;
 
 import net.simpleframework.ado.ColumnData;
@@ -13,7 +15,9 @@ import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
+import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.IUserService;
+import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
 
@@ -97,6 +101,21 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		super.onInit();
 
 		addListener(new DbEntityAdapterEx() {
+			@Override
+			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
+					final Object[] beans) {
+				super.onBeforeUpdate(manager, columns, beans);
+				// 机构下不允许添加用户
+				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
+					for (final Object o : beans) {
+						final Department dept = dService.getBean(((User) o).getDepartmentId());
+						if (dept != null && dept.getDepartmentType() == EDepartmentType.organization) {
+							throw OrganizationException.of($m("UserService.0"));
+						}
+					}
+				}
+			}
+
 			@Override
 			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
 					final Object[] beans) {
