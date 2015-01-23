@@ -20,11 +20,13 @@ import net.simpleframework.ctx.Module;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleType;
 import net.simpleframework.organization.IAccountService;
+import net.simpleframework.organization.IAccountStatService;
 import net.simpleframework.organization.IDepartmentService;
 import net.simpleframework.organization.IOrganizationContext;
 import net.simpleframework.organization.IRoleChartService;
@@ -100,7 +102,8 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 						.ASC("oorder")),
 				new DbEntityTable(RoleChart.class, "sf_organization_rolechart")
 						.setDefaultOrder(ColumnData.ASC("oorder")),
-				new DbEntityTable(RoleMember.class, "sf_organization_rolemember") };
+				new DbEntityTable(RoleMember.class, "sf_organization_rolemember"),
+				new DbEntityTable(AccountStat.class, "sf_organization_accountstat") };
 	}
 
 	@Override
@@ -143,6 +146,11 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 	@Override
 	public IRoleChartService getRoleChartService() {
 		return singleton(RoleChartService.class);
+	}
+
+	@Override
+	public IAccountStatService getAccountStatService() {
+		return singleton(AccountStatService.class);
 	}
 
 	@Override

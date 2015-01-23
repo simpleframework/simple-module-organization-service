@@ -4,11 +4,11 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.simpleframework.ado.IParamsValue;
+import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.DataQueryUtils;
@@ -25,6 +25,7 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountMark;
 import net.simpleframework.organization.EAccountStatus;
@@ -211,43 +212,15 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
 	}
 
-	private final Map<String, Integer> countCache = new HashMap<String, Integer>();
-
-	@Override
-	public int count(final Department dept) {
-		if (countCache.size() == 0) {
-			final StringBuilder sql = new StringBuilder();
-			sql.append("select count(*) as cc, u.departmentid as dept from ")
-					.append(getTablename(Account.class)).append(" a left join ")
-					.append(getTablename(User.class))
-					.append(" u on a.id=u.id where a.status<>? group by u.departmentid");
-			final IDataQuery<Map<String, Object>> rs = getEntityManager().queryMapSet(
-					new SQLValue(sql.toString(), EAccountStatus.delete));
-			Map<String, Object> data;
-			while ((data = rs.next()) != null) {
-				Object key = data.get("DEPT");
-				if (key == null) {
-					key = NO_DEPARTMENT_ID;
-				}
-				countCache.put(Convert.toString(key), Convert.toInt(data.get("CC")));
-			}
-		}
-		return Convert.toInt(countCache.get(Convert.toString(dept == null ? NO_DEPARTMENT_ID : dept
-				.getId())));
-	}
-
 	@Override
 	public IDataQuery<Account> queryAccounts(final int type) {
 		final String uTable = getTablename(User.class);
 		final String aTable = getTablename(Account.class);
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
-		sql.append("select a.* from ").append(aTable).append(" a right join ").append(uTable)
+		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)
 				.append(" u on a.id=u.id where 1=1");
-		if (type == ALL) {
-			sql.append(" and a.status<>?");
-			params.add(EAccountStatus.delete);
-		} else if (type == ONLINE_ID) {
+		if (type == ONLINE_ID) {
 			sql.append(" and a.login=? and a.status=?");
 			params.add(Boolean.TRUE);
 			params.add(EAccountStatus.normal);
@@ -262,32 +235,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
 		sql.append(" order by a.createdate");
-
-		final IDataQuery<Account> dq = getEntityManager().queryBeans(
-				new SQLValue(sql.toString(), params.toArray()));
-		dq.setCount(count(type));
-		return dq;
-	}
-
-	@Override
-	public int count(final int type) {
-		final StringBuilder sql = new StringBuilder();
-		final ArrayList<Object> params = new ArrayList<Object>();
-		if (type == ALL) {
-			sql.append("status<>?");
-			params.add(EAccountStatus.delete);
-		} else if (type == ONLINE_ID) {
-			sql.append("login=? and status=?");
-			params.add(Boolean.TRUE);
-			params.add(EAccountStatus.normal);
-		} else if (type >= STATE_DELETE_ID && type <= STATE_NORMAL_ID) {
-			sql.append("status=?");
-			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
-		}
-		if (sql.length() > 0) {
-			return count(sql.toString(), params.toArray());
-		}
-		return 0;
+		return getEntityManager().queryBeans(new SQLValue(sql.toString(), params.toArray()));
 	}
 
 	@Override
@@ -442,20 +390,19 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				}
 			}
 
-			private void deleteMember(final Account account) {
-				// 删除成员角色
-				rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user,
-						account.getId());
-			}
+			/*------------------------------after ope--------------------------------*/
 
 			@Override
-			public void onAfterDelete(final IDbEntityManager<?> service, final IParamsValue paramsValue) {
-				super.onAfterDelete(service, paramsValue);
+			public void onAfterDelete(final IDbEntityManager<?> manager, final IParamsValue paramsValue) {
+				super.onAfterDelete(manager, paramsValue);
 				for (final Account account : coll(paramsValue)) {
 					// 删除用户
 					uService.delete(account.getId());
 					deleteMember(account);
+					// 同步统计
+					updateStats(account);
 				}
+				updateAllStats();
 			}
 
 			@Override
@@ -480,8 +427,58 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 					if (ref != null) {
 						((OrganizationMessageRef) ref).doAccountCreatedMessage(account);
 					}
+					// 同步统计
+					updateStats(account);
 				}
+				updateAllStats();
 			}
 		});
+
+	}
+
+	private void deleteMember(final Account account) {
+		// 删除成员角色
+		rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
+	}
+
+	void updateAllStats() {
+		final AccountStat stat = sService.getAccountStat();
+		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
+				new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
+						+ " group by status"));
+		int nums = 0;
+		Map<String, Object> data;
+		while ((data = dq.next()) != null) {
+			final int c = Convert.toInt(data.get("c"));
+			final EAccountStatus status = Convert.toEnum(EAccountStatus.class, data.get("status"));
+			if (status != null)
+				BeanUtils.setProperty(stat, "state_" + status.name(), c);
+			nums += c;
+		}
+		// 全部及在线
+		stat.setNums(nums);
+		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
+		sService.update(stat);
+	}
+
+	void updateStats(final Account account) {
+		final ID departmentId = getUser(account.getId()).getDepartmentId();
+		final Department dept = dService.getBean(departmentId);
+		if (dept != null) {
+			final AccountStat stat = sService.getAccountStat(dept);
+			final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
+					new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
+							+ " a left join " + getTablename(User.class)
+							+ " u on a.id=u.id where u.departmentid=? group by status", dept.getId()));
+			int nums = 0;
+			Map<String, Object> data;
+			while ((data = dq.next()) != null) {
+				final int c = Convert.toInt(data.get("c"));
+				BeanUtils.setProperty(stat, "state_" + data.get("status"), c);
+				nums += c;
+			}
+			stat.setNums(nums);
+			sService.update(stat);
+		}
 	}
 }

@@ -9,9 +9,7 @@ import static net.simpleframework.common.I18n.$m;
  *         http://www.simpleframework.net
  */
 public enum ERoleMemberType {
-	/**
-	 * 用户
-	 */
+	/* 用户 */
 	user {
 
 		@Override
@@ -20,14 +18,20 @@ public enum ERoleMemberType {
 		}
 	},
 
-	/**
-	 * 角色，不能嵌套
-	 */
+	/* 角色，不能嵌套 */
 	role {
 
 		@Override
 		public String toString() {
 			return $m("ERoleMemberType.role");
+		}
+	},
+
+	/* 部门 */
+	dept {
+		@Override
+		public String toString() {
+			return $m("ERoleMemberType.dept");
 		}
 	}
 }

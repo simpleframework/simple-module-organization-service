@@ -18,4 +18,6 @@ public interface IOrganizationServiceImplAware extends IOrganizationContextAware
 	static RoleService rService = (RoleService) orgContext.getRoleService();
 
 	static RoleMemberService rmService = (RoleMemberService) orgContext.getRoleMemberService();
+
+	static AccountStatService sService = (AccountStatService) orgContext.getAccountStatService();
 }

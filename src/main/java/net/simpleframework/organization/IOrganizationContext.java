@@ -62,6 +62,8 @@ public interface IOrganizationContext extends IModuleContext {
 	 */
 	IRoleChartService getRoleChartService();
 
+	IAccountStatService getAccountStatService();
+
 	/**
 	 * 
 	 * @return

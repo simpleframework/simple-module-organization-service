@@ -147,4 +147,20 @@
       );
     ]]>
   </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_accountstat (
+        id char(32) not null,
+        deptid char(32),
+        orgid char(32),
+        nums int not null,
+        online_nums int not null,
+        state_normal int not null,
+        state_registration int not null,
+        state_locked int not null,
+        state_delete int not null,
+        primary key(id)
+      );
+    ]]>
+  </tran-sql>
 </sql-script>

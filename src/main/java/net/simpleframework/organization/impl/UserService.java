@@ -7,6 +7,7 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
@@ -87,7 +88,26 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		return getEntityManager().queryBeans(
 				new SQLValue("select u.* from " + getTablename(User.class) + " u left join "
 						+ getTablename(Account.class)
-						+ " a on u.id=a.id where u.DEPARTMENTID=? and a.status<>?", dept.getId(),
+						+ " a on u.id=a.id where u.departmentid=? and a.status<>?", dept.getId(),
 						EAccountStatus.delete));
+	}
+
+	@Override
+	public void onInit() throws Exception {
+		super.onInit();
+
+		addListener(new DbEntityAdapterEx() {
+			@Override
+			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
+					final Object[] beans) {
+				super.onAfterUpdate(manager, columns, beans);
+				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
+					for (final Object o : beans) {
+						aService.updateStats(getAccount(((User) o).getId()));
+					}
+					aService.updateAllStats();
+				}
+			}
+		});
 	}
 }

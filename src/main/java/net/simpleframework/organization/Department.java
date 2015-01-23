@@ -15,7 +15,11 @@ public class Department extends AbstractOrganizationBean implements ITreeBeanAwa
 
 	private ID parentId;
 
+	/* 部门类型 */
 	private EDepartmentType departmentType;
+
+	/* 统计字段,当前部门人数 */
+	// private int users;
 
 	@Override
 	public ID getParentId() {
@@ -34,6 +38,14 @@ public class Department extends AbstractOrganizationBean implements ITreeBeanAwa
 	public void setDepartmentType(final EDepartmentType departmentType) {
 		this.departmentType = departmentType;
 	}
+
+	// public int getUsers() {
+	// return users;
+	// }
+	//
+	// public void setUsers(final int users) {
+	// this.users = users;
+	// }
 
 	private static final long serialVersionUID = 4763200601974069965L;
 }
