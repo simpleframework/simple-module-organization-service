@@ -451,8 +451,9 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		while ((data = dq.next()) != null) {
 			final int c = Convert.toInt(data.get("c"));
 			final EAccountStatus status = Convert.toEnum(EAccountStatus.class, data.get("status"));
-			if (status != null)
+			if (status != null) {
 				BeanUtils.setProperty(stat, "state_" + status.name(), c);
+			}
 			nums += c;
 		}
 		// 全部及在线

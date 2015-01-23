@@ -1,9 +1,9 @@
 package net.simpleframework.organization.impl;
 
 import net.simpleframework.ado.db.common.ExpressionValue;
-import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.AccountStat;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IAccountStatService;
 
 /**
@@ -28,8 +28,13 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 						: new ExpressionValue("deptid=?", id));
 		if (stat == null) {
 			stat = new AccountStat();
-			if (id != null) {
-				stat.setDeptId(ID.of(id));
+			final Department _dept = dService.getBean(id);
+			if (_dept != null) {
+				stat.setDeptId(_dept.getId());
+				final Department org = dService.getOrg(_dept);
+				if (org != null) {
+					stat.setOrgId(org.getId());
+				}
 			}
 			insert(stat);
 		}

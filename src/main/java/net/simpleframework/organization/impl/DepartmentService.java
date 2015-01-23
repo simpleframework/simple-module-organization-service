@@ -27,6 +27,15 @@ public class DepartmentService extends AbstractDbBeanService<Department> impleme
 	}
 
 	@Override
+	public Department getOrg(final Department dept) {
+		Department org = dept;
+		while (org != null && org.getDepartmentType() != EDepartmentType.organization) {
+			org = getBean(org.getParentId());
+		}
+		return org;
+	}
+
+	@Override
 	public IDataQuery<Department> queryChildren(final Department parent,
 			final EDepartmentType departmentType, final ColumnData... orderColumns) {
 		final FilterItems items = FilterItems.of().addEqual("parentid",

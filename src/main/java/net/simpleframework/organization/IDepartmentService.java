@@ -17,6 +17,14 @@ public interface IDepartmentService extends IDbBeanService<Department>,
 	Department getDepartmentByName(String name);
 
 	/**
+	 * 获取所在机构
+	 * 
+	 * @param dept
+	 * @return
+	 */
+	Department getOrg(Department dept);
+
+	/**
 	 * 
 	 * @param parent
 	 * @param departmentType
