@@ -9,7 +9,6 @@ import static net.simpleframework.common.I18n.$m;
  *         http://www.simpleframework.net
  */
 public enum EDepartmentType {
-
 	/**
 	 * 部门
 	 */
