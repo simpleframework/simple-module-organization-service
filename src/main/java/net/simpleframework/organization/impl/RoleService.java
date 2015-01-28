@@ -21,7 +21,6 @@ import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.permission.PermissionRole;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleMemberType;
@@ -41,8 +40,7 @@ import net.simpleframework.organization.User;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleService extends AbstractDbBeanService<Role> implements IRoleService,
-		IOrganizationServiceImplAware {
+public class RoleService extends AbstractOrganizationService<Role> implements IRoleService {
 
 	@Override
 	public RoleChart getRoleChart(final Role role) {

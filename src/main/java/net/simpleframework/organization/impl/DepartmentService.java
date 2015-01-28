@@ -6,7 +6,6 @@ import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.IDepartmentService;
@@ -18,8 +17,8 @@ import net.simpleframework.organization.OrganizationException;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class DepartmentService extends AbstractDbBeanService<Department> implements
-		IDepartmentService, IOrganizationServiceImplAware {
+public class DepartmentService extends AbstractOrganizationService<Department> implements
+		IDepartmentService {
 
 	@Override
 	public Department getDepartmentByName(final String name) {

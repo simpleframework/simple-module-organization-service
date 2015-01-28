@@ -4,7 +4,6 @@ import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.IRoleChartService;
@@ -17,8 +16,8 @@ import net.simpleframework.organization.RoleChart;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleChartService extends AbstractDbBeanService<RoleChart> implements
-		IRoleChartService, IOrganizationServiceImplAware {
+public class RoleChartService extends AbstractOrganizationService<RoleChart> implements
+		IRoleChartService {
 
 	@Override
 	public IDataQuery<RoleChart> query(final Department dept) {
