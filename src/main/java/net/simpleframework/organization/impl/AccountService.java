@@ -194,7 +194,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 					.append("(a.longitude<>0 and a.latitude<>0 and a.status=? and a.accountmark=?) and ")
 					.append("(a.longitude between ? and ?) and (a.latitude between ? and ?) and u.sex=?");
 			params.add(sex);
-			return getEntityManager().queryBeans(new SQLValue(sql2.toString(), params.toArray()));
+			return query(new SQLValue(sql2.toString(), params.toArray()));
 		} else {
 			return query(sql.toString(), params.toArray());
 		}
@@ -208,8 +208,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				.append(" a left join ")
 				.append(getTablename(User.class))
 				.append(" u on a.id=u.id where u.departmentid=? and a.status<>? order by u.oorder desc");
-		return getEntityManager().queryBeans(
-				new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
+		return query(new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
 	}
 
 	@Override
@@ -235,7 +234,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
 		}
 		sql.append(" order by a.createdate");
-		return getEntityManager().queryBeans(new SQLValue(sql.toString(), params.toArray()));
+		return query(new SQLValue(sql.toString(), params.toArray()));
 	}
 
 	@Override

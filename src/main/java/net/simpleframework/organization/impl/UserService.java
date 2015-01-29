@@ -89,11 +89,10 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 
 	@Override
 	public IDataQuery<User> query(final Department dept) {
-		return getEntityManager().queryBeans(
-				new SQLValue("select u.* from " + getTablename(User.class) + " u left join "
-						+ getTablename(Account.class)
-						+ " a on u.id=a.id where u.departmentid=? and a.status<>?", dept.getId(),
-						EAccountStatus.delete));
+		return query(new SQLValue("select u.* from " + getTablename(User.class) + " u left join "
+				+ getTablename(Account.class)
+				+ " a on u.id=a.id where u.departmentid=? and a.status<>?", dept.getId(),
+				EAccountStatus.delete));
 	}
 
 	@Override
