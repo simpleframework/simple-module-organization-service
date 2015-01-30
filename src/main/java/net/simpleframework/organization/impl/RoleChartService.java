@@ -5,6 +5,7 @@ import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.organization.Department;
+import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
@@ -48,6 +49,19 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 					// 已存在角色
 					if (rService.queryRoot(chart).getCount() > 0) {
 						throw OrganizationException.of($m("RoleChartService.3"));
+					}
+				}
+			}
+
+			@Override
+			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+				super.onBeforeInsert(manager, beans);
+				// 视图只能加在机构上
+				for (final Object o : beans) {
+					final RoleChart chart = (RoleChart) o;
+					final Department dept = dService.getBean(chart.getDepartmentId());
+					if (dept != null && dept.getDepartmentType() == EDepartmentType.department) {
+						throw OrganizationException.of($m("RoleChartService.4"));
 					}
 				}
 			}
