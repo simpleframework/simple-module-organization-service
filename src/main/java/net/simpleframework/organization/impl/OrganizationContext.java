@@ -1,11 +1,6 @@
 package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
-import static net.simpleframework.ctx.permission.IPermissionConst.ROLECHART_SYSTEM;
-import static net.simpleframework.ctx.permission.IPermissionConst.ROLE_ALL_ACCOUNT;
-import static net.simpleframework.ctx.permission.IPermissionConst.ROLE_ANONYMOUS;
-import static net.simpleframework.ctx.permission.IPermissionConst.ROLE_LOCK_ACCOUNT;
-import static net.simpleframework.ctx.permission.IPermissionConst.ROLE_MANAGER;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +62,7 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 
 		final IRoleService rService = getRoleService();
 		for (final String r : new String[] { ROLE_ALL_ACCOUNT, ROLE_LOCK_ACCOUNT, ROLE_ANONYMOUS,
-				ROLE_MANAGER }) {
+				ROLE_MANAGER, ROLE_ORGANIZATION_MANAGER }) {
 			final String name = PermissionRole.split(r)[1];
 			Role role = rService.getRoleByName(roleChart, name);
 			if (role == null) {
@@ -76,7 +71,7 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 				role.setText($m("RoleChartService." + name));
 				role.setRoleChartId(roleChart.getId());
 				role.setRoleMark(ERoleMark.builtIn);
-				if (ROLE_MANAGER.equals(r)) {
+				if (ROLE_MANAGER.equals(r) || ROLE_ORGANIZATION_MANAGER.equals(r)) {
 					role.setRoleType(ERoleType.normal);
 				} else {
 					role.setRoleType(ERoleType.handle);
