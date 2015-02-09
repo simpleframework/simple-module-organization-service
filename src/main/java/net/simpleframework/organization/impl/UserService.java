@@ -89,7 +89,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	}
 
 	@Override
-	public IDataQuery<User> queryUsers(final Department dept, final boolean all) {
+	public IDataQuery<User> queryUsers(final Department dept) {
 		final StringBuilder sql = new StringBuilder();
 		sql.append("select u.* from ").append(getTablename(User.class)).append(" u left join ")
 				.append(getTablename(Account.class)).append(" a on u.id=a.id where ");
@@ -100,10 +100,9 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		}
 		final ArrayList<Object> params = new ArrayList<Object>();
 		params.add(dept.getId());
-		if (!all) {
-			sql.append(" and a.status<>?");
-			params.add(EAccountStatus.delete);
-		}
+
+		sql.append(" and a.status<>?");
+		params.add(EAccountStatus.delete);
 		sql.append(" order by u.oorder desc");
 		return query(new SQLValue(sql.toString(), params.toArray()));
 	}
