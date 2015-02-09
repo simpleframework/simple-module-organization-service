@@ -20,7 +20,8 @@ import net.simpleframework.common.StringUtils;
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityUpdateLogAdapter",
 		"net.simpleframework.module.log.EntityDeleteLogAdapter" }, columns = { "text", "email",
 		"mobile", "departmentId" })
-public class User extends AbstractTextDescriptionBean implements IOrderBeanAware {
+public class User extends AbstractTextDescriptionBean implements IOrderBeanAware,
+		IOrganizationContextAware {
 	private static final long serialVersionUID = -4938630954415307539L;
 
 	/** 性别 **/
@@ -61,7 +62,10 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 
 	private String msn;
 
+	/* 部门id */
 	private ID departmentId;
+	/* 机构id */
+	private ID orgId;
 
 	/** 排序 **/
 	private int oorder;
@@ -72,6 +76,20 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 
 	public void setDepartmentId(final ID departmentId) {
 		this.departmentId = departmentId;
+		if (departmentId != null) {
+			final Department org = orgContext.getDepartmentService().getOrg(departmentId);
+			if (org != null) {
+				setOrgId(org.getId());
+			}
+		}
+	}
+
+	public ID getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(final ID orgId) {
+		this.orgId = orgId;
 	}
 
 	@Override

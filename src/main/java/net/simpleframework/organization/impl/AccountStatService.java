@@ -21,6 +21,14 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 	}
 
 	@Override
+	public int getOrgCount(final Department org, final String k) {
+		if (org == null) {
+			return 0;
+		}
+		return getEntityManager().sum(k, new ExpressionValue("orgId=?", org.getId())).intValue();
+	}
+
+	@Override
 	public AccountStat getAccountStat(final Object dept) {
 		final Object id = getIdParam(dept);
 		AccountStat stat = getEntityManager().queryForBean(

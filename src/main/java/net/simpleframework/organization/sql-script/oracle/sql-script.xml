@@ -37,6 +37,7 @@
 	    create table sf_organization_user (
 	      id char(32) not null,
         departmentid char(32),
+        orgid char(32),
 	      text varchar2(32 char) not null,
 	      sex varchar2(2 char) not null,
 	      birthday date,

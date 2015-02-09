@@ -22,7 +22,7 @@ public interface IDepartmentService extends IDbBeanService<Department>,
 	 * @param dept
 	 * @return
 	 */
-	Department getOrg(Department dept);
+	Department getOrg(Object dept);
 
 	/**
 	 * 

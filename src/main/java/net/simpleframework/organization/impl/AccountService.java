@@ -201,17 +201,6 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public IDataQuery<Account> queryAccounts(final Department dept) {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("select a.* from ")
-				.append(getTablename(Account.class))
-				.append(" a left join ")
-				.append(getTablename(User.class))
-				.append(" u on a.id=u.id where u.departmentid=? and a.status<>? order by u.oorder desc");
-		return query(new SQLValue(sql.toString(), dept.getId(), EAccountStatus.delete));
-	}
-
-	@Override
 	public IDataQuery<Account> queryAccounts(final int type) {
 		final String uTable = getTablename(User.class);
 		final String aTable = getTablename(Account.class);

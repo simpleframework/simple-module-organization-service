@@ -26,8 +26,11 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 	}
 
 	@Override
-	public Department getOrg(final Department dept) {
-		Department org = dept;
+	public Department getOrg(Object dept) {
+		if (!(dept instanceof Department)) {
+			dept = getBean(dept);
+		}
+		Department org = (Department) dept;
 		while (org != null && org.getDepartmentType() != EDepartmentType.organization) {
 			org = getBean(org.getParentId());
 		}

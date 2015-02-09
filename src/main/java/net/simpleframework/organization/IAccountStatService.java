@@ -24,4 +24,6 @@ public interface IAccountStatService extends IDbBeanService<AccountStat> {
 	 * @return
 	 */
 	AccountStat getAccountStat();
+
+	int getOrgCount(Department org, String k);
 }

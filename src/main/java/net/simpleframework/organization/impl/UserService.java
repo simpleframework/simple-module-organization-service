@@ -3,6 +3,7 @@ package net.simpleframework.organization.impl;
 import static net.simpleframework.common.I18n.$m;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.IDbEntityManager;
@@ -88,11 +89,23 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	}
 
 	@Override
-	public IDataQuery<User> query(final Department dept) {
-		return query(new SQLValue("select u.* from " + getTablename(User.class) + " u left join "
-				+ getTablename(Account.class)
-				+ " a on u.id=a.id where u.departmentid=? and a.status<>?", dept.getId(),
-				EAccountStatus.delete));
+	public IDataQuery<User> queryUsers(final Department dept, final boolean all) {
+		final StringBuilder sql = new StringBuilder();
+		sql.append("select u.* from ").append(getTablename(User.class)).append(" u left join ")
+				.append(getTablename(Account.class)).append(" a on u.id=a.id where ");
+		if (dept.getDepartmentType() == EDepartmentType.department) {
+			sql.append("u.departmentid=?");
+		} else {
+			sql.append("u.orgid=?");
+		}
+		final ArrayList<Object> params = new ArrayList<Object>();
+		params.add(dept.getId());
+		if (!all) {
+			sql.append(" and a.status<>?");
+			params.add(EAccountStatus.delete);
+		}
+		sql.append(" order by u.oorder desc");
+		return query(new SQLValue(sql.toString(), params.toArray()));
 	}
 
 	@Override
