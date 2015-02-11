@@ -431,6 +431,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	void updateAllStats() {
 		final AccountStat stat = sService.getAccountStat();
+		sService.reset(stat);
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
 				new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
 						+ " group by status"));
@@ -455,6 +456,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		final Department dept = dService.getBean(departmentId);
 		if (dept != null) {
 			final AccountStat stat = sService.getAccountStat(dept);
+			sService.reset(stat);
 			final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
 					new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
 							+ " a left join " + getTablename(User.class)

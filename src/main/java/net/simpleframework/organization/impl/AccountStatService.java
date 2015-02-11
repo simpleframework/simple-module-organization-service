@@ -48,4 +48,13 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 		}
 		return stat;
 	}
+
+	void reset(final AccountStat stat) {
+		stat.setNums(0);
+		stat.setOnline_nums(0);
+		stat.setState_normal(0);
+		stat.setState_registration(0);
+		stat.setState_locked(0);
+		stat.setState_delete(0);
+	}
 }
