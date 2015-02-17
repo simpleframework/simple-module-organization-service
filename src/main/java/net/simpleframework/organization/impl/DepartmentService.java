@@ -38,7 +38,7 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 	}
 
 	@Override
-	public IDataQuery<Department> queryChildren(final Department parent,
+	public IDataQuery<Department> queryDepartments(final Department parent,
 			final EDepartmentType departmentType, final ColumnData... orderColumns) {
 		final FilterItems items = FilterItems.of().addEqual("parentid",
 				parent == null ? null : parent.getId());

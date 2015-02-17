@@ -31,6 +31,6 @@ public interface IDepartmentService extends IDbBeanService<Department>,
 	 * @param orderColumns
 	 * @return
 	 */
-	IDataQuery<Department> queryChildren(Department parent, EDepartmentType departmentType,
+	IDataQuery<Department> queryDepartments(Department parent, EDepartmentType departmentType,
 			ColumnData... orderColumns);
 }
