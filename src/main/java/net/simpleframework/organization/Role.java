@@ -11,7 +11,8 @@ import net.simpleframework.common.ID;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
+public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
+		IOrganizationContextAware {
 
 	/* 关联的角色视图id */
 	private ID roleChartId;
@@ -33,6 +34,14 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 
 	public void setRoleChartId(final ID roleChartId) {
 		this.roleChartId = roleChartId;
+		RoleChart chart;
+		if (getOrgId() == null
+				&& (chart = orgContext.getRoleChartService().getBean(roleChartId)) != null) {
+			final Department org = orgContext.getDepartmentService().getOrg(chart.getDepartmentId());
+			if (org != null) {
+				setOrgId(org.getId());
+			}
+		}
 	}
 
 	public ID getOrgId() {

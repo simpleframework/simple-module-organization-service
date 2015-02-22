@@ -76,7 +76,7 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 
 	public void setDepartmentId(final ID departmentId) {
 		this.departmentId = departmentId;
-		if (departmentId != null) {
+		if (getOrgId() == null && departmentId != null) {
 			final Department org = orgContext.getDepartmentService().getOrg(departmentId);
 			if (org != null) {
 				setOrgId(org.getId());
