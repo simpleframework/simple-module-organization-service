@@ -37,29 +37,23 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 
 	/** 家庭电话 **/
 	private String homePhone;
-
 	/** 办公电话 **/
 	private String officePhone;
-
 	/** 移动电话 **/
 	@ColumnMeta(columnText = "#(User.1)")
 	private String mobile;
-
 	/** 移动电话2 **/
 	private String mobile2;
 
 	/** 地址 **/
 	@ColumnMeta(columnText = "#(User.2)")
 	private String address;
-
 	/** 所在地 **/
 	private String hometown;
-
 	/** 邮政编码 **/
 	private String postcode;
 
 	private String qq;
-
 	private String msn;
 
 	/* 部门id */
