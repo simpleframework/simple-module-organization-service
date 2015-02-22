@@ -15,17 +15,33 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 
 	/* 关联的角色视图id */
 	private ID roleChartId;
+	/* 机构id */
+	private ID orgId;
 
 	private ID parentId;
 
 	private ERoleType roleType;
-
 	private String ruleHandler, ruleScript;
-
 	private ERoleMark roleMark;
 
 	/* 标识用户识别的角色，比如，全体注册用户，这个用户是不能理解的，也没有意义的 */
 	private boolean userRole;
+
+	public ID getRoleChartId() {
+		return roleChartId;
+	}
+
+	public void setRoleChartId(final ID roleChartId) {
+		this.roleChartId = roleChartId;
+	}
+
+	public ID getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(final ID orgId) {
+		this.orgId = orgId;
+	}
 
 	@Override
 	public ID getParentId() {
@@ -43,14 +59,6 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware {
 
 	public void setRoleType(final ERoleType roleType) {
 		this.roleType = roleType;
-	}
-
-	public ID getRoleChartId() {
-		return roleChartId;
-	}
-
-	public void setRoleChartId(final ID roleChartId) {
-		this.roleChartId = roleChartId;
 	}
 
 	public String getRuleHandler() {

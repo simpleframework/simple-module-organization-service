@@ -88,6 +88,7 @@
         id char(32) not null,
         parentid char(32),
         rolechartid char(32) not null,
+        orgid char(32),
         name varchar(64) not null,
         text varchar(32) not null,
         roletype int2 not null,
