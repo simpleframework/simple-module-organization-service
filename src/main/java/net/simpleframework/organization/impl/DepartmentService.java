@@ -74,7 +74,7 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 					if (uService.query("departmentId=?", dept.getId()).getCount() > 0) {
 						throw OrganizationException.of($m("DepartmentService.1"));
 					}
-					
+
 					// 删除统计
 					statService.deleteWith("deptId=?", dept.getId());
 				}
