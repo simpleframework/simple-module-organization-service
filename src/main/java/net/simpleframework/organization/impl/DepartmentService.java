@@ -57,6 +57,8 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 	public void onInit() throws Exception {
 		super.onInit();
 
+		final AccountStatService statService = (AccountStatService) orgContext
+				.getAccountStatService();
 		addListener(new DbEntityAdapterEx() {
 			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,
@@ -72,6 +74,9 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 					if (uService.query("departmentId=?", dept.getId()).getCount() > 0) {
 						throw OrganizationException.of($m("DepartmentService.1"));
 					}
+					
+					// 删除统计
+					statService.deleteWith("deptId=?", dept.getId());
 				}
 			}
 		});

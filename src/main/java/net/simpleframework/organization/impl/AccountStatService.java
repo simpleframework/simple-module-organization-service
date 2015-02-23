@@ -1,6 +1,12 @@
 package net.simpleframework.organization.impl;
 
+import java.util.Map;
+
+import net.simpleframework.ado.db.IDbDataQuery;
+import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.ExpressionValue;
+import net.simpleframework.ado.db.common.SQLValue;
+import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
@@ -56,5 +62,42 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 		stat.setState_registration(0);
 		stat.setState_locked(0);
 		stat.setState_delete(0);
+	}
+
+	@Override
+	public void onInit() throws Exception {
+		super.onInit();
+
+		addListener(new DbEntityAdapterEx() {
+			private void updateStat(final ID deptId) {
+				final AccountStat _stat = getAccountStat(deptId);
+				reset(_stat);
+				final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
+						new SQLValue("select sum(nums) as _nums from " + getTablename(AccountStat.class)
+								+ " where orgid=? group by deptid", deptId));
+				Map<String, Object> data;
+				while ((data = dq.next()) != null) {
+					_stat.setNums((Integer) data.get("_nums"));
+				}
+			}
+
+			@Override
+			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+				super.onAfterInsert(manager, beans);
+				for (final Object o : beans) {
+					updateStat(((AccountStat) o).getDeptId());
+				}
+			}
+
+			@Override
+			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
+					final Object[] beans) {
+
+				super.onAfterUpdate(manager, columns, beans);
+				for (final Object o : beans) {
+					updateStat(((AccountStat) o).getDeptId());
+				}
+			}
+		});
 	}
 }
