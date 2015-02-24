@@ -437,6 +437,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 							updateStats(id);
 						}
 						_UPDATES.clear();
+
 						updateAllStats();
 					}
 				}
