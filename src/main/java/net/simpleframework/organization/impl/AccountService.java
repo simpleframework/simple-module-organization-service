@@ -4,8 +4,10 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbDataQuery;
@@ -24,9 +26,9 @@ import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
+import net.simpleframework.ctx.task.ExecutorRunnable;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
-import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountMark;
 import net.simpleframework.organization.EAccountStatus;
 import net.simpleframework.organization.ERoleMemberType;
@@ -122,16 +124,28 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		final LoginObject lObj = accountSession.getLogin();
 		final Account account;
 		if (lObj != null && (account = getBean(lObj.getAccountId())) != null) {
-			account.setOnlineMillis(account.getOnlineMillis() + accountSession.getOnlineMillis());
-			account.setLogin(false);
-			if (clearSession) {
-				account.setSessionid("");
-				update(new String[] { "login", "sessionid", "onlineMillis" }, account);
-			} else {
-				update(new String[] { "login", "onlineMillis" }, account);
-			}
+			_logout(account, clearSession);
 		}
 		accountSession.logout();
+	}
+
+	@Override
+	public void logout(final Object... ids) {
+		for (final Object id : ids) {
+			_logout(getBean(id), true);
+		}
+	}
+
+	private void _logout(final Account account, final boolean clearSession) {
+		account.setOnlineMillis(account.getOnlineMillis()
+				+ (System.currentTimeMillis() - account.getLastLoginDate().getTime()));
+		account.setLogin(false);
+		if (clearSession) {
+			account.setSessionid("");
+			update(new String[] { "login", "sessionid", "onlineMillis" }, account);
+		} else {
+			update(new String[] { "login", "onlineMillis" }, account);
+		}
 	}
 
 	@Override
@@ -285,64 +299,47 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public int delete(final Object... ids) {
-		if (ids == null) {
-			return 0;
-		}
 		int i = 0;
 		for (final Object id : ids) {
 			final Account account = getBean(id);
-			if (account == null) {
-				continue;
-			}
-			if (account.isLogin()) {
-				// 如果在线,则恢复
-				account.setLogin(false);
-				update(new String[] { "login" }, account);
-			} else if (account.getStatus() == EAccountStatus.delete) {
-				super.delete(id);
+			if (account.getStatus() == EAccountStatus.delete) {
+				i += super.delete(id);
 			} else {
 				account.setStatus(EAccountStatus.delete);
 				update(new String[] { "status" }, account);
+				i++;
 			}
-			i++;
 		}
 		return i;
 	}
 
 	@Override
-	public int undelete(final Object... ids) {
-		return _status(EAccountStatus.delete, EAccountStatus.normal, ids);
+	public void undelete(final Object... ids) {
+		_status(EAccountStatus.delete, EAccountStatus.normal, ids);
 	}
 
 	@Override
-	public int lock(final Object... ids) {
-		return _status(EAccountStatus.normal, EAccountStatus.locked, ids);
+	public void lock(final Object... ids) {
+		_status(EAccountStatus.normal, EAccountStatus.locked, ids);
 	}
 
 	@Override
-	public int unlock(final Object... ids) {
-		return _status(EAccountStatus.locked, EAccountStatus.normal, ids);
+	public void unlock(final Object... ids) {
+		_status(EAccountStatus.locked, EAccountStatus.normal, ids);
 	}
 
-	private int _status(final EAccountStatus from, final EAccountStatus to, final Object... ids) {
-		if (ids == null) {
-			return 0;
-		}
-		int i = 0;
+	private void _status(final EAccountStatus from, final EAccountStatus to, final Object... ids) {
 		for (final Object id : ids) {
 			final Account account = getBean(id);
-			if (account == null || account.isAdmin()) {
-				continue;
-			}
 			if (account.getStatus() != from) {
 				throw OrganizationException.of($m("AccountService.1", account.getStatus(), from));
 			}
 			account.setStatus(to);
 			update(new String[] { "status" }, account);
-			i++;
 		}
-		return i;
 	}
+
+	private final Set<ID> _UPDATES = new HashSet<ID>();
 
 	@Override
 	public void onInit() throws Exception {
@@ -388,7 +385,22 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 					uService.delete(account.getId());
 					deleteMember(account);
 					// 同步统计
-					updateStats(account);
+					updateStats(getUser(account.getId()).getDepartmentId());
+				}
+				updateAllStats();
+			}
+
+			@Override
+			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+				super.onAfterInsert(manager, beans);
+				for (final Object bean : beans) {
+					final Account account = (Account) bean;
+					final IModuleRef ref = ((IOrganizationContext) getModuleContext()).getMessageRef();
+					if (ref != null) {
+						((OrganizationMessageRef) ref).doAccountCreatedMessage(account);
+					}
+					// 同步统计
+					updateStats(getUser(account.getId()).getDepartmentId());
 				}
 				updateAllStats();
 			}
@@ -403,30 +415,48 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 						// 删除成员角色
 						deleteMember(account);
 					}
-				}
-			}
 
-			@Override
-			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans) {
-				super.onAfterInsert(manager, beans);
-				for (final Object bean : beans) {
-					final Account account = (Account) bean;
-					final IModuleRef ref = ((IOrganizationContext) getModuleContext()).getMessageRef();
-					if (ref != null) {
-						((OrganizationMessageRef) ref).doAccountCreatedMessage(account);
+					// 更新操作频繁，异步更新
+					if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "login", true)
+							|| ArrayUtils.contains(columns, "status", true)) {
+						final ID deptId = getUser(account.getId()).getDepartmentId();
+						if (deptId != null) {
+							_UPDATES.add(deptId);
+						}
 					}
-					// 同步统计
-					updateStats(account);
 				}
-				updateAllStats();
 			}
 		});
 
+		getTaskExecutor().addScheduledTask(60 * 2, new ExecutorRunnable() {
+			@Override
+			protected void task() throws Exception {
+				synchronized (_UPDATES) {
+					if (_UPDATES.size() > 0) {
+						for (final ID id : _UPDATES) {
+							updateStats(id);
+						}
+						_UPDATES.clear();
+						updateAllStats();
+					}
+				}
+			}
+		});
 	}
 
-	private void deleteMember(final Account account) {
+	void deleteMember(final Account account) {
 		// 删除成员角色
 		rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
+	}
+
+	void updateStats(final ID deptId) {
+		if (deptId == null) {
+			return;
+		}
+		final AccountStat stat = sService.getAccountStat(deptId);
+		sService.reset(stat);
+		sService.setUpdateStats(stat);
+		sService.update(stat);
 	}
 
 	void updateAllStats() {
@@ -449,27 +479,5 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		stat.setNums(nums);
 		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
 		sService.update(stat);
-	}
-
-	void updateStats(final Account account) {
-		final ID departmentId = getUser(account.getId()).getDepartmentId();
-		final Department dept = dService.getBean(departmentId);
-		if (dept != null) {
-			final AccountStat stat = sService.getAccountStat(dept);
-			sService.reset(stat);
-			final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
-					new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
-							+ " a left join " + getTablename(User.class)
-							+ " u on a.id=u.id where u.departmentid=? group by status", dept.getId()));
-			int nums = 0;
-			Map<String, Object> data;
-			while ((data = dq.next()) != null) {
-				final int c = Convert.toInt(data.get("c"));
-				BeanUtils.setProperty(stat, "state_" + data.get("status"), c);
-				nums += c;
-			}
-			stat.setNums(nums);
-			sService.update(stat);
-		}
 	}
 }

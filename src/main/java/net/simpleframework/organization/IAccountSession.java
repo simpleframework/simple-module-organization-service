@@ -46,7 +46,7 @@ public interface IAccountSession {
 	 * 
 	 * @return
 	 */
-	long getOnlineMillis();
+	long getLastAccessedTime();
 
 	/**
 	 * 获取ip地址

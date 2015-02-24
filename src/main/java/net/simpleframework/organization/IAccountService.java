@@ -93,25 +93,22 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * 恢复删除的账号
 	 * 
 	 * @param ids
-	 * @return
 	 */
-	int undelete(Object... ids);
+	void undelete(Object... ids);
 
 	/**
 	 * 锁定帐号
 	 * 
 	 * @param ids
-	 * @return
 	 */
-	int lock(Object... ids);
+	void lock(Object... ids);
 
 	/**
 	 * 解锁帐号
 	 * 
 	 * @param ids
-	 * @return
 	 */
-	int unlock(Object... ids);
+	void unlock(Object... ids);
 
 	/**
 	 * 设置登录帐号
@@ -128,6 +125,13 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @return
 	 */
 	ID getLoginId(IAccountSession accountSession);
+
+	/**
+	 * 注销
+	 * 
+	 * @param ids
+	 */
+	void logout(Object... ids);
 
 	/**
 	 * 注销

@@ -142,7 +142,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 				super.onAfterUpdate(manager, columns, beans);
 				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
 					for (final Object o : beans) {
-						aService.updateStats(getAccount(((User) o).getId()));
+						aService.updateStats(((User) o).getDepartmentId());
 					}
 					aService.updateAllStats();
 				}
