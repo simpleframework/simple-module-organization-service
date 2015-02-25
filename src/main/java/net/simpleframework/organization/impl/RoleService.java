@@ -234,6 +234,11 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	}
 
 	@Override
+	public Iterator<Role> roles(final User user) {
+		return roles(user, new KVMap());
+	}
+
+	@Override
 	public Iterator<Role> roles(final User user, final Map<String, Object> variables) {
 		final IDataQuery<RoleMember> dq = rmService.query("memberType=? and memberId=?",
 				ERoleMemberType.user, user.getId());

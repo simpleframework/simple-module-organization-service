@@ -136,6 +136,8 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 */
 	Iterator<Role> roles(User user, Map<String, Object> variables);
 
+	Iterator<Role> roles(User user);
+
 	/**
 	 * 获取用户的主要角色
 	 * 
