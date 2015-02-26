@@ -7,6 +7,7 @@ import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
@@ -119,15 +120,35 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 
 		addListener(new DbEntityAdapterEx() {
 			@Override
+			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
+					final Object[] beans) {
+				super.onBeforeUpdate(manager, columns, beans);
+				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
+					for (final Object o : beans) {
+						final User user = (User) o;
+						final Object _deptId = queryFor("departmentId", "id=?", user.getId());
+						if (_deptId != null) {
+							user.setAttr("_deptId", _deptId);
+						}
+					}
+				}
+			}
+
+			@Override
 			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
 					final Object[] beans) {
 				super.onAfterUpdate(manager, columns, beans);
-				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
-					for (final Object o : beans) {
-						aService.updateStats(((User) o).getDepartmentId());
+				for (final Object o : beans) {
+					final User user = (User) o;
+					final String _deptId = Convert.toString(user.getAttr("_deptId"));
+					final String deptId = Convert.toString(user.getDepartmentId());
+					if (!ObjectUtils.objectEquals(_deptId, deptId)) {
+						// 更新变化前后部门的统计值
+						aService.updateStats(deptId);
+						aService.updateStats(_deptId);
 					}
-					aService.updateAllStats();
 				}
+				aService.updateAllStats();
 			}
 		});
 	}

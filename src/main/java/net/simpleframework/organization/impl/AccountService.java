@@ -450,11 +450,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
 	}
 
-	void updateStats(final ID deptId) {
-		if (deptId == null) {
+	void updateStats(final Object dept) {
+		if (dept == null) {
 			return;
 		}
-		final AccountStat stat = sService.getDeptAccountStat(deptId);
+		final AccountStat stat = sService.getDeptAccountStat(dept);
 		sService.reset(stat);
 		sService.setDeptStats(stat);
 		sService.update(stat);
