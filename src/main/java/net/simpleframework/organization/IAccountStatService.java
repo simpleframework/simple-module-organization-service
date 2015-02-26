@@ -16,12 +16,14 @@ public interface IAccountStatService extends IDbBeanService<AccountStat> {
 	 * @param dept
 	 * @return
 	 */
-	AccountStat getAccountStat(Object dept);
+	AccountStat getDeptAccountStat(Object dept);
+
+	AccountStat getOrgAccountStat(Object org);
 
 	/**
 	 * 获取全局的统计数据
 	 * 
 	 * @return
 	 */
-	AccountStat getAccountStat();
+	AccountStat getAllAccountStat();
 }

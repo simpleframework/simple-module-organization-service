@@ -454,14 +454,14 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		if (deptId == null) {
 			return;
 		}
-		final AccountStat stat = sService.getAccountStat(deptId);
+		final AccountStat stat = sService.getDeptAccountStat(deptId);
 		sService.reset(stat);
-		sService.setUpdateStats(stat);
+		sService.setDeptStats(stat);
 		sService.update(stat);
 	}
 
 	void updateAllStats() {
-		final AccountStat stat = sService.getAccountStat();
+		final AccountStat stat = sService.getAllAccountStat();
 		sService.reset(stat);
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
 				new SQLValue("select status, count(*) as c from " + getTablename(Account.class)

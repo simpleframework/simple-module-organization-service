@@ -15,6 +15,9 @@ public class AccountStat extends AbstractIdBean {
 	/* 机构id */
 	private ID orgId;
 
+	/* 统计类型 */
+	private EStatType statType;
+
 	/* 总数 */
 	private int nums;
 	/* 在线用户数 */
@@ -43,6 +46,14 @@ public class AccountStat extends AbstractIdBean {
 
 	public void setOrgId(final ID orgId) {
 		this.orgId = orgId;
+	}
+
+	public EStatType getStatType() {
+		return statType == null ? EStatType.dept : statType;
+	}
+
+	public void setStatType(final EStatType statType) {
+		this.statType = statType;
 	}
 
 	public int getNums() {
@@ -91,6 +102,14 @@ public class AccountStat extends AbstractIdBean {
 
 	public void setState_delete(final int state_delete) {
 		this.state_delete = state_delete;
+	}
+
+	public static enum EStatType {
+		all,
+
+		org,
+
+		dept
 	}
 
 	private static final long serialVersionUID = 6410017892099090654L;

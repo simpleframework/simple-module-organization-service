@@ -155,6 +155,7 @@
         id char(32) not null,
         deptid char(32),
         orgid char(32),
+        stattype tinyint not null,
         nums int not null,
         online_nums int not null,
         state_normal int not null,

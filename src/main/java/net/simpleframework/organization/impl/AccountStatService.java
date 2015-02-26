@@ -4,7 +4,6 @@ import java.util.Map;
 
 import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
-import net.simpleframework.ado.db.common.ExpressionValue;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.Convert;
@@ -12,6 +11,7 @@ import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
+import net.simpleframework.organization.AccountStat.EStatType;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
 import net.simpleframework.organization.EDepartmentType;
@@ -26,34 +26,61 @@ import net.simpleframework.organization.User;
  */
 public class AccountStatService extends AbstractDbBeanService<AccountStat> implements
 		IAccountStatService, IOrganizationServiceImplAware {
+
 	@Override
-	public AccountStat getAccountStat() {
-		return getAccountStat(null);
+	public AccountStat getAllAccountStat() {
+		return _getAccountStat(null, EStatType.all);
 	}
 
 	@Override
-	public AccountStat getAccountStat(final Object dept) {
-		final Object id = getIdParam(dept);
-		AccountStat stat = getEntityManager().queryForBean(
-				id == null ? new ExpressionValue("deptid is null")
-						: new ExpressionValue("deptid=?", id));
+	public AccountStat getDeptAccountStat(final Object dept) {
+		return _getAccountStat(dept, EStatType.dept);
+	}
+
+	@Override
+	public AccountStat getOrgAccountStat(final Object org) {
+		return _getAccountStat(org, EStatType.org);
+	}
+
+	private AccountStat _getAccountStat(final Object obj, final EStatType statType) {
+		Department _dept = null;
+		AccountStat stat = null;
+		if (statType == EStatType.all) {
+			stat = getBean("stattype=?", statType);
+		} else {
+			_dept = obj instanceof Department ? (Department) obj : dService.getBean(getIdParam(obj));
+			if (_dept == null) {
+				return null;
+			}
+			if (statType == EStatType.dept) {
+				stat = getBean("deptid=? and stattype=?", _dept.getId(), statType);
+			} else if (statType == EStatType.org) {
+				stat = getBean("orgid=? and stattype=?", getIdParam(obj), statType);
+			}
+		}
+
 		if (stat == null) {
 			stat = new AccountStat();
-			final Department _dept = dService.getBean(id);
+			stat.setStatType(statType);
 			if (_dept != null) {
-				stat.setDeptId(_dept.getId());
-				final Department org = dService.getOrg(_dept);
-				if (org != null && !org.equals(_dept)) {
-					stat.setOrgId(org.getId());
+				if (statType == EStatType.dept) {
+					stat.setDeptId(_dept.getId());
+					final Department org = dService.getOrg(_dept);
+					if (org != null) {
+						stat.setOrgId(org.getId());
+					}
+					setDeptStats(stat);
+				} else if (statType == EStatType.org) {
+					stat.setOrgId(_dept.getId());
+					setOrgStats(stat);
 				}
-				setUpdateStats(stat);
 			}
 			insert(stat);
 		}
 		return stat;
 	}
 
-	void setUpdateStats(final AccountStat stat) {
+	void setDeptStats(final AccountStat stat) {
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
 				new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
 						+ " a left join " + getTablename(User.class)
@@ -69,6 +96,23 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 			nums += c;
 		}
 		stat.setNums(nums);
+	}
+
+	void setOrgStats(final AccountStat stat) {
+		final Map<String, Object> data = getQueryManager().queryForMap(
+				new SQLValue("select sum(nums) as s1, sum(online_nums) as s2, "
+						+ "sum(state_normal) as s3, sum(state_registration) as s4, "
+						+ "sum(state_locked) as s5, sum(state_delete) as s6 from "
+						+ getTablename(AccountStat.class) + " where orgid=? and stattype=?", stat
+						.getOrgId(), EStatType.dept));
+		if (data != null) {
+			stat.setNums(Convert.toInt(data.get("s1")));
+			stat.setOnline_nums(Convert.toInt(data.get("s2")));
+			stat.setState_normal(Convert.toInt(data.get("s3")));
+			stat.setState_registration(Convert.toInt(data.get("s4")));
+			stat.setState_locked(Convert.toInt(data.get("s5")));
+			stat.setState_delete(Convert.toInt(data.get("s6")));
+		}
 	}
 
 	void reset(final AccountStat stat) {
@@ -89,22 +133,9 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 				if (orgId == null) {
 					return;
 				}
-				final AccountStat _stat = getAccountStat(orgId);
+				final AccountStat _stat = getOrgAccountStat(orgId);
 				reset(_stat);
-				final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
-						new SQLValue("select sum(nums) as s1, sum(online_nums) as s2, "
-								+ "sum(state_normal) as s3, sum(state_registration) as s4, "
-								+ "sum(state_locked) as s5, sum(state_delete) as s6 from "
-								+ getTablename(AccountStat.class) + " where orgid=?", orgId));
-				Map<String, Object> data;
-				while ((data = dq.next()) != null) {
-					_stat.setNums(Convert.toInt(data.get("s1")));
-					_stat.setOnline_nums(Convert.toInt(data.get("s2")));
-					_stat.setState_normal(Convert.toInt(data.get("s3")));
-					_stat.setState_registration(Convert.toInt(data.get("s4")));
-					_stat.setState_locked(Convert.toInt(data.get("s5")));
-					_stat.setState_delete(Convert.toInt(data.get("s6")));
-				}
+				setOrgStats(_stat);
 				update(_stat);
 			}
 
