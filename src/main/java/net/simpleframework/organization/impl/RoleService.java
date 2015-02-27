@@ -16,6 +16,7 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.permission.IPermissionConst;
 import net.simpleframework.ctx.permission.IPermissionHandler;
 import net.simpleframework.ctx.permission.PermissionRole;
@@ -242,24 +243,28 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	public Iterator<Role> roles(final User user, final Map<String, Object> variables) {
 		final IDataQuery<RoleMember> dq = rmService.query("memberType=? and memberId=?",
 				ERoleMemberType.user, user.getId());
+		final boolean _userRole = Convert.toBool(variables.get("userRole"), false);
+		final boolean _ruleRole = Convert.toBool(variables.get("ruleRole"), false);
+		final boolean _inOrg = Convert.toBool(variables.get("inOrg"), false);
 		return new AbstractIterator<Role>() {
 			@Override
 			public boolean hasNext() {
 				RoleMember jm;
 				while ((jm = dq.next()) != null) {
 					role = getBean(jm.getRoleId());
-					final boolean userRole = Convert.toBool(variables.get("userRole"), false);
-					if (role != null && (!userRole || role.isUserRole())) {
+					if (role != null && (!_userRole || role.isUserRole())
+							&& (!_inOrg || ObjectUtils.objectEquals(role.getOrgId(), user.getOrgId()))) {
 						return true;
 					}
 				}
-				if (Convert.toBool(variables.get("ruleRole"), false)) {
+				if (_ruleRole) {
 					if (qd2 == null) {
 						qd2 = query("roleType=? or roleType=?", ERoleType.handle, ERoleType.script);
 					}
 					Role r;
 					while ((r = qd2.next()) != null) {
-						if (isMember(user, r, variables)) {
+						if (isMember(user, r, variables) && (!_userRole || role.isUserRole())
+								&& (!_inOrg || ObjectUtils.objectEquals(role.getOrgId(), user.getOrgId()))) {
 							role = r;
 							return true;
 						}
