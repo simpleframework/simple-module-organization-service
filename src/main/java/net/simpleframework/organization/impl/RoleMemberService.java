@@ -28,6 +28,7 @@ public class RoleMemberService extends AbstractDbBeanService<RoleMember> impleme
 		return query("roleid=? order by oorder", role.getId());
 	}
 
+	@Override
 	public RoleMember getRoleMember(final Role role, final ERoleMemberType mtype,
 			final Object memberId) {
 		return getBean("roleId=? and memberType=? and memberId=?", role.getId(),
