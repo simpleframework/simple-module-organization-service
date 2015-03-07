@@ -3,6 +3,7 @@ package net.simpleframework.organization.impl;
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EDepartmentType;
@@ -21,13 +22,29 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		IRoleChartService {
 
 	@Override
-	public IDataQuery<RoleChart> query(final Department dept) {
-		return dept == null ? query("departmentid is null") : query("departmentid=?", dept.getId());
+	public IDataQuery<RoleChart> queryOrgCharts(final Department org) {
+		if (org == null) {
+			return DataQueryUtils.nullQuery();
+		}
+		return query("departmentid=?", org.getId());
+	}
+
+	@Override
+	public IDataQuery<RoleChart> queryGlobalCharts() {
+		return query("departmentid is null");
 	}
 
 	@Override
 	public RoleChart getRoleChartByName(final String name) {
 		return getBean("name=?", name);
+	}
+
+	@Override
+	public RoleChart getRoleChartByText(final Department org, final String text) {
+		if (org == null) {
+			return null;
+		}
+		return getBean("departmentid=? and text=?", org.getId(), text);
 	}
 
 	@Override

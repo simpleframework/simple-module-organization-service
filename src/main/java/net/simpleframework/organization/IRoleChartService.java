@@ -12,13 +12,14 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 public interface IRoleChartService extends IDbBeanService<RoleChart> {
 
 	/**
-	 * 获取部门下的角色视图
+	 * 获取机构下的角色视图
 	 * 
-	 * @param dept
-	 *        null返回全局视图
+	 * @param org
 	 * @return
 	 */
-	IDataQuery<RoleChart> query(Department dept);
+	IDataQuery<RoleChart> queryOrgCharts(Department org);
+
+	IDataQuery<RoleChart> queryGlobalCharts();
 
 	/**
 	 * 根据名称获取视图
@@ -27,4 +28,13 @@ public interface IRoleChartService extends IDbBeanService<RoleChart> {
 	 * @return
 	 */
 	RoleChart getRoleChartByName(String name);
+
+	/**
+	 * 根据显示名称获取视图
+	 * 
+	 * @param org
+	 * @param text
+	 * @return
+	 */
+	RoleChart getRoleChartByText(Department org, String text);
 }
