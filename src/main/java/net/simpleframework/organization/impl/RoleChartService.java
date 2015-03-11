@@ -26,12 +26,12 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		if (org == null) {
 			return DataQueryUtils.nullQuery();
 		}
-		return query("departmentid=?", org.getId());
+		return query("orgid=?", org.getId());
 	}
 
 	@Override
 	public IDataQuery<RoleChart> queryGlobalCharts() {
-		return query("departmentid is null");
+		return query("orgid is null");
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 				chart = getRoleChartByName(org, name);
 			}
 		} else {
-			chart = getBean("departmentid is null and name=?", name);
+			chart = getBean("orgid is null and name=?", name);
 		}
 		return chart;
 	}
@@ -60,7 +60,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		if (org == null) {
 			return null;
 		}
-		return getBean("departmentid=? and name=?", org.getId(), name);
+		return getBean("orgid=? and name=?", org.getId(), name);
 	}
 
 	@Override
