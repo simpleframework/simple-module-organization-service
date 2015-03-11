@@ -53,10 +53,10 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 * 根据视图和角色显示名称获取角色对象
 	 * 
 	 * @param roleChart
-	 * @param text
+	 * @param name
 	 * @return
 	 */
-	Role getRoleByName(RoleChart roleChart, String text);
+	Role getRoleByName(RoleChart roleChart, String name);
 
 	/**
 	 * 根据角色视图的根角色
