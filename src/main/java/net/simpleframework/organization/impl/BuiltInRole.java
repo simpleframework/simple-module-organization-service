@@ -39,4 +39,11 @@ public abstract class BuiltInRole {
 			return true;
 		}
 	}
+
+	public static class InDept extends AbstractRoleHandler {
+		@Override
+		public boolean isMember(final User user, final Map<String, Object> variables) {
+			return false;
+		}
+	}
 }

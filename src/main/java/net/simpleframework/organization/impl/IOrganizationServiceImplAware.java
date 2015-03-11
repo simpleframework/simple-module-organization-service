@@ -10,8 +10,9 @@ import net.simpleframework.organization.IOrganizationContextAware;
  */
 public interface IOrganizationServiceImplAware extends IOrganizationContextAware {
 
-	static AccountService aService = (AccountService) orgContext.getAccountService();
 	static UserService uService = (UserService) orgContext.getUserService();
+	static AccountService aService = (AccountService) orgContext.getAccountService();
+
 	static DepartmentService dService = (DepartmentService) orgContext.getDepartmentService();
 
 	static RoleChartService rcService = (RoleChartService) orgContext.getRoleChartService();

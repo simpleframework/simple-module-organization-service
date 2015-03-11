@@ -1,6 +1,8 @@
 package net.simpleframework.organization;
 
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.ctx.IApplicationContext;
+import net.simpleframework.ctx.IApplicationStartup;
 import net.simpleframework.ctx.permission.PermissionConst;
 
 /**
@@ -9,7 +11,7 @@ import net.simpleframework.ctx.permission.PermissionConst;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class RolenameConst extends PermissionConst {
+public class RolenameConst extends PermissionConst implements IApplicationStartup {
 
 	public static final String ROLECHART_SYSTEM = "syschart";
 
@@ -17,7 +19,8 @@ public abstract class RolenameConst extends PermissionConst {
 	public static final String ROLE_ORGANIZATION_MANAGER = RolenameConst.toUniqueRolename(
 			RolenameConst.ROLECHART_SYSTEM, "orgmgr");
 
-	public static void init() {
+	@Override
+	public void onStartup(final IApplicationContext application) throws Exception {
 		ROLE_ANONYMOUS = toUniqueRolename(ROLECHART_SYSTEM, "anonymous");
 		ROLE_ALL_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_all");
 		ROLE_LOCK_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_lock");

@@ -41,14 +41,12 @@ import net.simpleframework.organization.UserLob;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class OrganizationContext extends AbstractADOModuleContext implements IOrganizationContext,
-		IDbEntityTableRegistry {
+public abstract class OrganizationContext extends AbstractADOModuleContext implements
+		IOrganizationContext, IDbEntityTableRegistry {
 
 	@Override
 	public void onInit(final IApplicationContext application) throws Exception {
 		super.onInit(application);
-
-		RolenameConst.init();
 
 		// 创建缺省视图及角色
 		final IRoleChartService rcService = getRoleChartService();
