@@ -37,7 +37,7 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 		RoleChart chart;
 		if (getOrgId() == null
 				&& (chart = orgContext.getRoleChartService().getBean(roleChartId)) != null) {
-			final Department org = orgContext.getDepartmentService().getOrg(chart.getDepartmentId());
+			final Department org = orgContext.getDepartmentService().getOrg(chart.getOrgId());
 			if (org != null) {
 				setOrgId(org.getId());
 			}

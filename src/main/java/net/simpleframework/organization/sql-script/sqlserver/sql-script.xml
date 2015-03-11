@@ -99,7 +99,7 @@
         description varchar(256),
        	oorder int not null,
         primary key(id),
-        unique(rolechartid, name)
+        unique(orgid, rolechartid, name)
       );
     ]]>
   </tran-sql>
@@ -107,15 +107,14 @@
     <![CDATA[
       create table sf_organization_rolechart (
         id char(32) not null,
-        departmentid char(32),
+        orgid char(32),
         name varchar(32) not null,
         text varchar(32) not null,
         chartmark tinyint not null,
         description varchar(256),
         oorder int not null,
         primary key(id),
-        unique (name),
-        unique (departmentid, text)
+        unique (orgid, name)
       );
     ]]>
   </tran-sql>

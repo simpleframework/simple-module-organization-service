@@ -11,20 +11,17 @@ import net.simpleframework.common.ID;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
 public class RoleChart extends AbstractOrganizationBean {
-
-	private ID departmentId;
-
-	/**
-	 * 是否内置的
-	 */
+	/* 机构id */
+	private ID orgId;
+	/* 是否内置的 */
 	private ERoleChartMark chartMark;
 
-	public ID getDepartmentId() {
-		return departmentId;
+	public ID getOrgId() {
+		return orgId;
 	}
 
-	public void setDepartmentId(final ID departmentId) {
-		this.departmentId = departmentId;
+	public void setOrgId(final ID orgId) {
+		this.orgId = orgId;
 	}
 
 	public ERoleChartMark getChartMark() {

@@ -51,7 +51,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@Override
 	public String toUniqueName(final Role role) {
 		final RoleChart chart = getRoleChart(role);
-		final Department org = dService.getBean(chart.getDepartmentId());
+		final Department org = dService.getBean(chart.getOrgId());
 		return RolenameConst.toUniqueRolename(org != null ? org.getName() : null, chart.getName(),
 				role.getName());
 	}

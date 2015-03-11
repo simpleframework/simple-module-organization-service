@@ -36,7 +36,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 
 	@Override
 	public String toUniqueName(final RoleChart chart) {
-		final Department org = dService.getBean(chart.getDepartmentId());
+		final Department org = dService.getBean(chart.getOrgId());
 		return RolenameConst.toUniqueChartname(org != null ? org.getName() : null, chart.getName());
 	}
 
@@ -92,8 +92,8 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 				// 视图只能加在机构上
 				for (final Object o : beans) {
 					final RoleChart chart = (RoleChart) o;
-					final Department dept = dService.getBean(chart.getDepartmentId());
-					if (dept != null && dept.getDepartmentType() == EDepartmentType.department) {
+					final Department org = dService.getBean(chart.getOrgId());
+					if (org != null && org.getDepartmentType() == EDepartmentType.department) {
 						throw OrganizationException.of($m("RoleChartService.4"));
 					}
 				}
