@@ -12,8 +12,7 @@ import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
-import net.simpleframework.ctx.permission.IPermissionConst;
-import net.simpleframework.ctx.permission.PermissionRole;
+import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
@@ -32,6 +31,7 @@ import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
+import net.simpleframework.organization.RolenameConst;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
 
@@ -48,12 +48,14 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 	public void onInit(final IApplicationContext application) throws Exception {
 		super.onInit(application);
 
+		RolenameConst.init();
+
 		// 创建缺省视图及角色
 		final IRoleChartService rcService = getRoleChartService();
-		RoleChart roleChart = rcService.getRoleChartByName(ROLECHART_SYSTEM);
+		RoleChart roleChart = rcService.getRoleChartByName(RolenameConst.ROLECHART_SYSTEM);
 		if (roleChart == null) {
 			roleChart = rcService.createBean();
-			roleChart.setName(ROLECHART_SYSTEM);
+			roleChart.setName(RolenameConst.ROLECHART_SYSTEM);
 			roleChart.setText($m("RoleChartService.0"));
 			roleChart.setChartMark(ERoleChartMark.builtIn);
 			roleChart.setDescription($m("RoleChartService.1"));
@@ -61,9 +63,10 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 		}
 
 		final IRoleService rService = getRoleService();
-		for (final String r : new String[] { ROLE_ALL_ACCOUNT, ROLE_LOCK_ACCOUNT, ROLE_ANONYMOUS,
-				ROLE_MANAGER, ROLE_ORGANIZATION_MANAGER }) {
-			final String name = PermissionRole.split(r)[1];
+		for (final String r : new String[] { PermissionConst.ROLE_ALL_ACCOUNT,
+				PermissionConst.ROLE_LOCK_ACCOUNT, PermissionConst.ROLE_ANONYMOUS,
+				PermissionConst.ROLE_MANAGER, RolenameConst.ROLE_ORGANIZATION_MANAGER }) {
+			final String name = RolenameConst.split(r)[1];
 			Role role = rService.getRoleByName(roleChart, name);
 			if (role == null) {
 				role = rService.createBean();
@@ -71,7 +74,8 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 				role.setText($m("RoleChartService." + name));
 				role.setRoleChartId(roleChart.getId());
 				role.setRoleMark(ERoleMark.builtIn);
-				if (ROLE_MANAGER.equals(r) || ROLE_ORGANIZATION_MANAGER.equals(r)) {
+				if (PermissionConst.ROLE_MANAGER.equals(r)
+						|| RolenameConst.ROLE_ORGANIZATION_MANAGER.equals(r)) {
 					role.setRoleType(ERoleType.normal);
 				} else {
 					role.setRoleType(ERoleType.handle);
@@ -81,9 +85,9 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 		}
 
 		// 注册缺省的规则角色
-		registRoleHandler(ROLE_ALL_ACCOUNT, BuiltInRole.All.class);
-		registRoleHandler(ROLE_LOCK_ACCOUNT, BuiltInRole.Lock.class);
-		registRoleHandler(ROLE_ANONYMOUS, BuiltInRole.Anonymous.class);
+		registRoleHandler(PermissionConst.ROLE_ALL_ACCOUNT, BuiltInRole.All.class);
+		registRoleHandler(PermissionConst.ROLE_LOCK_ACCOUNT, BuiltInRole.Lock.class);
+		registRoleHandler(PermissionConst.ROLE_ANONYMOUS, BuiltInRole.Anonymous.class);
 	}
 
 	@Override
@@ -103,13 +107,13 @@ public class OrganizationContext extends AbstractADOModuleContext implements IOr
 
 	@Override
 	public RoleChart getSystemChart() {
-		return getRoleChartService().getRoleChartByName(ROLECHART_SYSTEM);
+		return getRoleChartService().getRoleChartByName(RolenameConst.ROLECHART_SYSTEM);
 	}
 
 	@Override
 	protected Module createModule() {
-		return new Module().setRole(IPermissionConst.ROLE_MANAGER)
-				.setManagerRole(IPermissionConst.ROLE_MANAGER).setName(MODULE_NAME)
+		return new Module().setRole(PermissionConst.ROLE_MANAGER)
+				.setManagerRole(PermissionConst.ROLE_MANAGER).setName(MODULE_NAME)
 				.setText($m("OrganizationContext.0")).setOrder(11);
 	}
 

@@ -11,6 +11,7 @@ import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.RoleChart;
+import net.simpleframework.organization.RolenameConst;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -20,7 +21,6 @@ import net.simpleframework.organization.RoleChart;
  */
 public class RoleChartService extends AbstractOrganizationService<RoleChart> implements
 		IRoleChartService {
-
 	@Override
 	public IDataQuery<RoleChart> queryOrgCharts(final Department org) {
 		if (org == null) {
@@ -35,16 +35,32 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 	}
 
 	@Override
-	public RoleChart getRoleChartByName(final String name) {
-		return getBean("name=?", name);
+	public String toUniqueName(final RoleChart chart) {
+		final Department org = dService.getBean(chart.getDepartmentId());
+		return RolenameConst.toUniqueChartname(org != null ? org.getName() : null, chart.getName());
 	}
 
 	@Override
-	public RoleChart getRoleChartByText(final Department org, final String text) {
+	public RoleChart getRoleChartByName(final String name) {
+		RoleChart chart = null;
+		final String[] arr = RolenameConst.split(name);
+		if (arr.length == 2) {
+			final Department org = dService.getDepartmentByName(arr[0]);
+			if (org != null) {
+				chart = getRoleChartByName(org, name);
+			}
+		} else {
+			chart = getBean("departmentid is null and name=?", name);
+		}
+		return chart;
+	}
+
+	@Override
+	public RoleChart getRoleChartByName(final Department org, final String name) {
 		if (org == null) {
 			return null;
 		}
-		return getBean("departmentid=? and text=?", org.getId(), text);
+		return getBean("departmentid=? and name=?", org.getId(), name);
 	}
 
 	@Override

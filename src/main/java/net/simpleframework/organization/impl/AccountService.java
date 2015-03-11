@@ -24,7 +24,7 @@ import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleRef;
-import net.simpleframework.ctx.permission.IPermissionConst;
+import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.ctx.task.ExecutorRunnable;
 import net.simpleframework.organization.Account;
@@ -47,7 +47,7 @@ import net.simpleframework.organization.User;
  *         http://www.simpleframework.net
  */
 public class AccountService extends AbstractDbBeanService<Account> implements IAccountService,
-		IPermissionConst, IOrganizationServiceImplAware {
+		IOrganizationServiceImplAware {
 
 	@Override
 	public Account getAccountByName(final String name) {
@@ -56,7 +56,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public Account getAdmin() {
-		return getAccountByName(IPermissionConst.ADMIN);
+		return getAccountByName(PermissionConst.ADMIN);
 	}
 
 	@Override
@@ -345,9 +345,10 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	public void onInit() throws Exception {
 		super.onInit();
 
-		final Account admin = getAccountByName(ADMIN);
+		final Account admin = getAccountByName(PermissionConst.ADMIN);
 		if (admin == null) {
-			doSave(null, ADMIN, ADMIN, EAccountMark.builtIn, null, new KVMap().add("text", ADMIN));
+			doSave(null, PermissionConst.ADMIN, PermissionConst.ADMIN, EAccountMark.builtIn, null,
+					new KVMap().add("text", PermissionConst.ADMIN));
 		}
 
 		addListener(new DbEntityAdapterEx() {

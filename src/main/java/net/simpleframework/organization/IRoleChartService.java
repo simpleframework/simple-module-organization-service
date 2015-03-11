@@ -36,5 +36,7 @@ public interface IRoleChartService extends IDbBeanService<RoleChart> {
 	 * @param text
 	 * @return
 	 */
-	RoleChart getRoleChartByText(Department org, String text);
+	RoleChart getRoleChartByName(Department org, String name);
+
+	String toUniqueName(RoleChart chart);
 }

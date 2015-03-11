@@ -7,7 +7,7 @@ import net.simpleframework.ado.bean.AbstractNameBean;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.AlgorithmUtils;
 import net.simpleframework.common.StringUtils;
-import net.simpleframework.ctx.permission.IPermissionConst;
+import net.simpleframework.ctx.permission.PermissionConst;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -76,7 +76,7 @@ public class Account extends AbstractNameBean {
 
 	@ColumnMeta(ignore = true)
 	public boolean isAdmin() {
-		return IPermissionConst.ADMIN.equals(getName());
+		return PermissionConst.ADMIN.equals(getName());
 	}
 
 	public String getPassword() {

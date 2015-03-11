@@ -2,7 +2,6 @@ package net.simpleframework.organization;
 
 import net.simpleframework.ctx.AbstractModuleRef;
 import net.simpleframework.ctx.ModuleContextFactory;
-import net.simpleframework.ctx.permission.PermissionRole;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -23,7 +22,7 @@ public class OrganizationRef extends AbstractModuleRef {
 
 	protected void createRole_SystemChart(final String name, final String text, final ERoleType rType) {
 		final RoleChart sc = getModuleContext().getSystemChart();
-		final String[] arr = PermissionRole.split(name);
+		final String[] arr = RolenameConst.split(name);
 		final String r = arr != null && arr.length == 2 ? arr[1] : name;
 		final IRoleService service = getRoleService();
 		Role role = service.getRoleByName(sc, r);

@@ -17,12 +17,11 @@ import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
-import net.simpleframework.ctx.permission.IPermissionConst;
-import net.simpleframework.ctx.permission.IPermissionHandler;
-import net.simpleframework.ctx.permission.PermissionRole;
+import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.ERoleType;
@@ -32,6 +31,7 @@ import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
+import net.simpleframework.organization.RolenameConst;
 import net.simpleframework.organization.User;
 
 /**
@@ -50,16 +50,25 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public String toUniqueName(final Role role) {
-		return PermissionRole.toUniqueRolename(getRoleChart(role).getName(), role.getName());
+		final RoleChart chart = getRoleChart(role);
+		final Department org = dService.getBean(chart.getDepartmentId());
+		return RolenameConst.toUniqueRolename(org != null ? org.getName() : null, chart.getName(),
+				role.getName());
 	}
 
 	@Override
 	public Role getRoleByName(final String name) {
-		final String[] arr = PermissionRole.split(name);
-		if (arr == null || arr.length != 2) {
+		final String[] arr = RolenameConst.split(name);
+		RoleChart chart;
+		if (arr.length == 3) {
+			chart = rcService.getRoleChartByName(dService.getDepartmentByName(arr[0]), arr[1]);
+			return getRoleByName(chart, arr[2]);
+		} else if (arr.length == 2) {
+			chart = rcService.getRoleChartByName(arr[0]);
+			return getRoleByName(chart, arr[1]);
+		} else {
 			throw OrganizationException.of($m("RoleService.2"));
 		}
-		return getRoleByName(rcService.getRoleChartByName(arr[0]), arr[1]);
 	}
 
 	@Override
@@ -111,14 +120,14 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (user == null || role == null) {
 			return false;
 		}
-		if (role != null && IPermissionConst.ROLE_ANONYMOUS.equals(toUniqueName(role))) {
+		if (role != null && PermissionConst.ROLE_ANONYMOUS.equals(toUniqueName(role))) {
 			return true;
 		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
 			if (rmService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
 					ERoleMemberType.user, user.getId()) != null) {
-				variables.put(IPermissionHandler.CTX_ROLEID, role.getId());
+				variables.put(PermissionConst.CTX_ROLEID, role.getId());
 				return true;
 			} else {
 				final IDataQuery<RoleMember> dq = rmService.query("roleid=? and membertype=?",
@@ -175,7 +184,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				&& account.isAdmin()) {
 			return true;
 		}
-		return isMember(user, IPermissionConst.ROLE_MANAGER, variables);
+		return isMember(user, PermissionConst.ROLE_MANAGER, variables);
 	}
 
 	@Override
@@ -202,8 +211,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 						if (jm.getMemberType() == ERoleMemberType.user) {
 							user = uService.getBean(memberId);
 							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
-								variables.put(IPermissionHandler.CTX_ROLEID, role.getId());
-								variables.put(IPermissionHandler.CTX_DEPTID, jm.getDeptId());
+								variables.put(PermissionConst.CTX_ROLEID, role.getId());
+								variables.put(PermissionConst.CTX_DEPTID, jm.getDeptId());
 								return true;
 							}
 						} else {
@@ -298,7 +307,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 			}
 		}
 		if (r == null) {
-			r = getRoleByName(IPermissionConst.ROLE_ALL_ACCOUNT);
+			r = getRoleByName(PermissionConst.ROLE_ALL_ACCOUNT);
 		}
 		return r;
 	}
