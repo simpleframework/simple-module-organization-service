@@ -127,7 +127,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (jt == ERoleType.normal) {
 			if (rmService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
 					ERoleMemberType.user, user.getId()) != null) {
-				variables.put(PermissionConst.CTX_ROLEID, role.getId());
+				variables.put(PermissionConst.VAR_ROLEID, role.getId());
 				return true;
 			} else {
 				final IDataQuery<RoleMember> dq = rmService.query("roleid=? and membertype=?",
@@ -211,8 +211,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 						if (jm.getMemberType() == ERoleMemberType.user) {
 							user = uService.getBean(memberId);
 							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
-								variables.put(PermissionConst.CTX_ROLEID, role.getId());
-								variables.put(PermissionConst.CTX_DEPTID, jm.getDeptId());
+								variables.put(PermissionConst.VAR_ROLEID, role.getId());
+								variables.put(PermissionConst.VAR_DEPTID, jm.getDeptId());
 								return true;
 							}
 						} else {
