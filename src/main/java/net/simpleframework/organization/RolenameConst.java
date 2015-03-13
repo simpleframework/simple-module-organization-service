@@ -14,6 +14,7 @@ import net.simpleframework.ctx.permission.PermissionConst;
 public class RolenameConst extends PermissionConst implements IApplicationStartup {
 
 	public static final String ROLECHART_SYSTEM = "syschart";
+	public static final String ROLECHART_ORG_DEFAULT = "odefault";
 
 	/* 机构管理员角色 */
 	public static final String ROLE_ORGANIZATION_MANAGER = RolenameConst.toUniqueRolename(

@@ -21,12 +21,28 @@ import net.simpleframework.organization.RolenameConst;
  */
 public class RoleChartService extends AbstractOrganizationService<RoleChart> implements
 		IRoleChartService {
+
 	@Override
 	public IDataQuery<RoleChart> queryOrgCharts(final Department org) {
 		if (org == null) {
 			return DataQueryUtils.nullQuery();
 		}
 		return query("orgid=?", org.getId());
+	}
+
+	@Override
+	public RoleChart getDefaultOrgChart(final Department org) {
+		RoleChart rchart = getRoleChartByName(org, RolenameConst.ROLECHART_ORG_DEFAULT);
+		if (rchart == null) {
+			rchart = rcService.createBean();
+			rchart.setName(RolenameConst.ROLECHART_ORG_DEFAULT);
+			rchart.setOrgId(org.getId());
+			rchart.setChartMark(ERoleChartMark.builtIn);
+			rchart.setText($m("RoleChartService.5"));
+			rchart.setDescription($m("RoleChartService.6"));
+			rcService.insert(rchart);
+		}
+		return rchart;
 	}
 
 	@Override

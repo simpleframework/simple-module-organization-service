@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.IDbEntityTableRegistry;
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
@@ -16,6 +18,7 @@ import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
+import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.ERoleMark;
 import net.simpleframework.organization.ERoleType;
@@ -58,6 +61,14 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 			roleChart.setChartMark(ERoleChartMark.builtIn);
 			roleChart.setDescription($m("RoleChartService.1"));
 			rcService.insert(roleChart);
+		}
+
+		// 创建机构缺省视图
+		final IDataQuery<Department> dq = getDepartmentService().queryByParams(
+				FilterItems.of("departmentType", EDepartmentType.organization));
+		Department org;
+		while ((org = dq.next()) != null) {
+			rcService.getDefaultOrgChart(org);
 		}
 
 		final IRoleService rService = getRoleService();
