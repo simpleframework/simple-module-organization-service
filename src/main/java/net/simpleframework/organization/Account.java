@@ -234,5 +234,14 @@ public class Account extends AbstractNameBean {
 		return AlgorithmUtils.md5Hex(password == null ? "" : password.trim());
 	}
 
+	public static final int ALL = -1, STATE_NORMAL_ID = -11, STATE_REGISTRATION_ID = -12,
+			STATE_LOCKED_ID = -13, STATE_DELETE_ID = -14;
+
+	public static final int ONLINE_ID = -2;
+
+	public static final int NO_DEPARTMENT_ID = -3;
+
+	public static final int DEPARTMENT_ID = -4;
+
 	private static final long serialVersionUID = -2003319378229277570L;
 }

@@ -13,14 +13,6 @@ import net.simpleframework.ctx.service.ado.db.IDbBeanService;
  *         http://www.simpleframework.net
  */
 public interface IAccountService extends IDbBeanService<Account> {
-	static final int ALL = -1, STATE_NORMAL_ID = -11, STATE_REGISTRATION_ID = -12,
-			STATE_LOCKED_ID = -13, STATE_DELETE_ID = -14;
-
-	static final int ONLINE_ID = -2;
-
-	static final int NO_DEPARTMENT_ID = -3;
-
-	static final int DEPARTMENT_ID = -4;
 
 	/**
 	 * 通过账号名获取
@@ -156,7 +148,7 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @param type
 	 * @return
 	 */
-	IDataQuery<Account> queryAccounts(int type);
+	IDataQuery<Account> queryAccounts(Department org, int type);
 
 	/**
 	 * 更新经纬度

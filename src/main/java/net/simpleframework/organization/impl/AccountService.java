@@ -29,6 +29,7 @@ import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.ctx.task.ExecutorRunnable;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountMark;
 import net.simpleframework.organization.EAccountStatus;
 import net.simpleframework.organization.ERoleMemberType;
@@ -215,26 +216,30 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public IDataQuery<Account> queryAccounts(final int type) {
+	public IDataQuery<Account> queryAccounts(final Department org, final int type) {
 		final String uTable = getTablename(User.class);
 		final String aTable = getTablename(Account.class);
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
 		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)
 				.append(" u on a.id=u.id where 1=1");
-		if (type == ONLINE_ID) {
+		if (org != null) {
+			sql.append(" and u.orgid=?");
+			params.add(org.getId());
+		}
+		if (type == Account.ONLINE_ID) {
 			sql.append(" and a.login=? and a.status=?");
 			params.add(Boolean.TRUE);
 			params.add(EAccountStatus.normal);
-		} else if (type == NO_DEPARTMENT_ID) {
+		} else if (type == Account.NO_DEPARTMENT_ID) {
 			sql.append(" and u.departmentid is null and a.status<>?");
 			params.add(EAccountStatus.delete);
-		} else if (type == DEPARTMENT_ID) {
+		} else if (type == Account.DEPARTMENT_ID) {
 			sql.append(" and u.departmentid is not null and a.status<>?");
 			params.add(EAccountStatus.delete);
-		} else if (type >= STATE_DELETE_ID && type <= STATE_NORMAL_ID) {
+		} else if (type >= Account.STATE_DELETE_ID && type <= Account.STATE_NORMAL_ID) {
 			sql.append(" and a.status=?");
-			params.add(EAccountStatus.values()[STATE_NORMAL_ID - type]);
+			params.add(EAccountStatus.values()[Account.STATE_NORMAL_ID - type]);
 		}
 		sql.append(" order by a.createdate");
 		return query(new SQLValue(sql.toString(), params.toArray()));
