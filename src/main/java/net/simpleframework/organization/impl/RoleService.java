@@ -31,7 +31,8 @@ import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
-import net.simpleframework.organization.RolenameConst;
+import net.simpleframework.organization.RolenameW;
+import net.simpleframework.organization.RolenameW.RoleW;
 import net.simpleframework.organization.User;
 
 /**
@@ -52,20 +53,18 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	public String toUniqueName(final Role role) {
 		final RoleChart chart = getRoleChart(role);
 		final Department org = dService.getBean(chart.getOrgId());
-		return RolenameConst.toUniqueRolename(org != null ? org.getName() : null, chart.getName(),
+		return RolenameW.toUniqueRolename(org != null ? org.getName() : null, chart.getName(),
 				role.getName());
 	}
 
 	@Override
 	public Role getRoleByName(final String name) {
-		final String[] arr = RolenameConst.split(name);
-		RoleChart chart;
+		final String[] arr = RolenameW.split(name);
 		if (arr.length == 3) {
-			chart = rcService.getRoleChartByName(dService.getDepartmentByName(arr[0]), arr[1]);
-			return getRoleByName(chart, arr[2]);
+			return getRoleByName(
+					rcService.getRoleChartByName(dService.getDepartmentByName(arr[0]), arr[1]), arr[2]);
 		} else if (arr.length == 2) {
-			chart = rcService.getRoleChartByName(arr[0]);
-			return getRoleByName(chart, arr[1]);
+			return getRoleByName(rcService.getRoleChartByName(arr[0]), arr[1]);
 		} else {
 			throw OrganizationException.of($m("RoleService.2"));
 		}
@@ -76,7 +75,24 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (roleChart == null) {
 			return null;
 		}
-		return getBean("rolechartid=? and name=?", roleChart.getId(), name);
+		Role r = getBean("rolechartid=? and name=?", roleChart.getId(), name);
+		RoleW w;
+		if (r == null && (w = RolenameW.getBuiltInRole(name)) != null) {
+			r = createRole(w);
+			r.setRoleChartId(roleChart.getId());
+			insert(r);
+		}
+		return r;
+	}
+
+	private Role createRole(final RoleW w) {
+		final Role r = createBean();
+		r.setName(w.getName());
+		r.setText(w.getText());
+		r.setDescription(w.getDescription());
+		r.setRoleType(w.getRoleType());
+		r.setRoleMark(ERoleMark.builtIn);
+		return r;
 	}
 
 	@Override

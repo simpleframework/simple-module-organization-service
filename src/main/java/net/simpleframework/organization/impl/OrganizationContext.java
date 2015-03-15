@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.simpleframework.ado.ColumnData;
-import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.db.DbEntityTable;
 import net.simpleframework.ado.db.IDbEntityTableRegistry;
-import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
@@ -18,10 +16,6 @@ import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.EDepartmentType;
-import net.simpleframework.organization.ERoleChartMark;
-import net.simpleframework.organization.ERoleMark;
-import net.simpleframework.organization.ERoleType;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountStatService;
 import net.simpleframework.organization.IDepartmentService;
@@ -34,7 +28,7 @@ import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
-import net.simpleframework.organization.RolenameConst;
+import net.simpleframework.organization.RolenameW;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
 
@@ -50,48 +44,6 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 	@Override
 	public void onInit(final IApplicationContext application) throws Exception {
 		super.onInit(application);
-
-		// 创建缺省视图及角色
-		final IRoleChartService rcService = getRoleChartService();
-		RoleChart roleChart = rcService.getRoleChartByName(RolenameConst.ROLECHART_SYSTEM);
-		if (roleChart == null) {
-			roleChart = rcService.createBean();
-			roleChart.setName(RolenameConst.ROLECHART_SYSTEM);
-			roleChart.setText($m("RoleChartService.0"));
-			roleChart.setChartMark(ERoleChartMark.builtIn);
-			roleChart.setDescription($m("RoleChartService.1"));
-			rcService.insert(roleChart);
-		}
-
-		// 创建机构缺省视图
-		final IDataQuery<Department> dq = getDepartmentService().queryByParams(
-				FilterItems.of("departmentType", EDepartmentType.organization));
-		Department org;
-		while ((org = dq.next()) != null) {
-			rcService.getDefaultOrgChart(org);
-		}
-
-		final IRoleService rService = getRoleService();
-		for (final String r : new String[] { PermissionConst.ROLE_ALL_ACCOUNT,
-				PermissionConst.ROLE_LOCK_ACCOUNT, PermissionConst.ROLE_ANONYMOUS,
-				PermissionConst.ROLE_MANAGER, RolenameConst.ROLE_ORGANIZATION_MANAGER }) {
-			final String name = RolenameConst.split(r)[1];
-			Role role = rService.getRoleByName(roleChart, name);
-			if (role == null) {
-				role = rService.createBean();
-				role.setName(name);
-				role.setText($m("RoleChartService." + name));
-				role.setRoleChartId(roleChart.getId());
-				role.setRoleMark(ERoleMark.builtIn);
-				if (PermissionConst.ROLE_MANAGER.equals(r)
-						|| RolenameConst.ROLE_ORGANIZATION_MANAGER.equals(r)) {
-					role.setRoleType(ERoleType.normal);
-				} else {
-					role.setRoleType(ERoleType.handle);
-				}
-				rService.insert(role);
-			}
-		}
 
 		// 注册缺省的规则角色
 		registRoleHandler(PermissionConst.ROLE_ALL_ACCOUNT, BuiltInRole.All.class);
@@ -116,7 +68,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 
 	@Override
 	public RoleChart getSystemChart() {
-		return getRoleChartService().getRoleChartByName(RolenameConst.ROLECHART_SYSTEM);
+		return getRoleChartService().getRoleChartByName(RolenameW.ROLECHART_SYSTEM);
 	}
 
 	@Override

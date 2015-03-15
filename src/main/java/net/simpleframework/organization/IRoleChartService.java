@@ -19,14 +19,6 @@ public interface IRoleChartService extends IDbBeanService<RoleChart> {
 	 */
 	IDataQuery<RoleChart> queryOrgCharts(Department org);
 
-	/**
-	 * 获取机构的缺省视图
-	 * 
-	 * @param org
-	 * @return
-	 */
-	RoleChart getDefaultOrgChart(Department org);
-
 	IDataQuery<RoleChart> queryGlobalCharts();
 
 	/**
@@ -45,6 +37,16 @@ public interface IRoleChartService extends IDbBeanService<RoleChart> {
 	 * @return
 	 */
 	RoleChart getRoleChartByName(String name);
+
+	RoleChart getDefaultSysChart();
+
+	/**
+	 * 获取机构的缺省视图
+	 * 
+	 * @param org
+	 * @return
+	 */
+	RoleChart getDefaultOrgChart(Department org);
 
 	String toUniqueName(RoleChart chart);
 }

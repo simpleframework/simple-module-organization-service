@@ -11,7 +11,8 @@ import net.simpleframework.organization.ERoleChartMark;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.RoleChart;
-import net.simpleframework.organization.RolenameConst;
+import net.simpleframework.organization.RolenameW;
+import net.simpleframework.organization.RolenameW.ChartW;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -31,18 +32,13 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 	}
 
 	@Override
+	public RoleChart getDefaultSysChart() {
+		return getRoleChartByName(RolenameW.ROLECHART_SYSTEM);
+	}
+
+	@Override
 	public RoleChart getDefaultOrgChart(final Department org) {
-		RoleChart rchart = getRoleChartByName(org, RolenameConst.ROLECHART_ORG_DEFAULT);
-		if (rchart == null) {
-			rchart = rcService.createBean();
-			rchart.setName(RolenameConst.ROLECHART_ORG_DEFAULT);
-			rchart.setOrgId(org.getId());
-			rchart.setChartMark(ERoleChartMark.builtIn);
-			rchart.setText($m("RoleChartService.5"));
-			rchart.setDescription($m("RoleChartService.6"));
-			rcService.insert(rchart);
-		}
-		return rchart;
+		return getRoleChartByName(org, RolenameW.ROLECHART_ORG_DEFAULT);
 	}
 
 	@Override
@@ -53,20 +49,21 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 	@Override
 	public String toUniqueName(final RoleChart chart) {
 		final Department org = dService.getBean(chart.getOrgId());
-		return RolenameConst.toUniqueChartname(org != null ? org.getName() : null, chart.getName());
+		return RolenameW.toUniqueChartname(org != null ? org.getName() : null, chart.getName());
 	}
 
 	@Override
 	public RoleChart getRoleChartByName(final String name) {
 		RoleChart chart = null;
-		final String[] arr = RolenameConst.split(name);
+		final String[] arr = RolenameW.split(name);
 		if (arr.length == 2) {
-			final Department org = dService.getDepartmentByName(arr[0]);
-			if (org != null) {
-				chart = getRoleChartByName(org, name);
-			}
+			chart = getRoleChartByName(dService.getDepartmentByName(arr[0]), arr[1]);
 		} else {
 			chart = getBean("orgid is null and name=?", name);
+			ChartW w;
+			if (chart == null && (w = RolenameW.getBuiltInChart(name)) != null && !w.isOrg()) {
+				rcService.insert(chart = createChart(w));
+			}
 		}
 		return chart;
 	}
@@ -76,7 +73,23 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		if (org == null) {
 			return null;
 		}
-		return getBean("orgid=? and name=?", org.getId(), name);
+		RoleChart chart = getBean("orgid=? and name=?", org.getId(), name);
+		ChartW w;
+		if (chart == null && (w = RolenameW.getBuiltInChart(name)) != null && w.isOrg()) {
+			chart = createChart(w);
+			chart.setOrgId(org.getId());
+			rcService.insert(chart);
+		}
+		return chart;
+	}
+
+	private RoleChart createChart(final ChartW w) {
+		final RoleChart chart = createBean();
+		chart.setName(w.getName());
+		chart.setText(w.getText());
+		chart.setDescription(w.getDescription());
+		chart.setChartMark(ERoleChartMark.builtIn);
+		return chart;
 	}
 
 	@Override

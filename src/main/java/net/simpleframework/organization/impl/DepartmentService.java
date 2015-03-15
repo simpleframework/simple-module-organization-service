@@ -6,6 +6,7 @@ import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.IDepartmentService;
@@ -61,10 +62,37 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 				.getAccountStatService();
 		addListener(new DbEntityAdapterEx() {
 			@Override
+			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+				super.onAfterInsert(manager, beans);
+				for (final Object o : beans) {
+					checkDeptType((Department) o);
+				}
+			}
+
+			@Override
+			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
+					final Object[] beans) {
+				super.onAfterUpdate(manager, columns, beans);
+				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "parentId", true)) {
+					for (final Object o : beans) {
+						checkDeptType((Department) o);
+					}
+				}
+			}
+
+			private void checkDeptType(final Department dept) {
+				if (dept.getDepartmentType() == EDepartmentType.organization) {
+					final Department parent = getBean(dept.getParentId());
+					if (parent != null && parent.getDepartmentType() == EDepartmentType.department) {
+						throw OrganizationException.of($m("DepartmentService.2"));
+					}
+				}
+			}
+
+			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,
 					final IParamsValue paramsValue) {
 				super.onBeforeDelete(service, paramsValue);
-
 				for (final Department dept : coll(paramsValue)) {
 					// 存在子部门
 					if (queryChildren(dept).getCount() > 0) {
