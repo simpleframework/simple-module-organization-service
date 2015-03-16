@@ -16,11 +16,12 @@ public class OrganizationRef extends AbstractModuleRef {
 		return ModuleContextFactory.get(IOrganizationContext.class);
 	}
 
-	protected void createRole_SystemChart(final String name, final String text) {
-		createRole_SystemChart(name, text, ERoleType.normal);
+	protected void createRole_SystemChart2(final String name, final String text) {
+		createRole_SystemChart2(name, text, ERoleType.normal);
 	}
 
-	protected void createRole_SystemChart(final String name, final String text, final ERoleType rType) {
+	protected void createRole_SystemChart2(final String name, final String text,
+			final ERoleType rType) {
 		final RoleChart sc = getModuleContext().getSystemChart();
 		final String[] arr = RolenameW.split(name);
 		final String r = arr != null && arr.length == 2 ? arr[1] : name;
