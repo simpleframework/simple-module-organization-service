@@ -16,28 +16,6 @@ public class OrganizationRef extends AbstractModuleRef {
 		return ModuleContextFactory.get(IOrganizationContext.class);
 	}
 
-	protected void createRole_SystemChart2(final String name, final String text) {
-		createRole_SystemChart2(name, text, ERoleType.normal);
-	}
-
-	protected void createRole_SystemChart2(final String name, final String text,
-			final ERoleType rType) {
-		final RoleChart sc = getModuleContext().getSystemChart();
-		final String[] arr = RolenameW.split(name);
-		final String r = arr != null && arr.length == 2 ? arr[1] : name;
-		final IRoleService service = getRoleService();
-		Role role = service.getRoleByName(sc, r);
-		if (role == null) {
-			role = service.createBean();
-			role.setName(r);
-			role.setText(text);
-			role.setRoleChartId(sc.getId());
-			role.setRoleMark(ERoleMark.builtIn);
-			role.setRoleType(rType);
-			service.insert(role);
-		}
-	}
-
 	public String toOrgText(final Object id) {
 		final Department dept = getDepartmentService().getBean(id);
 		return dept != null ? dept.toString() : null;
