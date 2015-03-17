@@ -1,5 +1,6 @@
 package net.simpleframework.organization;
 
+import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.bean.ITreeBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
@@ -50,6 +51,14 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 
 	public void setOrgId(final ID orgId) {
 		this.orgId = orgId;
+	}
+
+	@Override
+	public void setName(final String name) {
+		if (name != null && name.contains(":")) {
+			throw OrganizationException.of($m("Role.0"));
+		}
+		super.setName(name);
 	}
 
 	@Override

@@ -40,6 +40,8 @@ import net.simpleframework.organization.UserLob;
  */
 public abstract class OrganizationContext extends AbstractADOModuleContext implements
 		IOrganizationContext, IDbEntityTableRegistry {
+	/* 机构管理员角色 */
+	public static String ROLE_ORGANIZATION_MANAGER;
 
 	@Override
 	public void onInit(final IApplicationContext application) throws Exception {

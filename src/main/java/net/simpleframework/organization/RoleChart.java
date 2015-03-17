@@ -1,5 +1,6 @@
 package net.simpleframework.organization;
 
+import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 
@@ -22,6 +23,14 @@ public class RoleChart extends AbstractOrganizationBean {
 
 	public void setOrgId(final ID orgId) {
 		this.orgId = orgId;
+	}
+
+	@Override
+	public void setName(final String name) {
+		if (name != null && name.contains(":")) {
+			throw OrganizationException.of($m("RoleChart.0"));
+		}
+		super.setName(name);
 	}
 
 	public ERoleChartMark getChartMark() {

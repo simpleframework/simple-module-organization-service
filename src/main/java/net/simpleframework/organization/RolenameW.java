@@ -1,6 +1,7 @@
 package net.simpleframework.organization;
 
 import static net.simpleframework.common.I18n.$m;
+import static net.simpleframework.organization.impl.OrganizationContext.ROLE_ORGANIZATION_MANAGER;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +19,6 @@ import net.simpleframework.ctx.permission.PermissionConst;
  *         http://www.simpleframework.net
  */
 public class RolenameW extends PermissionConst implements IApplicationStartup {
-	/* 机构管理员角色 */
-	public static final String ROLE_ORGANIZATION_MANAGER = RolenameW.toUniqueRolename(
-			RolenameW.ROLECHART_SYSTEM, "orgmgr");
 
 	public static final String ROLECHART_SYSTEM = "syschart";
 	public static final String ROLECHART_ORG_DEFAULT = "odefault";
@@ -56,6 +54,8 @@ public class RolenameW extends PermissionConst implements IApplicationStartup {
 		ROLE_ALL_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_all");
 		ROLE_LOCK_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_lock");
 		ROLE_MANAGER = toUniqueRolename(ROLECHART_SYSTEM, "manager");
+
+		ROLE_ORGANIZATION_MANAGER = RolenameW.toUniqueRolename(RolenameW.ROLECHART_SYSTEM, "orgmgr");
 
 		// 注册chart
 		registChart(ROLECHART_SYSTEM, $m("RoleChartService.0"), $m("RoleChartService.1"), false);
