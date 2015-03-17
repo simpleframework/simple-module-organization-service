@@ -129,6 +129,12 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (isManager(user, variables)) {
 			return true;
 		}
+		if (role != null && role.getOrgId() != null) {
+			if (_isMember(user, getRoleByName(OrganizationContext.ROLE_ORGANIZATION_MANAGER),
+					variables)) {
+				return true;
+			}
+		}
 		return _isMember(user, role, variables);
 	}
 
