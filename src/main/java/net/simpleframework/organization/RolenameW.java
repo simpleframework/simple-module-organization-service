@@ -53,6 +53,7 @@ public class RolenameW extends PermissionConst implements IApplicationStartup {
 		ROLE_ANONYMOUS = toUniqueRolename(ROLECHART_SYSTEM, "anonymous");
 		ROLE_ALL_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_all");
 		ROLE_LOCK_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_lock");
+		ROLE_INDEPT = toUniqueRolename(ROLECHART_SYSTEM, "indept");
 		ROLE_MANAGER = toUniqueRolename(ROLECHART_SYSTEM, "manager");
 
 		ROLE_ORGANIZATION_MANAGER = RolenameW.toUniqueRolename(RolenameW.ROLECHART_SYSTEM, "orgmgr");
@@ -62,7 +63,7 @@ public class RolenameW extends PermissionConst implements IApplicationStartup {
 		registChart(ROLECHART_ORG_DEFAULT, $m("RoleChartService.5"), $m("RoleChartService.6"), true);
 
 		// 注册角色
-		for (final String r : new String[] { "anonymous", "account_all", "account_lock" }) {
+		for (final String r : new String[] { "anonymous", "account_all", "account_lock", "indept" }) {
 			registRole(r, $m("RoleChartService." + r), null, ERoleType.handle);
 		}
 		for (final String r : new String[] { "manager", "orgmgr" }) {

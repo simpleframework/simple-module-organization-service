@@ -1,8 +1,13 @@
 package net.simpleframework.organization.impl;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import net.simpleframework.ado.query.DataQueryUtils;
+import net.simpleframework.common.coll.CollectionUtils;
+import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
 import net.simpleframework.organization.User;
 
@@ -43,7 +48,19 @@ public abstract class BuiltInRole {
 	public static class InDept extends AbstractRoleHandler {
 		@Override
 		public boolean isMember(final User user, final Map<String, Object> variables) {
-			return false;
+			final Object deptId = variables.get(PermissionConst.VAR_DEPTID);
+			return deptId != null && deptId.toString().equals(user.getDepartmentId().toString());
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public Iterator<User> members(final Map<String, Object> variables) {
+			final Department dept = orgContext.getDepartmentService().getBean(
+					variables.get(PermissionConst.VAR_DEPTID));
+			if (dept != null) {
+				return DataQueryUtils.toIterator(orgContext.getUserService().queryUsers(dept));
+			}
+			return CollectionUtils.EMPTY_ITERATOR;
 		}
 	}
 }
