@@ -9,6 +9,8 @@ import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
+import net.simpleframework.organization.IDepartmentService;
+import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.User;
 
 /**
@@ -55,10 +57,19 @@ public abstract class BuiltInRole {
 		@SuppressWarnings("unchecked")
 		@Override
 		public Iterator<User> members(final Map<String, Object> variables) {
-			final Department dept = orgContext.getDepartmentService().getBean(
-					variables.get(PermissionConst.VAR_DEPTID));
-			if (dept != null) {
-				return DataQueryUtils.toIterator(orgContext.getUserService().queryUsers(dept));
+			if (variables != null) {
+				final IUserService uService = orgContext.getUserService();
+				final IDepartmentService dService = orgContext.getDepartmentService();
+				Department dept = dService.getBean(variables.get(PermissionConst.VAR_DEPTID));
+				if (dept == null) {
+					final User user = uService.getBean(variables.get(PermissionConst.VAR_USERID));
+					if (user != null) {
+						dept = dService.getBean(user.getDepartmentId());
+					}
+				}
+				if (dept != null) {
+					return DataQueryUtils.toIterator(uService.queryUsers(dept));
+				}
 			}
 			return CollectionUtils.EMPTY_ITERATOR;
 		}
