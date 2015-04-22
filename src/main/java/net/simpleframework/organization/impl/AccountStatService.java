@@ -6,6 +6,7 @@ import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.common.BeanUtils;
+import net.simpleframework.common.BeanUtils.PropertyWrapper;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
@@ -116,12 +117,11 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 	}
 
 	void reset(final AccountStat stat) {
-		stat.setNums(0);
-		stat.setOnline_nums(0);
-		stat.setState_normal(0);
-		stat.setState_registration(0);
-		stat.setState_locked(0);
-		stat.setState_delete(0);
+		for (final PropertyWrapper p : BeanUtils.getProperties(AccountStat.class).values()) {
+			if ("int".equals(p.type.getName())) {
+				BeanUtils.setProperty(stat, p.name, 0);
+			}
+		}
 	}
 
 	@Override
