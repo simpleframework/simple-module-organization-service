@@ -355,10 +355,12 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					if (role.getRoleMark() == ERoleMark.builtIn) {
 						throw OrganizationException.of($m("RoleService.0"));
 					}
-
-					final ID rid = role.getId();
-					rmService.deleteWith("roleId=? or (membertype=? and memberid=?)", rid,
-							ERoleMemberType.role, rid);
+					if (rmService.queryMembers(role).getCount() > 0) {
+						throw OrganizationException.of($m("RoleService.3"));
+					}
+					// 删除成员
+					rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.role,
+							role.getId());
 				}
 			}
 		});
