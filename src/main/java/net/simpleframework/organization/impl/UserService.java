@@ -99,10 +99,11 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		if (dept.getDepartmentType() == EDepartmentType.department) {
 			sql.append("u.departmentid=?");
 		} else {
-			if (all)
+			if (all) {
 				sql.append("u.orgid=?");
-			else
+			} else {
 				sql.append("(u.orgid=? and u.departmentid is null)");
+			}
 		}
 		final ArrayList<Object> params = new ArrayList<Object>();
 		params.add(dept.getId());
