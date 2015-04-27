@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
+import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
@@ -87,14 +88,21 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	}
 
 	@Override
-	public IDataQuery<User> queryUsers(final Department dept, final EAccountStatus status) {
+	public IDataQuery<User> queryUsers(final Department dept, final EAccountStatus status,
+			final boolean all) {
+		if (dept == null) {
+			return DataQueryUtils.nullQuery();
+		}
 		final StringBuilder sql = new StringBuilder();
 		sql.append("select u.* from ").append(getTablename(User.class)).append(" u left join ")
 				.append(getTablename(Account.class)).append(" a on u.id=a.id where ");
 		if (dept.getDepartmentType() == EDepartmentType.department) {
 			sql.append("u.departmentid=?");
 		} else {
-			sql.append("u.orgid=?");
+			if (all)
+				sql.append("u.orgid=?");
+			else
+				sql.append("(u.orgid=? and u.departmentid is null)");
 		}
 		final ArrayList<Object> params = new ArrayList<Object>();
 		params.add(dept.getId());
@@ -111,7 +119,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept) {
-		return queryUsers(dept, null);
+		return queryUsers(dept, null, true);
 	}
 
 	@Override

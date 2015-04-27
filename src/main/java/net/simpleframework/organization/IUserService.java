@@ -58,9 +58,10 @@ public interface IUserService extends IDbBeanService<User> {
 	 * 
 	 * @param dept
 	 * @param status
+	 * @param all
 	 * @return
 	 */
-	IDataQuery<User> queryUsers(Department dept, EAccountStatus status);
+	IDataQuery<User> queryUsers(Department dept, EAccountStatus status, boolean all);
 
 	IDataQuery<User> queryUsers(Department dept);
 }

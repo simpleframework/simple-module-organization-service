@@ -18,9 +18,6 @@ public class Department extends AbstractOrganizationBean implements ITreeBeanAwa
 	/* 部门类型 */
 	private EDepartmentType departmentType;
 
-	/* 统计字段,当前部门人数 */
-	// private int users;
-
 	@Override
 	public ID getParentId() {
 		return parentId;
