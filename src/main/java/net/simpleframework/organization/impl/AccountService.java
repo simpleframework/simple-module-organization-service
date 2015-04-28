@@ -218,37 +218,51 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType) {
-		final String uTable = getTablename(User.class);
-		final String aTable = getTablename(Account.class);
+		return query(toAccountsSQLValue(dept, accountType, true));
+	}
+
+	SQLValue toAccountsSQLValue(final Department dept, final int accountType, final boolean account) {
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
-		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)
-				.append(" u on a.id=u.id where 1=1");
+		sql.append("select ").append(account ? "a" : "u").append(".* from ")
+				.append(getTablename(Account.class)).append(" a left join ")
+				.append(getTablename(User.class)).append(" u on a.id=u.id where 1=1");
+
+		final boolean _status = accountType >= Account.TYPE_STATE_DELETE
+				&& accountType <= Account.TYPE_STATE_NORMAL;
+		boolean _dept = false;
 		if (dept != null) {
 			if (dept.getDepartmentType() == EDepartmentType.department) {
 				sql.append(" and u.departmentid=?");
+				_dept = true;
 			} else {
 				sql.append(" and u.orgid=?");
 			}
 			params.add(dept.getId());
+			if (!_status) {
+				sql.append(" and a.status<>?");
+				params.add(EAccountStatus.delete);
+			}
 		}
-		if (accountType == Account.TYPE_ONLINE) {
+
+		if (_status) {
+			sql.append(" and a.status=?");
+			params.add(EAccountStatus.values()[Account.TYPE_STATE_NORMAL - accountType]);
+		} else if (accountType == Account.TYPE_ONLINE) {
 			sql.append(" and a.login=? and a.status=?");
 			params.add(Boolean.TRUE);
 			params.add(EAccountStatus.normal);
-		} else if (accountType == Account.TYPE_NO_DEPT) {
-			sql.append(" and u.departmentid is null and a.status<>?");
-			params.add(EAccountStatus.delete);
-		} else if (accountType == Account.TYPE_DEPT) {
-			sql.append(" and u.departmentid is not null and a.status<>?");
-			params.add(EAccountStatus.delete);
-		} else if (accountType >= Account.TYPE_STATE_DELETE
-				&& accountType <= Account.TYPE_STATE_NORMAL) {
-			sql.append(" and a.status=?");
-			params.add(EAccountStatus.values()[Account.TYPE_STATE_NORMAL - accountType]);
+		} else if (!_dept) {
+			if (accountType == Account.TYPE_NO_DEPT) {
+				sql.append(" and u.departmentid is null and a.status<>?");
+				params.add(EAccountStatus.delete);
+			} else if (accountType == Account.TYPE_DEPT) {
+				sql.append(" and u.departmentid is not null and a.status<>?");
+				params.add(EAccountStatus.delete);
+			}
 		}
-		sql.append(" order by a.createdate");
-		return query(new SQLValue(sql.toString(), params.toArray()));
+		sql.append(" order by u.oorder desc");
+		return new SQLValue(sql.toString(), params.toArray());
 	}
 
 	@Override
