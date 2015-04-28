@@ -145,10 +145,10 @@ public interface IAccountService extends IDbBeanService<Account> {
 	/**
 	 * 根据类型获取账号列表。
 	 * 
-	 * @param type
+	 * @param accountType
 	 * @return
 	 */
-	IDataQuery<Account> queryAccounts(Department org, int type);
+	IDataQuery<Account> queryAccounts(Department dept, int accountType);
 
 	/**
 	 * 更新经纬度

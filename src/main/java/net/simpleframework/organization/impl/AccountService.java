@@ -32,6 +32,7 @@ import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountMark;
 import net.simpleframework.organization.EAccountStatus;
+import net.simpleframework.organization.EDepartmentType;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountSession;
@@ -216,30 +217,35 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public IDataQuery<Account> queryAccounts(final Department org, final int type) {
+	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType) {
 		final String uTable = getTablename(User.class);
 		final String aTable = getTablename(Account.class);
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
 		sql.append("select a.* from ").append(aTable).append(" a left join ").append(uTable)
 				.append(" u on a.id=u.id where 1=1");
-		if (org != null) {
-			sql.append(" and u.orgid=?");
-			params.add(org.getId());
+		if (dept != null) {
+			if (dept.getDepartmentType() == EDepartmentType.department) {
+				sql.append(" and u.departmentid=?");
+			} else {
+				sql.append(" and u.orgid=?");
+			}
+			params.add(dept.getId());
 		}
-		if (type == Account.ONLINE_ID) {
+		if (accountType == Account.TYPE_ONLINE) {
 			sql.append(" and a.login=? and a.status=?");
 			params.add(Boolean.TRUE);
 			params.add(EAccountStatus.normal);
-		} else if (type == Account.NO_DEPARTMENT_ID) {
+		} else if (accountType == Account.TYPE_NO_DEPT) {
 			sql.append(" and u.departmentid is null and a.status<>?");
 			params.add(EAccountStatus.delete);
-		} else if (type == Account.DEPARTMENT_ID) {
+		} else if (accountType == Account.TYPE_DEPT) {
 			sql.append(" and u.departmentid is not null and a.status<>?");
 			params.add(EAccountStatus.delete);
-		} else if (type >= Account.STATE_DELETE_ID && type <= Account.STATE_NORMAL_ID) {
+		} else if (accountType >= Account.TYPE_STATE_DELETE
+				&& accountType <= Account.TYPE_STATE_NORMAL) {
 			sql.append(" and a.status=?");
-			params.add(EAccountStatus.values()[Account.STATE_NORMAL_ID - type]);
+			params.add(EAccountStatus.values()[Account.TYPE_STATE_NORMAL - accountType]);
 		}
 		sql.append(" order by a.createdate");
 		return query(new SQLValue(sql.toString(), params.toArray()));
