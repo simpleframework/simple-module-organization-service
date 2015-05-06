@@ -27,8 +27,8 @@
         openprovider varchar(16),
         openid varchar(64),
         mdevid varchar(32),
-        unique(name),
-        primary key(id)
+        primary key(id),
+        unique(name)
       );
     ]]>
 	</tran-sql>
@@ -53,7 +53,8 @@
 	      msn varchar(16),
 	      description varchar(256),
 	      oorder int not null,
-	      primary key(id)
+        primary key(id),
+        unique(oorder)
 	    );
     ]]>
 	</tran-sql>
@@ -78,7 +79,8 @@
         oorder int not null,
         primary key(id),
         unique(name),
-        unique(parentid, text)
+        unique(parentid, text),
+        unique(oorder)
       );
     ]]>
 	</tran-sql>
@@ -99,7 +101,8 @@
         description varchar(256),
        	oorder int not null,
         primary key(id),
-        unique(orgid, rolechartid, name)
+        unique(orgid, rolechartid, name),
+        unique(oorder)
       );
     ]]>
 	</tran-sql>
@@ -114,7 +117,8 @@
         description varchar(256),
         oorder int not null,
         primary key(id),
-        unique (orgid, name)
+        unique(orgid, name),
+        unique(oorder)
       );
     ]]>
 	</tran-sql>
@@ -130,7 +134,8 @@
         description varchar(256),
         oorder int not null,
         primary key(id),
-        unique (roleid, membertype, memberid)
+        unique(roleid, membertype, memberid),
+        unique(oorder)
       );
     ]]>
   </tran-sql>
@@ -144,7 +149,7 @@
         resourcetext varchar(64),
         description varchar(256),
         primary key(id),
-        unique (roleid, resourcetype, resourceid)
+        unique(roleid, resourcetype, resourceid)
       );
     ]]>
   </tran-sql>
