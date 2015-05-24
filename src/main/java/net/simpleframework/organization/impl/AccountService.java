@@ -261,7 +261,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				params.add(EAccountStatus.delete);
 			}
 		}
-		sql.append(" order by u.oorder desc");
+		sql.append(toOrderSQL(uService.getDefaultOrderColumns()));
 		return new SQLValue(sql.toString(), params.toArray());
 	}
 
