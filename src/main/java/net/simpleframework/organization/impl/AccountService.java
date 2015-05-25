@@ -285,7 +285,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				params.add(EAccountStatus.delete);
 			}
 		}
-		sql.append(toOrderSQL(uService.getDefaultOrderColumns()));
+		// left join => createdate排序
+		sql.append(toOrderSQL(getDefaultOrderColumns()));
 		return new SQLValue(sql.toString(), params.toArray());
 	}
 
