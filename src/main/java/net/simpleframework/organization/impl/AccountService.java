@@ -389,7 +389,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		}
 	}
 
-	private final Set<ID> _UPDATES = new HashSet<ID>();
+	private final Set<ID> _UPDATE_ASYNC = new HashSet<ID>();
 
 	@Override
 	public void onInit() throws Exception {
@@ -460,6 +460,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			public void onAfterUpdate(final IDbEntityManager<?> service, final String[] columns,
 					final Object[] beans) {
 				super.onAfterUpdate(service, columns, beans);
+
+				final Set<ID> _UPDATE_SYNC = new HashSet<ID>();
 				for (final Object bean : beans) {
 					final Account account = (Account) bean;
 					if (account.getStatus() == EAccountStatus.delete) {
@@ -467,33 +469,40 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 						deleteMember(account);
 					}
 
-					// 更新操作频繁，异步更新
-					if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "login", true)
-							|| ArrayUtils.contains(columns, "status", true)) {
-						final ID deptId = getUser(account.getId()).getDepartmentId();
-						if (deptId != null) {
-							_UPDATES.add(deptId);
-						}
+					if (ArrayUtils.contains(columns, "status", true)) {
+						_UPDATE_SYNC.add(account.getId());
+					} else if (ArrayUtils.isEmpty(columns)
+							|| ArrayUtils.contains(columns, "login", true)) {
+						// 其它异步更新
+						_UPDATE_ASYNC.add(account.getId());
 					}
 				}
+				_updateStats(_UPDATE_SYNC);
 			}
 		});
 
 		getTaskExecutor().addScheduledTask(60 * 2, new ExecutorRunnable() {
 			@Override
 			protected void task() throws Exception {
-				synchronized (_UPDATES) {
-					if (_UPDATES.size() > 0) {
-						for (final ID id : _UPDATES) {
-							updateStats(id);
-						}
-						_UPDATES.clear();
-
-						updateAllStats();
-					}
-				}
+				_updateStats(_UPDATE_ASYNC);
+				// 校正在线状态
 			}
 		});
+	}
+
+	private synchronized void _updateStats(final Set<ID> set) {
+		if (set == null || set.size() == 0) {
+			return;
+		}
+		for (final ID id : set) {
+			final User user = getUser(id);
+			ID deptId;
+			if (user != null && (deptId = user.getDepartmentId()) != null) {
+				updateStats(deptId);
+			}
+		}
+		set.clear();
+		updateAllStats();
 	}
 
 	void deleteMember(final Account account) {
