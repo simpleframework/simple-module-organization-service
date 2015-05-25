@@ -218,7 +218,19 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	@Override
 	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType) {
-		return query(toAccountsSQLValue(dept, accountType, true));
+		final IDataQuery<Account> dq = query(toAccountsSQLValue(dept, accountType, true));
+		dq.setCount(getAccountCount(dept, accountType));
+		return dq;
+	}
+
+	int getAccountCount(final Department dept, final int accountType) {
+		if (dept == null) {
+			final AccountStat stat = sService.getAllAccountStat();
+			if (accountType == Account.TYPE_ALL) {
+				return stat.getNums();
+			}
+		}
+		return -1;
 	}
 
 	SQLValue toAccountsSQLValue(final Department dept, final int accountType, final boolean account) {
