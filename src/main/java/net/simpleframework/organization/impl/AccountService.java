@@ -229,6 +229,16 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			final AccountStat stat = sService.getAllAccountStat();
 			if (accountType == Account.TYPE_ALL) {
 				return stat.getNums();
+			} else if (accountType == Account.TYPE_STATE_NORMAL) {
+				return stat.getState_normal();
+			} else if (accountType == Account.TYPE_STATE_LOCKED) {
+				return stat.getState_locked();
+			} else if (accountType == Account.TYPE_STATE_REGISTRATION) {
+				return stat.getState_registration();
+			} else if (accountType == Account.TYPE_STATE_DELETE) {
+				return stat.getState_delete();
+			} else if (accountType == Account.TYPE_ONLINE) {
+				return stat.getOnline_nums();
 			}
 		}
 		return -1;
