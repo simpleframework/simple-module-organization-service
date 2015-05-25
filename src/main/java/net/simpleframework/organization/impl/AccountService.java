@@ -223,7 +223,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		return dq;
 	}
 
-	int getAccountCount(final Department dept, final int accountType) {
+	protected int getAccountCount(final Department dept, final int accountType) {
+		// 大数据下，count性能太差
 		if (dept == null) {
 			final AccountStat stat = sService.getAllAccountStat();
 			if (accountType == Account.TYPE_ALL) {
@@ -233,7 +234,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		return -1;
 	}
 
-	SQLValue toAccountsSQLValue(final Department dept, final int accountType, final boolean account) {
+	protected SQLValue toAccountsSQLValue(final Department dept, final int accountType,
+			final boolean account) {
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
 		sql.append("select ").append(account ? "a" : "u").append(".* from ")
