@@ -83,10 +83,17 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	}
 
 	@Override
-	public IDataQuery<User> queryUsers(final Department dept, final int accountType) {
-		final IDataQuery<User> dq = query(aService.toAccountsSQLValue(dept, accountType, false));
+	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
+			final ColumnData order) {
+		final IDataQuery<User> dq = query(aService.toAccountsSQLValue(dept, accountType, false,
+				order != null ? new ColumnData[] { order } : getDefaultOrderColumns()));
 		dq.setCount(aService.getAccountCount(dept, accountType));
 		return dq;
+	}
+
+	@Override
+	public IDataQuery<User> queryUsers(final Department dept, final int accountType) {
+		return queryUsers(dept, accountType, null);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
@@ -218,10 +219,17 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	@Override
-	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType) {
-		final IDataQuery<Account> dq = query(toAccountsSQLValue(dept, accountType, true));
+	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType,
+			final ColumnData order) {
+		final IDataQuery<Account> dq = query(toAccountsSQLValue(dept, accountType, true,
+				order != null ? new ColumnData[] { order } : getDefaultOrderColumns()));
 		dq.setCount(getAccountCount(dept, accountType));
 		return dq;
+	}
+
+	@Override
+	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType) {
+		return queryAccounts(dept, accountType, null);
 	}
 
 	protected int getAccountCount(final Department dept, final int accountType) {
@@ -246,12 +254,12 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	}
 
 	protected SQLValue toAccountsSQLValue(final Department dept, final int accountType,
-			final boolean account) {
+			final boolean account, final ColumnData[] orderCols) {
 		final StringBuilder sql = new StringBuilder();
 		final ArrayList<Object> params = new ArrayList<Object>();
 		sql.append("select ").append(account ? "a" : "u").append(".* from ")
-				.append(getTablename(Account.class)).append(" a left join ")
-				.append(getTablename(User.class)).append(" u on a.id=u.id where 1=1");
+				.append(getTablename(Account.class)).append(" a ").append(account ? "left" : "right")
+				.append(" join ").append(getTablename(User.class)).append(" u on a.id=u.id where 1=1");
 
 		final boolean _status = accountType >= Account.TYPE_STATE_DELETE
 				&& accountType <= Account.TYPE_STATE_NORMAL;
@@ -286,8 +294,9 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				params.add(EAccountStatus.delete);
 			}
 		}
+
 		// left join => createdate排序
-		sql.append(toOrderSQL(getDefaultOrderColumns()));
+		sql.append(toOrderSQL(orderCols));
 		return new SQLValue(sql.toString(), params.toArray());
 	}
 
@@ -489,7 +498,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 				// 校正在线状态
 				final Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.HOUR_OF_DAY, -24);
+				cal.add(Calendar.HOUR_OF_DAY, -12);
 				final IDataQuery<Account> dq = query("login=? and lastlogindate<?", Boolean.TRUE,
 						cal.getTime());
 				Account account;

@@ -2,6 +2,7 @@ package net.simpleframework.organization;
 
 import java.util.Map;
 
+import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
@@ -143,11 +144,15 @@ public interface IAccountService extends IDbBeanService<Account> {
 	boolean verifyPassword(Account account, String password);
 
 	/**
-	 * 根据类型获取账号列表。
+	 * 获取账号列表
 	 * 
+	 * @param dept
 	 * @param accountType
+	 * @param order
 	 * @return
 	 */
+	IDataQuery<Account> queryAccounts(Department dept, int accountType, ColumnData order);
+
 	IDataQuery<Account> queryAccounts(Department dept, int accountType);
 
 	/**

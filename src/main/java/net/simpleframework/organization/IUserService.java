@@ -2,6 +2,7 @@ package net.simpleframework.organization;
 
 import java.io.InputStream;
 
+import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 
@@ -54,12 +55,15 @@ public interface IUserService extends IDbBeanService<User> {
 	void updatePhoto(User user, InputStream photo);
 
 	/**
-	 * 获取部门下的用户
+	 * 获取用户列表
 	 * 
 	 * @param dept
 	 * @param accountType
+	 * @param order
 	 * @return
 	 */
+	IDataQuery<User> queryUsers(Department dept, int accountType, ColumnData order);
+
 	IDataQuery<User> queryUsers(Department dept, int accountType);
 
 	IDataQuery<User> queryUsers(Department dept);
