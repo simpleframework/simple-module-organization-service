@@ -3,6 +3,7 @@ package net.simpleframework.organization.impl;
 import static net.simpleframework.common.I18n.$m;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -485,7 +486,17 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			@Override
 			protected void task() throws Exception {
 				_updateStats(_UPDATE_ASYNC);
+
 				// 校正在线状态
+				final Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.HOUR_OF_DAY, -24);
+				final IDataQuery<Account> dq = query("login=? and lastlogindate<?", Boolean.TRUE,
+						cal.getTime());
+				Account account;
+				while ((account = dq.next()) != null) {
+					account.setLogin(false);
+					update(new String[] { "login" }, account);
+				}
 			}
 		});
 	}
