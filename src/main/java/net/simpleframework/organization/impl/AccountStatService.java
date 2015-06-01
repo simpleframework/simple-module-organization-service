@@ -141,7 +141,7 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 
 			@Override
 			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) {
+					final Object[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
 				for (final Object o : beans) {
 					final AccountStat stat = (AccountStat) o;

@@ -108,7 +108,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		addListener(new DbEntityAdapterEx() {
 			@Override
 			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) {
+					final Object[] beans) throws Exception {
 				super.onBeforeUpdate(manager, columns, beans);
 				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
 					for (final Object o : beans) {
@@ -123,7 +123,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 
 			@Override
 			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) {
+					final Object[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
 				for (final Object o : beans) {
 					final User user = (User) o;

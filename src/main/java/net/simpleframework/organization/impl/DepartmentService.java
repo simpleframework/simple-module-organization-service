@@ -62,7 +62,8 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 				.getAccountStatService();
 		addListener(new DbEntityAdapterEx() {
 			@Override
-			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans)
+					throws Exception {
 				super.onAfterInsert(manager, beans);
 				for (final Object o : beans) {
 					checkDeptType((Department) o);
@@ -71,7 +72,7 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 
 			@Override
 			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) {
+					final Object[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
 				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "parentId", true)) {
 					for (final Object o : beans) {
@@ -91,7 +92,7 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 
 			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,
-					final IParamsValue paramsValue) {
+					final IParamsValue paramsValue) throws Exception {
 				super.onBeforeDelete(service, paramsValue);
 				for (final Department dept : coll(paramsValue)) {
 					// 存在子部门

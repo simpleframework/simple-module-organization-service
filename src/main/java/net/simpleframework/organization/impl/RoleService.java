@@ -343,7 +343,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,
-					final IParamsValue paramsValue) {
+					final IParamsValue paramsValue) throws Exception {
 				super.onBeforeDelete(service, paramsValue);
 
 				for (final Role role : coll(paramsValue)) {

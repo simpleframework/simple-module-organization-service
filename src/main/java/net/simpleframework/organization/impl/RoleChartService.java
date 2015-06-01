@@ -99,7 +99,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		addListener(new DbEntityAdapterEx() {
 			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,
-					final IParamsValue paramsValue) {
+					final IParamsValue paramsValue) throws Exception {
 				super.onBeforeDelete(service, paramsValue);
 
 				for (final RoleChart chart : coll(paramsValue)) {
@@ -116,7 +116,8 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 			}
 
 			@Override
-			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans)
+					throws Exception {
 				super.onBeforeInsert(manager, beans);
 				// 视图只能加在机构上
 				for (final Object o : beans) {

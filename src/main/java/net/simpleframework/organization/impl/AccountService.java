@@ -414,7 +414,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		addListener(new DbEntityAdapterEx() {
 			@Override
 			public void onBeforeDelete(final IDbEntityManager<?> service,
-					final IParamsValue paramsValue) {
+					final IParamsValue paramsValue) throws Exception {
 				super.onBeforeDelete(service, paramsValue);
 				for (final Account account : coll(paramsValue)) {
 					if (account.getAccountMark() == EAccountMark.builtIn) {
@@ -425,7 +425,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 			@Override
 			public void onBeforeUpdate(final IDbEntityManager<?> service, final String[] columns,
-					final Object[] beans) {
+					final Object[] beans) throws Exception {
 				super.onBeforeUpdate(service, columns, beans);
 				for (final Object bean : beans) {
 					final Account account = (Account) bean;
@@ -439,7 +439,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			/*------------------------------after ope--------------------------------*/
 
 			@Override
-			public void onAfterDelete(final IDbEntityManager<?> manager, final IParamsValue paramsValue) {
+			public void onAfterDelete(final IDbEntityManager<?> manager, final IParamsValue paramsValue)
+					throws Exception {
 				super.onAfterDelete(manager, paramsValue);
 				for (final Account account : coll(paramsValue)) {
 					// 删除用户
@@ -452,7 +453,8 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			}
 
 			@Override
-			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans) {
+			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans)
+					throws Exception {
 				super.onAfterInsert(manager, beans);
 				for (final Object bean : beans) {
 					final Account account = (Account) bean;
@@ -468,7 +470,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 			@Override
 			public void onAfterUpdate(final IDbEntityManager<?> service, final String[] columns,
-					final Object[] beans) {
+					final Object[] beans) throws Exception {
 				super.onAfterUpdate(service, columns, beans);
 
 				final Set<ID> _UPDATE_SYNC = new HashSet<ID>();
