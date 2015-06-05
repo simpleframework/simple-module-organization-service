@@ -26,11 +26,6 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 		IOrganizationServiceImplAware {
 
 	@Override
-	protected ColumnData[] getDefaultOrderColumns() {
-		return ORDER_OORDER;
-	}
-
-	@Override
 	public Account getAccount(final Object id) {
 		User user = null;
 		if (id instanceof User) {
@@ -86,7 +81,7 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
 			final ColumnData order) {
 		final IDataQuery<User> dq = query(aService.toAccountsSQLValue(dept, accountType, false,
-				order != null ? new ColumnData[] { order } : getDefaultOrderColumns()));
+				new ColumnData[] { order != null ? order : ColumnData.DESC("u.oorder") }));
 		dq.setCount(aService.getAccountCount(dept, accountType));
 		return dq;
 	}
