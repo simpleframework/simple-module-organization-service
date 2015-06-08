@@ -78,6 +78,11 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	}
 
 	@Override
+	protected ColumnData[] getDefaultOrderColumns() {
+		return ORDER_OORDER;
+	}
+
+	@Override
 	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
 			final ColumnData order) {
 		final IDataQuery<User> dq = query(aService.toAccountsSQLValue(dept, accountType, false,
