@@ -83,9 +83,9 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 
 	void setDeptStats(final AccountStat stat) {
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
-				new SQLValue("select status, count(*) as c from " + getTablename(Account.class)
-						+ " a left join " + getTablename(User.class)
-						+ " u on a.id=u.id where u.departmentid=? group by status", stat.getDeptId()));
+				"select status, count(*) as c from " + getTablename(Account.class) + " a left join "
+						+ getTablename(User.class)
+						+ " u on a.id=u.id where u.departmentid=? group by status", stat.getDeptId());
 		int nums = 0;
 		Map<String, Object> data;
 		while ((data = dq.next()) != null) {
