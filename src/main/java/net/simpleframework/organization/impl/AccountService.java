@@ -494,7 +494,13 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			}
 		});
 
-		getTaskExecutor().addScheduledTask(60 * 2, new ExecutorRunnable() {
+		getTaskExecutor().addScheduledTask(new ExecutorRunnable() {
+
+			@Override
+			public long getPeriod() {
+				return 60 * 2;
+			}
+
 			@Override
 			protected void task(final Map<String, Object> cache) throws Exception {
 				_updateStats(_UPDATE_ASYNC);
