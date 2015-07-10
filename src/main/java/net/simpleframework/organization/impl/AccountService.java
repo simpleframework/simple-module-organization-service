@@ -496,7 +496,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 		getTaskExecutor().addScheduledTask(60 * 2, new ExecutorRunnable() {
 			@Override
-			protected void task() throws Exception {
+			protected void task(final Map<String, Object> cache) throws Exception {
 				_updateStats(_UPDATE_ASYNC);
 
 				// 校正在线状态
