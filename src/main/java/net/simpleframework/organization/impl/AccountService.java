@@ -212,9 +212,9 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 					.append("(a.longitude<>0 and a.latitude<>0 and a.status=? and a.accountmark=?) and ")
 					.append("(a.longitude between ? and ?) and (a.latitude between ? and ?) and u.sex=?");
 			params.add(sex);
-			return query(new SQLValue(sql2.toString(), params.toArray()));
+			return query(new SQLValue(sql2, params.toArray()));
 		} else {
-			return query(sql.toString(), params.toArray());
+			return query(sql, params.toArray());
 		}
 	}
 
@@ -298,7 +298,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 		// left join => createdate排序
 		sql.append(toOrderSQL(orderCols));
-		return new SQLValue(sql.toString(), params.toArray());
+		return new SQLValue(sql, params.toArray());
 	}
 
 	@Override
