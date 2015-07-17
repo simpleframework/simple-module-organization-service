@@ -4,7 +4,6 @@ import java.util.Map;
 
 import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
-import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.BeanUtils.PropertyWrapper;
 import net.simpleframework.common.Convert;
@@ -102,11 +101,11 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 
 	void setOrgStats(final AccountStat stat) {
 		final Map<String, Object> data = getQueryManager().queryForMap(
-				new SQLValue("select sum(nums) as s1, sum(online_nums) as s2, "
+				"select sum(nums) as s1, sum(online_nums) as s2, "
 						+ "sum(state_normal) as s3, sum(state_registration) as s4, "
 						+ "sum(state_locked) as s5, sum(state_delete) as s6 from "
-						+ getTablename(AccountStat.class) + " where orgid=? and stattype=?", stat
-						.getOrgId(), EStatType.dept));
+						+ getTablename(AccountStat.class) + " where orgid=? and stattype=?",
+				stat.getOrgId(), EStatType.dept);
 		if (data != null) {
 			stat.setNums(Convert.toInt(data.get("s1")));
 			stat.setOnline_nums(Convert.toInt(data.get("s2")));
