@@ -100,7 +100,7 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 						throw OrganizationException.of($m("DepartmentService.0"));
 					}
 					// 存在用户
-					if (uService.query("departmentId=?", dept.getId()).getCount() > 0) {
+					if (userService.query("departmentId=?", dept.getId()).getCount() > 0) {
 						throw OrganizationException.of($m("DepartmentService.1"));
 					}
 

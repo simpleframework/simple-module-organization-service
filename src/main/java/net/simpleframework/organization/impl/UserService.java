@@ -32,12 +32,12 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 			user = (User) id;
 		}
 
-		Account account = aService.getBean(user != null ? user.getId() : id);
+		Account account = accountService.getBean(user != null ? user.getId() : id);
 		if (account == null && (user != null || (user = getBean(id)) != null)) {
-			account = aService.createBean();
+			account = accountService.createBean();
 			account.setId(user.getId());
 			account.setName(ObjectUtils.hashStr(user));
-			aService.insert(account);
+			accountService.insert(account);
 		}
 		return account;
 	}
@@ -85,9 +85,9 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
 			final ColumnData order) {
-		final IDataQuery<User> dq = query(aService.toAccountsSQLValue(dept, accountType, false,
+		final IDataQuery<User> dq = query(accountService.toAccountsSQLValue(dept, accountType, false,
 				new ColumnData[] { order != null ? order : ColumnData.DESC("u.oorder") }));
-		dq.setCount(aService.getAccountCount(dept, accountType));
+		dq.setCount(accountService.getAccountCount(dept, accountType));
 		return dq;
 	}
 
@@ -131,11 +131,11 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 					final String deptId = Convert.toString(user.getDepartmentId());
 					if (!ObjectUtils.objectEquals(_deptId, deptId)) {
 						// 更新变化前后部门的统计值
-						aService.updateStats(deptId);
-						aService.updateStats(_deptId);
+						accountService.updateStats(deptId);
+						accountService.updateStats(_deptId);
 					}
 				}
-				aService.updateAllStats();
+				accountService.updateAllStats();
 			}
 		});
 	}

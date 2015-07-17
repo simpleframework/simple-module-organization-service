@@ -49,7 +49,7 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 		if (statType == EStatType.all) {
 			stat = getBean("stattype=?", statType);
 		} else {
-			_dept = obj instanceof Department ? (Department) obj : dService.getBean(getIdParam(obj));
+			_dept = obj instanceof Department ? (Department) obj : deptService.getBean(getIdParam(obj));
 			if (_dept == null) {
 				return null;
 			}
@@ -66,7 +66,7 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 			if (_dept != null) {
 				if (statType == EStatType.dept) {
 					stat.setDeptId(_dept.getId());
-					final Department org = dService.getOrg(_dept);
+					final Department org = deptService.getOrg(_dept);
 					if (org != null) {
 						stat.setOrgId(org.getId());
 					}

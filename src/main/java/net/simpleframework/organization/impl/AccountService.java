@@ -84,12 +84,12 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		if (id instanceof Account) {
 			account = (Account) id;
 		}
-		User user = uService.getBean(account != null ? account.getId() : id);
+		User user = userService.getBean(account != null ? account.getId() : id);
 		if (user == null && (account != null || (account = getBean(id)) != null)) {
-			user = uService.createBean();
+			user = userService.createBean();
 			user.setId(account.getId());
 			user.setText(account.getName());
-			uService.insert(user);
+			userService.insert(user);
 		}
 		return user;
 	}
@@ -236,7 +236,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 	protected int getAccountCount(final Department dept, final int accountType) {
 		// 大数据下，count性能太差
 		if (dept == null) {
-			final AccountStat stat = sService.getAllAccountStat();
+			final AccountStat stat = accountStatService.getAllAccountStat();
 			if (accountType == Account.TYPE_ALL) {
 				return stat.getNums();
 			} else if (accountType == Account.TYPE_STATE_NORMAL) {
@@ -335,19 +335,19 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			update(account);
 		}
 
-		User user = uService.getBean(account.getId());
+		User user = userService.getBean(account.getId());
 		if (user == null) {
-			user = uService.createBean();
+			user = userService.createBean();
 			user.setId(account.getId());
 			for (final Map.Entry<String, Object> e : userData.entrySet()) {
 				BeanUtils.setProperty(user, e.getKey(), e.getValue());
 			}
-			uService.insert(user);
+			userService.insert(user);
 		} else {
 			for (final Map.Entry<String, Object> e : userData.entrySet()) {
 				BeanUtils.setProperty(user, e.getKey(), e.getValue());
 			}
-			uService.update(user);
+			userService.update(user);
 		}
 		return account;
 	}
@@ -445,7 +445,7 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 				super.onAfterDelete(manager, paramsValue);
 				for (final Account account : coll(paramsValue)) {
 					// 删除用户
-					uService.delete(account.getId());
+					userService.delete(account.getId());
 					deleteMember(account);
 					// 同步统计
 					updateStats(getUser(account.getId()).getDepartmentId());
@@ -536,22 +536,22 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 
 	void deleteMember(final Account account) {
 		// 删除成员角色
-		rmService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
+		rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
 	}
 
 	void updateStats(final Object dept) {
 		if (dept == null) {
 			return;
 		}
-		final AccountStat stat = sService.getDeptAccountStat(dept);
-		sService.reset(stat);
-		sService.setDeptStats(stat);
-		sService.update(stat);
+		final AccountStat stat = accountStatService.getDeptAccountStat(dept);
+		accountStatService.reset(stat);
+		accountStatService.setDeptStats(stat);
+		accountStatService.update(stat);
 	}
 
 	void updateAllStats() {
-		final AccountStat stat = sService.getAllAccountStat();
-		sService.reset(stat);
+		final AccountStat stat = accountStatService.getAllAccountStat();
+		accountStatService.reset(stat);
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager()
 				.query(
 						"select status, count(*) as c from " + getTablename(Account.class)
@@ -569,6 +569,6 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		// 全部及在线
 		stat.setNums(nums);
 		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
-		sService.update(stat);
+		accountStatService.update(stat);
 	}
 }
