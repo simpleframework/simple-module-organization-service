@@ -62,7 +62,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		final String[] arr = RolenameW.split(name);
 		if (arr.length == 3) {
 			return getRoleByName(
-					rolecService.getRoleChartByName(deptService.getDepartmentByName(arr[0]), arr[1]), arr[2]);
+					rolecService.getRoleChartByName(deptService.getDepartmentByName(arr[0]), arr[1]),
+					arr[2]);
 		} else if (arr.length == 2) {
 			return getRoleByName(rolecService.getRoleChartByName(arr[0]), arr[1]);
 		} else {
