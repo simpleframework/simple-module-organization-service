@@ -1,6 +1,7 @@
 package net.simpleframework.organization.impl;
 
 import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.AbstractOrganizationBean;
 
@@ -12,6 +13,11 @@ import net.simpleframework.organization.AbstractOrganizationBean;
  */
 public abstract class AbstractOrganizationService<T extends AbstractOrganizationBean> extends
 		AbstractDbBeanService<T> implements IOrganizationServiceImplAware {
+
+	@Override
+	public IModuleContext getModuleContext() {
+		return orgContext;
+	}
 
 	@Override
 	protected ColumnData[] getDefaultOrderColumns() {
