@@ -105,14 +105,13 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 	public void onInit() throws Exception {
 		super.onInit();
 
-		addListener(new DbEntityAdapterEx() {
+		addListener(new DbEntityAdapterEx<User>() {
 			@Override
-			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) throws Exception {
+			public void onBeforeUpdate(final IDbEntityManager<User> manager, final String[] columns,
+					final User[] beans) throws Exception {
 				super.onBeforeUpdate(manager, columns, beans);
 				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "departmentId", true)) {
-					for (final Object o : beans) {
-						final User user = (User) o;
+					for (final User user : beans) {
 						final Object _deptId = queryFor("departmentId", "id=?", user.getId());
 						if (_deptId != null) {
 							user.setAttr("_deptId", _deptId);
@@ -122,11 +121,10 @@ public class UserService extends AbstractDbBeanService<User> implements IUserSer
 			}
 
 			@Override
-			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) throws Exception {
+			public void onAfterUpdate(final IDbEntityManager<User> manager, final String[] columns,
+					final User[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
-				for (final Object o : beans) {
-					final User user = (User) o;
+				for (final User user : beans) {
 					final String _deptId = Convert.toString(user.getAttr("_deptId"));
 					final String deptId = Convert.toString(user.getDepartmentId());
 					if (!ObjectUtils.objectEquals(_deptId, deptId)) {

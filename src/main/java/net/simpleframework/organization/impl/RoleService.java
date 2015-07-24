@@ -340,14 +340,14 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	public void onInit() throws Exception {
 		super.onInit();
 
-		addListener(new DbEntityAdapterEx() {
+		addListener(new DbEntityAdapterEx<Role>() {
 
 			@Override
-			public void onBeforeDelete(final IDbEntityManager<?> service,
+			public void onBeforeDelete(final IDbEntityManager<Role> manager,
 					final IParamsValue paramsValue) throws Exception {
-				super.onBeforeDelete(service, paramsValue);
+				super.onBeforeDelete(manager, paramsValue);
 
-				for (final Role role : coll(paramsValue)) {
+				for (final Role role : coll(manager, paramsValue)) {
 					// 含有孩子
 					if (queryChildren(role).getCount() > 0) {
 						throw OrganizationException.of($m("RoleService.1"));

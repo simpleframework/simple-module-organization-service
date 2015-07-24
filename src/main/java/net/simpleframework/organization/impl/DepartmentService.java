@@ -60,23 +60,23 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 
 		final AccountStatService statService = (AccountStatService) orgContext
 				.getAccountStatService();
-		addListener(new DbEntityAdapterEx() {
+		addListener(new DbEntityAdapterEx<Department>() {
 			@Override
-			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans)
-					throws Exception {
+			public void onBeforeInsert(final IDbEntityManager<Department> manager,
+					final Department[] beans) throws Exception {
 				super.onAfterInsert(manager, beans);
-				for (final Object o : beans) {
-					checkDeptType((Department) o);
+				for (final Department o : beans) {
+					checkDeptType(o);
 				}
 			}
 
 			@Override
-			public void onBeforeUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) throws Exception {
+			public void onBeforeUpdate(final IDbEntityManager<Department> manager,
+					final String[] columns, final Department[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
 				if (ArrayUtils.isEmpty(columns) || ArrayUtils.contains(columns, "parentId", true)) {
-					for (final Object o : beans) {
-						checkDeptType((Department) o);
+					for (final Department o : beans) {
+						checkDeptType(o);
 					}
 				}
 			}
@@ -91,10 +91,10 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 			}
 
 			@Override
-			public void onBeforeDelete(final IDbEntityManager<?> service,
+			public void onBeforeDelete(final IDbEntityManager<Department> manager,
 					final IParamsValue paramsValue) throws Exception {
-				super.onBeforeDelete(service, paramsValue);
-				for (final Department dept : coll(paramsValue)) {
+				super.onBeforeDelete(manager, paramsValue);
+				for (final Department dept : coll(manager, paramsValue)) {
 					// 存在子部门
 					if (queryChildren(dept).getCount() > 0) {
 						throw OrganizationException.of($m("DepartmentService.0"));

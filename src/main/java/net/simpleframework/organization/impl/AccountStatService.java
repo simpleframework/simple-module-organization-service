@@ -128,7 +128,7 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 	public void onInit() throws Exception {
 		super.onInit();
 
-		addListener(new DbEntityAdapterEx() {
+		addListener(new DbEntityAdapterEx<AccountStat>() {
 			private void updateOrgStat(final ID orgId) {
 				if (orgId == null) {
 					return;
@@ -140,11 +140,10 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 			}
 
 			@Override
-			public void onAfterUpdate(final IDbEntityManager<?> manager, final String[] columns,
-					final Object[] beans) throws Exception {
+			public void onAfterUpdate(final IDbEntityManager<AccountStat> manager,
+					final String[] columns, final AccountStat[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
-				for (final Object o : beans) {
-					final AccountStat stat = (AccountStat) o;
+				for (final AccountStat stat : beans) {
 					final Department dept = orgContext.getDepartmentService().getBean(stat.getDeptId());
 					if (dept != null && dept.getDepartmentType() == EDepartmentType.department) {
 						updateOrgStat(stat.getOrgId());

@@ -412,12 +412,12 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 					new KVMap().add("text", PermissionConst.ADMIN));
 		}
 
-		addListener(new DbEntityAdapterEx() {
+		addListener(new DbEntityAdapterEx<Account>() {
 			@Override
-			public void onBeforeDelete(final IDbEntityManager<?> service,
+			public void onBeforeDelete(final IDbEntityManager<Account> manager,
 					final IParamsValue paramsValue) throws Exception {
-				super.onBeforeDelete(service, paramsValue);
-				for (final Account account : coll(paramsValue)) {
+				super.onBeforeDelete(manager, paramsValue);
+				for (final Account account : coll(manager, paramsValue)) {
 					if (account.getAccountMark() == EAccountMark.builtIn) {
 						throw OrganizationException.of($m("AccountService.0"));
 					}
@@ -425,11 +425,10 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			}
 
 			@Override
-			public void onBeforeUpdate(final IDbEntityManager<?> service, final String[] columns,
-					final Object[] beans) throws Exception {
+			public void onBeforeUpdate(final IDbEntityManager<Account> service,
+					final String[] columns, final Account[] beans) throws Exception {
 				super.onBeforeUpdate(service, columns, beans);
-				for (final Object bean : beans) {
-					final Account account = (Account) bean;
+				for (final Account account : beans) {
 					if (account.getStatus() == EAccountStatus.delete
 							&& account.getAccountMark() == EAccountMark.builtIn) {
 						throw OrganizationException.of($m("AccountService.0"));
@@ -440,10 +439,10 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			/*------------------------------after ope--------------------------------*/
 
 			@Override
-			public void onAfterDelete(final IDbEntityManager<?> manager, final IParamsValue paramsValue)
-					throws Exception {
+			public void onAfterDelete(final IDbEntityManager<Account> manager,
+					final IParamsValue paramsValue) throws Exception {
 				super.onAfterDelete(manager, paramsValue);
-				for (final Account account : coll(paramsValue)) {
+				for (final Account account : coll(manager, paramsValue)) {
 					// 删除用户
 					userService.delete(account.getId());
 					deleteMember(account);
@@ -454,11 +453,10 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			}
 
 			@Override
-			public void onAfterInsert(final IDbEntityManager<?> manager, final Object[] beans)
+			public void onAfterInsert(final IDbEntityManager<Account> manager, final Account[] beans)
 					throws Exception {
 				super.onAfterInsert(manager, beans);
-				for (final Object bean : beans) {
-					final Account account = (Account) bean;
+				for (final Account account : beans) {
 					final IModuleRef ref = ((IOrganizationContext) getModuleContext()).getMessageRef();
 					if (ref != null) {
 						((OrganizationMessageRef) ref).doAccountCreatedMessage(account);
@@ -470,13 +468,12 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 			}
 
 			@Override
-			public void onAfterUpdate(final IDbEntityManager<?> service, final String[] columns,
-					final Object[] beans) throws Exception {
+			public void onAfterUpdate(final IDbEntityManager<Account> service, final String[] columns,
+					final Account[] beans) throws Exception {
 				super.onAfterUpdate(service, columns, beans);
 
 				final Set<ID> _UPDATE_SYNC = new HashSet<ID>();
-				for (final Object bean : beans) {
-					final Account account = (Account) bean;
+				for (final Account account : beans) {
 					if (account.getStatus() == EAccountStatus.delete) {
 						// 删除成员角色
 						deleteMember(account);

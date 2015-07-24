@@ -96,13 +96,13 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 	public void onInit() throws Exception {
 		super.onInit();
 
-		addListener(new DbEntityAdapterEx() {
+		addListener(new DbEntityAdapterEx<RoleChart>() {
 			@Override
-			public void onBeforeDelete(final IDbEntityManager<?> service,
+			public void onBeforeDelete(final IDbEntityManager<RoleChart> manager,
 					final IParamsValue paramsValue) throws Exception {
-				super.onBeforeDelete(service, paramsValue);
+				super.onBeforeDelete(manager, paramsValue);
 
-				for (final RoleChart chart : coll(paramsValue)) {
+				for (final RoleChart chart : coll(manager, paramsValue)) {
 					// 内置视图
 					if (chart.getChartMark() == ERoleChartMark.builtIn) {
 						throw OrganizationException.of($m("RoleChartService.2"));
@@ -116,12 +116,11 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 			}
 
 			@Override
-			public void onBeforeInsert(final IDbEntityManager<?> manager, final Object[] beans)
-					throws Exception {
+			public void onBeforeInsert(final IDbEntityManager<RoleChart> manager,
+					final RoleChart[] beans) throws Exception {
 				super.onBeforeInsert(manager, beans);
 				// 视图只能加在机构上
-				for (final Object o : beans) {
-					final RoleChart chart = (RoleChart) o;
+				for (final RoleChart chart : beans) {
 					final Department org = deptService.getBean(chart.getOrgId());
 					if (org != null && org.getDepartmentType() == EDepartmentType.department) {
 						throw OrganizationException.of($m("RoleChartService.4"));
