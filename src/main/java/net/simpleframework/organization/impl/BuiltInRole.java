@@ -9,8 +9,6 @@ import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.IDepartmentService;
-import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.User;
 
 /**
@@ -25,7 +23,7 @@ public abstract class BuiltInRole {
 
 		@Override
 		public boolean isMember(final User user, final Map<String, Object> variables) {
-			final Account account = orgContext.getUserService().getAccount(user.getId());
+			final Account account = _userService.getAccount(user.getId());
 			return account != null && account.getStatus() == EAccountStatus.normal;
 		}
 	}
@@ -34,7 +32,7 @@ public abstract class BuiltInRole {
 
 		@Override
 		public boolean isMember(final User user, final Map<String, Object> variables) {
-			final Account account = orgContext.getUserService().getAccount(user.getId());
+			final Account account = _userService.getAccount(user.getId());
 			return account != null && account.getStatus() == EAccountStatus.locked;
 		}
 	}
@@ -58,17 +56,15 @@ public abstract class BuiltInRole {
 		@Override
 		public Iterator<User> members(final Map<String, Object> variables) {
 			if (variables != null) {
-				final IUserService uService = orgContext.getUserService();
-				final IDepartmentService dService = orgContext.getDepartmentService();
-				Department dept = dService.getBean(variables.get(PermissionConst.VAR_DEPTID));
+				Department dept = _deptService.getBean(variables.get(PermissionConst.VAR_DEPTID));
 				if (dept == null) {
-					final User user = uService.getBean(variables.get(PermissionConst.VAR_USERID));
+					final User user = _userService.getBean(variables.get(PermissionConst.VAR_USERID));
 					if (user != null) {
-						dept = dService.getBean(user.getDepartmentId());
+						dept = _deptService.getBean(user.getDepartmentId());
 					}
 				}
 				if (dept != null) {
-					return DataQueryUtils.toIterator(uService.queryUsers(dept));
+					return DataQueryUtils.toIterator(_userService.queryUsers(dept));
 				}
 			}
 			return CollectionUtils.EMPTY_ITERATOR;

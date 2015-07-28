@@ -21,7 +21,7 @@ public abstract class AbstractRoleHandler extends ObjectEx implements IRoleHandl
 
 	@Override
 	public Iterator<User> members(final Map<String, Object> variables) {
-		final IDataQuery<User> dq = orgContext.getUserService().queryAll().setFetchSize(0);
+		final IDataQuery<User> dq = _userService.queryAll().setFetchSize(0);
 		return new AbstractIterator<User>() {
 			@Override
 			public boolean hasNext() {

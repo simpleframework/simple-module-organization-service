@@ -144,7 +144,7 @@ public class AccountStatService extends AbstractDbBeanService<AccountStat> imple
 					final String[] columns, final AccountStat[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
 				for (final AccountStat stat : beans) {
-					final Department dept = orgContext.getDepartmentService().getBean(stat.getDeptId());
+					final Department dept = _deptService.getBean(stat.getDeptId());
 					if (dept != null && dept.getDepartmentType() == EDepartmentType.department) {
 						updateOrgStat(stat.getOrgId());
 					}
