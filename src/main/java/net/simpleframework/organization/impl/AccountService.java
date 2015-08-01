@@ -318,7 +318,11 @@ public class AccountService extends AbstractDbBeanService<Account> implements IA
 		}
 
 		if (password != null && !password.equals(account.getPassword())) {
-			account.setPassword(Account.encrypt(password));
+			if (password.startsWith("encrypt:")) {
+				account.setPassword(password.substring(8));
+			} else {
+				account.setPassword(Account.encrypt(password));
+			}
 		}
 		account.setAccountMark(accountMark);
 		account.setStatus(status);
