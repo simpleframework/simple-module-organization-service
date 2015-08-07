@@ -134,7 +134,7 @@
         description varchar2(256 char),
         oorder number(11) not null,
         primary key(id),
-        unique(roleid, membertype, memberid),
+        unique(roleid, membertype, memberid, deptid),
         unique(oorder)
       );
     ]]>
