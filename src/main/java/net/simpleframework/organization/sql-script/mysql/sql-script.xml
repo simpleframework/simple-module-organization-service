@@ -99,6 +99,7 @@
         rulehandler varchar(128),
         rulescript text,
         description varchar(256),
+        members int not null,
        	oorder int not null,
         primary key(id),
         unique(orgid, rolechartid, name),

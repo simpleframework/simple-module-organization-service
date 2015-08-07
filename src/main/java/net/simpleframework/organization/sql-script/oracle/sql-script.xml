@@ -99,6 +99,7 @@
         rulehandler varchar2(128 char),
         rulescript clob,
         description varchar2(256 char),
+        members number(11) not null,
        	oorder number(11) not null,
         primary key(id),
         unique(orgid, rolechartid, name),

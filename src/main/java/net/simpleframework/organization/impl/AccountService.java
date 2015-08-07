@@ -27,7 +27,6 @@ import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.PermissionConst;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.ctx.task.ExecutorRunnable;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
@@ -50,8 +49,7 @@ import net.simpleframework.organization.User;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountService extends AbstractDbBeanService<Account> implements IAccountService,
-		IOrganizationServiceImplAware {
+public class AccountService extends AbstractOrganizationService<Account> implements IAccountService {
 
 	@Override
 	public Account getAccountByName(final String name) {

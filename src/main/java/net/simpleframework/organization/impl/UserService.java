@@ -9,7 +9,6 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IUserService;
@@ -22,8 +21,7 @@ import net.simpleframework.organization.UserLob;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class UserService extends AbstractDbBeanService<User> implements IUserService,
-		IOrganizationServiceImplAware {
+public class UserService extends AbstractOrganizationService<User> implements IUserService {
 
 	@Override
 	public Account getAccount(final Object id) {

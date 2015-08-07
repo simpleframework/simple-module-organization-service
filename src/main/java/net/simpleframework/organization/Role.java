@@ -29,6 +29,9 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 	/* 标识用户识别的角色，比如，全体注册用户，这个用户是不能理解的，也没有意义的 */
 	private boolean userRole;
 
+	/* 统计，成员数 */
+	private int members;
+
 	public ID getRoleChartId() {
 		return roleChartId;
 	}
@@ -109,6 +112,14 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 
 	public void setUserRole(final boolean userRole) {
 		this.userRole = userRole;
+	}
+
+	public int getMembers() {
+		return members;
+	}
+
+	public void setMembers(final int members) {
+		this.members = Math.max(members, 0);
 	}
 
 	private static final long serialVersionUID = -911479175612535742L;

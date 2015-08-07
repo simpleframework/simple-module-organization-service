@@ -2,11 +2,11 @@ package net.simpleframework.organization.impl;
 
 import java.util.ArrayList;
 
+import net.simpleframework.ado.IParamsValue;
+import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.ERoleMemberType;
-import net.simpleframework.organization.IOrganizationContextAware;
 import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleMember;
@@ -17,8 +17,8 @@ import net.simpleframework.organization.RoleMember;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleMemberService extends AbstractDbBeanService<RoleMember> implements
-		IRoleMemberService, IOrganizationContextAware {
+public class RoleMemberService extends AbstractOrganizationService<RoleMember> implements
+		IRoleMemberService {
 
 	@Override
 	public IDataQuery<RoleMember> queryMembers(final Role role) {
@@ -62,5 +62,36 @@ public class RoleMemberService extends AbstractDbBeanService<RoleMember> impleme
 		}
 
 		update(new String[] { "primaryrole" }, beans.toArray(new RoleMember[beans.size()]));
+	}
+
+	@Override
+	public void onInit() throws Exception {
+		super.onInit();
+
+		addListener(new DbEntityAdapterEx<RoleMember>() {
+			@Override
+			public void onBeforeDelete(final IDbEntityManager<RoleMember> manager,
+					final IParamsValue paramsValue) throws Exception {
+				super.onBeforeDelete(manager, paramsValue);
+				for (final RoleMember rm : coll(manager, paramsValue)) {
+					doUpdateMembers(rm, -1);
+				}
+			}
+
+			@Override
+			public void onAfterInsert(final IDbEntityManager<RoleMember> manager,
+					final RoleMember[] beans) throws Exception {
+				super.onAfterInsert(manager, beans);
+				for (final RoleMember rm : beans) {
+					doUpdateMembers(rm, 0);
+				}
+			}
+
+			private void doUpdateMembers(final RoleMember rm, final int delta) {
+				final Role role = roleService.getBean(rm.getRoleId());
+				role.setMembers(count("roleid=?", role.getId()) + delta);
+				roleService.update(new String[] { "members" }, role);
+			}
+		});
 	}
 }

@@ -8,7 +8,6 @@ import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.BeanUtils.PropertyWrapper;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
-import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.AccountStat.EStatType;
@@ -24,8 +23,8 @@ import net.simpleframework.organization.User;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountStatService extends AbstractDbBeanService<AccountStat> implements
-		IAccountStatService, IOrganizationServiceImplAware {
+public class AccountStatService extends AbstractOrganizationService<AccountStat> implements
+		IAccountStatService {
 
 	@Override
 	public AccountStat getAllAccountStat() {
