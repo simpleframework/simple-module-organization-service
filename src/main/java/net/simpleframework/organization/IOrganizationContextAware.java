@@ -15,6 +15,8 @@ public interface IOrganizationContextAware extends IModuleContextAware {
 			.get(IOrganizationContext.class);
 
 	static final IAccountService _accountService = orgContext.getAccountService();
+	static final IAccountStatService _accountStatService = orgContext.getAccountStatService();
+
 	static final IUserService _userService = orgContext.getUserService();
 
 	static final IDepartmentService _deptService = orgContext.getDepartmentService();
