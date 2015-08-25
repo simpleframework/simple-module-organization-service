@@ -88,9 +88,9 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 			}
 
 			private void doUpdateMembers(final RoleMember rm, final int delta) {
-				final Role role = roleService.getBean(rm.getRoleId());
+				final Role role = _roleService.getBean(rm.getRoleId());
 				role.setMembers(count("roleid=?", role.getId()) + delta);
-				roleService.update(new String[] { "members" }, role);
+				_roleService.update(new String[] { "members" }, role);
 			}
 		});
 	}

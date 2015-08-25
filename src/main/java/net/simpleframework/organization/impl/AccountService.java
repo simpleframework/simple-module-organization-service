@@ -82,12 +82,12 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		if (id instanceof Account) {
 			account = (Account) id;
 		}
-		User user = userService.getBean(account != null ? account.getId() : id);
+		User user = _userService.getBean(account != null ? account.getId() : id);
 		if (user == null && (account != null || (account = getBean(id)) != null)) {
-			user = userService.createBean();
+			user = _userService.createBean();
 			user.setId(account.getId());
 			user.setText(account.getName());
-			userService.insert(user);
+			_userService.insert(user);
 		}
 		return user;
 	}
@@ -234,7 +234,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	protected int getAccountCount(final Department dept, final int accountType) {
 		// 大数据下，count性能太差
 		if (dept == null) {
-			final AccountStat stat = accountStatService.getAllAccountStat();
+			final AccountStat stat = _accountStatService.getAllAccountStat();
 			if (accountType == Account.TYPE_ALL) {
 				return stat.getNums();
 			} else if (accountType == Account.TYPE_STATE_NORMAL) {
@@ -337,19 +337,19 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			update(account);
 		}
 
-		User user = userService.getBean(account.getId());
+		User user = _userService.getBean(account.getId());
 		if (user == null) {
-			user = userService.createBean();
+			user = _userService.createBean();
 			user.setId(account.getId());
 			for (final Map.Entry<String, Object> e : userData.entrySet()) {
 				BeanUtils.setProperty(user, e.getKey(), e.getValue());
 			}
-			userService.insert(user);
+			_userService.insert(user);
 		} else {
 			for (final Map.Entry<String, Object> e : userData.entrySet()) {
 				BeanUtils.setProperty(user, e.getKey(), e.getValue());
 			}
-			userService.update(user);
+			_userService.update(user);
 		}
 		return account;
 	}
@@ -446,7 +446,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				super.onAfterDelete(manager, paramsValue);
 				for (final Account account : coll(manager, paramsValue)) {
 					// 删除用户
-					userService.delete(account.getId());
+					_userService.delete(account.getId());
 					deleteMember(account);
 					// 同步统计
 					updateStats(getUser(account.getId()).getDepartmentId());
@@ -535,22 +535,23 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	void deleteMember(final Account account) {
 		// 删除成员角色
-		rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
+		_rolemService
+				.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
 	}
 
 	void updateStats(final Object dept) {
 		if (dept == null) {
 			return;
 		}
-		final AccountStat stat = accountStatService.getDeptAccountStat(dept);
-		accountStatService.reset(stat);
-		accountStatService.setDeptStats(stat);
-		accountStatService.update(stat);
+		final AccountStat stat = _accountStatService.getDeptAccountStat(dept);
+		_accountStatServiceImpl.reset(stat);
+		_accountStatServiceImpl.setDeptStats(stat);
+		_accountStatService.update(stat);
 	}
 
 	void updateAllStats() {
-		final AccountStat stat = accountStatService.getAllAccountStat();
-		accountStatService.reset(stat);
+		final AccountStat stat = _accountStatService.getAllAccountStat();
+		_accountStatServiceImpl.reset(stat);
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager()
 				.query(
 						"select status, count(*) as c from " + getTablename(Account.class)
@@ -568,6 +569,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		// 全部及在线
 		stat.setNums(nums);
 		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
-		accountStatService.update(stat);
+		_accountStatService.update(stat);
 	}
 }

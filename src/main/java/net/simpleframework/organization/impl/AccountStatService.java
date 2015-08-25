@@ -47,7 +47,7 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		if (statType == EStatType.all) {
 			stat = getBean("stattype=?", statType);
 		} else {
-			_dept = obj instanceof Department ? (Department) obj : deptService.getBean(obj);
+			_dept = obj instanceof Department ? (Department) obj : _deptService.getBean(obj);
 			if (_dept == null) {
 				return null;
 			}
@@ -64,7 +64,7 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 			if (_dept != null) {
 				if (statType == EStatType.dept) {
 					stat.setDeptId(_dept.getId());
-					final Department org = deptService.getOrg(_dept);
+					final Department org = _deptService.getOrg(_dept);
 					if (org != null) {
 						stat.setOrgId(org.getId());
 					}

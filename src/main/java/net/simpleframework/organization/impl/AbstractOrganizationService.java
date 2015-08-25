@@ -3,6 +3,7 @@ package net.simpleframework.organization.impl;
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
+import net.simpleframework.organization.IOrganizationContextAware;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -11,7 +12,10 @@ import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
  *         http://www.simpleframework.net
  */
 public abstract class AbstractOrganizationService<T> extends AbstractDbBeanService<T> implements
-		IOrganizationServiceImplAware {
+		IOrganizationContextAware {
+
+	static final AccountService _accountServiceImpl = (AccountService) _accountService;
+	static final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
 
 	@Override
 	public IModuleContext getModuleContext() {

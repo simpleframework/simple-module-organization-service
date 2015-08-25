@@ -30,12 +30,12 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			user = (User) id;
 		}
 
-		Account account = accountService.getBean(user != null ? user.getId() : id);
+		Account account = _accountService.getBean(user != null ? user.getId() : id);
 		if (account == null && (user != null || (user = getBean(id)) != null)) {
-			account = accountService.createBean();
+			account = _accountService.createBean();
 			account.setId(user.getId());
 			account.setName(ObjectUtils.hashStr(user));
-			accountService.insert(account);
+			_accountService.insert(account);
 		}
 		return account;
 	}
@@ -83,9 +83,9 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
 			final ColumnData order) {
-		final IDataQuery<User> dq = query(accountService.toAccountsSQLValue(dept, accountType, false,
-				new ColumnData[] { order != null ? order : ColumnData.DESC("u.oorder") }));
-		dq.setCount(accountService.getAccountCount(dept, accountType));
+		final IDataQuery<User> dq = query(_accountServiceImpl.toAccountsSQLValue(dept, accountType,
+				false, new ColumnData[] { order != null ? order : ColumnData.DESC("u.oorder") }));
+		dq.setCount(_accountServiceImpl.getAccountCount(dept, accountType));
 		return dq;
 	}
 
@@ -127,11 +127,11 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 					final String deptId = Convert.toString(user.getDepartmentId());
 					if (!ObjectUtils.objectEquals(_deptId, deptId)) {
 						// 更新变化前后部门的统计值
-						accountService.updateStats(deptId);
-						accountService.updateStats(_deptId);
+						_accountServiceImpl.updateStats(deptId);
+						_accountServiceImpl.updateStats(_deptId);
 					}
 				}
-				accountService.updateAllStats();
+				_accountServiceImpl.updateAllStats();
 			}
 		});
 	}

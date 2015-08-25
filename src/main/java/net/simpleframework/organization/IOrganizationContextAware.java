@@ -20,4 +20,8 @@ public interface IOrganizationContextAware extends IModuleContextAware {
 	static final IUserService _userService = orgContext.getUserService();
 
 	static final IDepartmentService _deptService = orgContext.getDepartmentService();
+
+	static final IRoleService _roleService = orgContext.getRoleService();
+	static final IRoleChartService _rolecService = orgContext.getRoleChartService();
+	static final IRoleMemberService _rolemService = orgContext.getRoleMemberService();
 }

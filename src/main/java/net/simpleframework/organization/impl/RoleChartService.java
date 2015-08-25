@@ -48,7 +48,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 
 	@Override
 	public String toUniqueName(final RoleChart chart) {
-		final Department org = deptService.getBean(chart.getOrgId());
+		final Department org = _deptService.getBean(chart.getOrgId());
 		return RolenameW.toUniqueChartname(org != null ? org.getName() : null, chart.getName());
 	}
 
@@ -57,12 +57,12 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		RoleChart chart = null;
 		final String[] arr = RolenameW.split(name);
 		if (arr.length == 2) {
-			chart = getRoleChartByName(deptService.getDepartmentByName(arr[0]), arr[1]);
+			chart = getRoleChartByName(_deptService.getDepartmentByName(arr[0]), arr[1]);
 		} else {
 			chart = getBean("orgid is null and name=?", name);
 			ChartW w;
 			if (chart == null && (w = RolenameW.getBuiltInChart(name)) != null && !w.isOrg()) {
-				rolecService.insert(chart = createChart(w));
+				_rolecService.insert(chart = createChart(w));
 			}
 		}
 		return chart;
@@ -78,7 +78,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		if (chart == null && (w = RolenameW.getBuiltInChart(name)) != null && w.isOrg()) {
 			chart = createChart(w);
 			chart.setOrgId(org.getId());
-			rolecService.insert(chart);
+			_rolecService.insert(chart);
 		}
 		return chart;
 	}
@@ -109,7 +109,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 					}
 
 					// 已存在角色
-					if (roleService.queryRoot(chart).getCount() > 0) {
+					if (_roleService.queryRoot(chart).getCount() > 0) {
 						throw OrganizationException.of($m("RoleChartService.3"));
 					}
 				}
@@ -121,7 +121,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 				super.onBeforeInsert(manager, beans);
 				// 视图只能加在机构上
 				for (final RoleChart chart : beans) {
-					final Department org = deptService.getBean(chart.getOrgId());
+					final Department org = _deptService.getBean(chart.getOrgId());
 					if (org != null && org.getDepartmentType() == EDepartmentType.department) {
 						throw OrganizationException.of($m("RoleChartService.4"));
 					}

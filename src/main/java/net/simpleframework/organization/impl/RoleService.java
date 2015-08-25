@@ -46,13 +46,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public RoleChart getRoleChart(final Role role) {
-		return role == null ? null : rolecService.getBean(role.getRoleChartId());
+		return role == null ? null : _rolecService.getBean(role.getRoleChartId());
 	}
 
 	@Override
 	public String toUniqueName(final Role role) {
 		final RoleChart chart = getRoleChart(role);
-		final Department org = deptService.getBean(chart.getOrgId());
+		final Department org = _deptService.getBean(chart.getOrgId());
 		return RolenameW.toUniqueRolename(org != null ? org.getName() : null, chart.getName(),
 				role.getName());
 	}
@@ -62,10 +62,10 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		final String[] arr = RolenameW.split(name);
 		if (arr.length == 3) {
 			return getRoleByName(
-					rolecService.getRoleChartByName(deptService.getDepartmentByName(arr[0]), arr[1]),
+					_rolecService.getRoleChartByName(_deptService.getDepartmentByName(arr[0]), arr[1]),
 					arr[2]);
 		} else if (arr.length == 2) {
-			return getRoleByName(rolecService.getRoleChartByName(arr[0]), arr[1]);
+			return getRoleByName(_rolecService.getRoleChartByName(arr[0]), arr[1]);
 		} else {
 			throw OrganizationException.of($m("RoleService.2"));
 		}
@@ -149,12 +149,12 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
-			if (rolemService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
+			if (_rolemService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
 					ERoleMemberType.user, user.getId()) != null) {
 				variables.put(PermissionConst.VAR_ROLEID, role.getId());
 				return true;
 			} else {
-				final IDataQuery<RoleMember> dq = rolemService.query("roleid=? and membertype=?",
+				final IDataQuery<RoleMember> dq = _rolemService.query("roleid=? and membertype=?",
 						role.getId(), ERoleMemberType.role);
 				RoleMember jm;
 				while ((jm = dq.next()) != null) {
@@ -188,7 +188,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		}
 		for (final String rr : StringUtils.split(roleRule, ";")) {
 			if (rr.startsWith("#")) { // #开头则认为是用户名
-				final User user2 = userService.getBean(rr.substring(1));
+				final User user2 = _userService.getBean(rr.substring(1));
 				if (user2 != null && user2.equals(user)) {
 					return true;
 				}
@@ -204,7 +204,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@Override
 	public boolean isManager(final User user, final Map<String, Object> variables) {
 		Account account;
-		if (user != null && (account = userService.getAccount(user.getId())) != null
+		if (user != null && (account = _userService.getAccount(user.getId())) != null
 				&& account.isAdmin()) {
 			return true;
 		}
@@ -213,7 +213,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public IDataQuery<RoleMember> members(final Role role) {
-		return rolemService.queryMembers(role);
+		return _rolemService.queryMembers(role);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -233,7 +233,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					while ((jm = dq.next()) != null) {
 						final ID memberId = jm.getMemberId();
 						if (jm.getMemberType() == ERoleMemberType.user) {
-							user = userService.getBean(memberId);
+							user = _userService.getBean(memberId);
 							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
 								variables.put(PermissionConst.VAR_ROLEID, role.getId());
 								variables.put(PermissionConst.VAR_DEPTID, jm.getDeptId());
@@ -274,7 +274,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public Iterator<Role> roles(final User user, final Map<String, Object> variables) {
-		final IDataQuery<RoleMember> dq = rolemService.query("memberType=? and memberId=?",
+		final IDataQuery<RoleMember> dq = _rolemService.query("memberType=? and memberId=?",
 				ERoleMemberType.user, user.getId());
 		final boolean _userRole = Convert.toBool(variables.get("userRole"), false);
 		final boolean _ruleRole = Convert.toBool(variables.get("ruleRole"), false);
@@ -320,7 +320,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@Override
 	public Role getPrimaryRole(final User user) {
 		Role r = null;
-		final RoleMember rm = rolemService.getBean("memberType=? and memberId=? and primaryRole=?",
+		final RoleMember rm = _rolemService.getBean("memberType=? and memberId=? and primaryRole=?",
 				ERoleMemberType.user, user.getId(), true);
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
@@ -356,11 +356,11 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					if (role.getRoleMark() == ERoleMark.builtIn) {
 						throw OrganizationException.of($m("RoleService.0"));
 					}
-					if (rolemService.queryMembers(role).getCount() > 0) {
+					if (_rolemService.queryMembers(role).getCount() > 0) {
 						throw OrganizationException.of($m("RoleService.3"));
 					}
 					// 删除成员
-					rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.role,
+					_rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.role,
 							role.getId());
 				}
 			}
