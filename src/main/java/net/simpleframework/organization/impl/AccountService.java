@@ -496,7 +496,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		getTaskExecutor().addScheduledTask(new ExecutorRunnable() {
 
 			@Override
-			public long getPeriod() {
+			public int getPeriod() {
 				return 60 * 2;
 			}
 
