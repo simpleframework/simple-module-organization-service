@@ -14,9 +14,6 @@ import net.simpleframework.organization.IOrganizationContextAware;
 public abstract class AbstractOrganizationService<T> extends AbstractDbBeanService<T> implements
 		IOrganizationContextAware {
 
-	static final AccountService _accountServiceImpl = (AccountService) _accountService;
-	static final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
-
 	@Override
 	public IModuleContext getModuleContext() {
 		return orgContext;

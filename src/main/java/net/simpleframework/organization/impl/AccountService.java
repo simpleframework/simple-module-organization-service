@@ -571,4 +571,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
 		_accountStatService.update(stat);
 	}
+
+	static final AccountStatService _accountStatServiceImpl = (AccountStatService) orgContext
+			.getAccountStatService();
 }

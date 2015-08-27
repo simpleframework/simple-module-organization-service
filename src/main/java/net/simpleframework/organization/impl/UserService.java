@@ -135,4 +135,7 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			}
 		});
 	}
+
+	final static AccountService _accountServiceImpl = (AccountService) orgContext
+			.getAccountService();
 }
