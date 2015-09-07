@@ -268,52 +268,59 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	}
 
 	@Override
-	public Iterator<Role> roles(final User user) {
+	public Iterator<RoleM> roles(final User user) {
 		return roles(user, new KVMap());
 	}
 
 	@Override
-	public Iterator<Role> roles(final User user, final Map<String, Object> variables) {
+	public Iterator<RoleM> roles(final User user, final Map<String, Object> variables) {
 		final IDataQuery<RoleMember> dq = _rolemService.query("memberType=? and memberId=?",
 				ERoleMemberType.user, user.getId());
+		// 是否仅显示用户识别的角色
 		final boolean _userRole = Convert.toBool(variables.get("userRole"), false);
+		// 是否分析规则角色
 		final boolean _ruleRole = Convert.toBool(variables.get("ruleRole"), false);
+		// 显示同一机构的角色
 		final boolean _inOrg = Convert.toBool(variables.get("inOrg"), false);
-		return new AbstractIterator<Role>() {
+		return new AbstractIterator<RoleM>() {
 			@Override
 			public boolean hasNext() {
 				RoleMember jm;
 				while ((jm = dq.next()) != null) {
-					role = getBean(jm.getRoleId());
+					final Role role = getBean(jm.getRoleId());
 					if (role != null && (!_userRole || role.isUserRole())
 							&& (!_inOrg || ObjectUtils.objectEquals(role.getOrgId(), user.getOrgId()))) {
-						return true;
+						return r(new RoleM(role, jm));
 					}
 				}
 				if (_ruleRole) {
+					// 调用此处，会造成大量计算
 					if (qd2 == null) {
-						qd2 = query("roleType=? or roleType=?", ERoleType.handle, ERoleType.script);
+						qd2 = query("roletype=? or roletype=?", ERoleType.handle, ERoleType.script);
 					}
 					Role r;
 					while ((r = qd2.next()) != null) {
-						if (isMember(user, r, variables) && (!_userRole || role.isUserRole())
-								&& (!_inOrg || ObjectUtils.objectEquals(role.getOrgId(), user.getOrgId()))) {
-							role = r;
-							return true;
+						if ((!_userRole || r.isUserRole())
+								&& (!_inOrg || ObjectUtils.objectEquals(r.getOrgId(), user.getOrgId()))
+								&& isMember(user, r, variables)) {
+							return r(new RoleM(r));
 						}
 					}
 				}
-				return false;
+				return r(null);
+			}
+
+			private boolean r(final RoleM _rolem) {
+				return (rolem = _rolem) != null;
 			}
 
 			@Override
-			public Role next() {
-				return role;
+			public RoleM next() {
+				return rolem;
 			}
 
-			Role role = null;
-
-			IDataQuery<Role> qd2 = null;
+			private RoleM rolem = null;
+			private IDataQuery<Role> qd2 = null;
 		};
 	}
 
@@ -325,9 +332,9 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (rm != null) {
 			r = getBean(rm.getRoleId());
 		} else {
-			final Iterator<Role> it = roles(user, new KVMap());
+			final Iterator<RoleM> it = roles(user, new KVMap());
 			if (it.hasNext()) {
-				r = it.next();
+				r = it.next().role;
 			}
 		}
 		if (r == null) {

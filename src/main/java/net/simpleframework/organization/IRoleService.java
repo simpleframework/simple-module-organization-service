@@ -134,9 +134,9 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 *        userRole: 是否仅返回用户角色
 	 * @return
 	 */
-	Iterator<Role> roles(User user, Map<String, Object> variables);
+	Iterator<RoleM> roles(User user, Map<String, Object> variables);
 
-	Iterator<Role> roles(User user);
+	Iterator<RoleM> roles(User user);
 
 	/**
 	 * 获取用户的主要角色
@@ -145,4 +145,18 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	 * @return
 	 */
 	Role getPrimaryRole(User user);
+
+	public static class RoleM {
+		public RoleMember rm;
+		public Role role;
+
+		public RoleM(final Role role, final RoleMember rm) {
+			this.role = role;
+			this.rm = rm;
+		}
+
+		public RoleM(final Role role) {
+			this(role, null);
+		}
+	}
 }
