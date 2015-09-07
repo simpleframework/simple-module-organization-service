@@ -19,8 +19,6 @@ public interface IRoleMemberService extends IDbBeanService<RoleMember> {
 	 */
 	IDataQuery<RoleMember> queryMembers(Role role);
 
-	RoleMember getRoleMember(Role role, ERoleMemberType mtype, Object memberId);
-
 	/**
 	 * 设置当前成员为主要成员
 	 * 

@@ -29,13 +29,6 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 	}
 
 	@Override
-	public RoleMember getRoleMember(final Role role, final ERoleMemberType mtype,
-			final Object memberId) {
-		return getBean("roleId=? and memberType=? and memberId=?", role.getId(),
-				ERoleMemberType.user, memberId);
-	}
-
-	@Override
 	public void setPrimary(final RoleMember member) {
 		if (member == null || member.getMemberType() != ERoleMemberType.user) {
 			return;
@@ -67,6 +60,19 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 	@Override
 	public void onInit() throws Exception {
 		super.onInit();
+
+		// patch
+		// final IDataQuery<RoleMember> dq =
+		// query("membertype=? and deptId is null",
+		// ERoleMemberType.user);
+		// RoleMember rm;
+		// while ((rm = dq.next()) != null) {
+		// final User user = _userService.getBean(rm.getMemberId());
+		// if (user != null) {
+		// rm.setDeptId(user.getDepartmentId());
+		// update(new String[] { "deptId" }, rm);
+		// }
+		// }
 
 		addListener(new DbEntityAdapterEx<RoleMember>() {
 			@Override

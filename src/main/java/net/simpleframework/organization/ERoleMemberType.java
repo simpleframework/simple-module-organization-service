@@ -11,7 +11,6 @@ import static net.simpleframework.common.I18n.$m;
 public enum ERoleMemberType {
 	/* 用户 */
 	user {
-
 		@Override
 		public String toString() {
 			return $m("ERoleMemberType.user");
@@ -20,7 +19,6 @@ public enum ERoleMemberType {
 
 	/* 角色，不能嵌套 */
 	role {
-
 		@Override
 		public String toString() {
 			return $m("ERoleMemberType.role");
@@ -28,7 +26,7 @@ public enum ERoleMemberType {
 	},
 
 	/* 部门 */
-	dept {
+	dept2 {
 		@Override
 		public String toString() {
 			return $m("ERoleMemberType.dept");

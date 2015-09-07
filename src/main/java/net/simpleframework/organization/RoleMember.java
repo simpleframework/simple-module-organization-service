@@ -4,7 +4,6 @@ import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
-import net.simpleframework.ctx.ModuleContextFactory;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -13,7 +12,8 @@ import net.simpleframework.ctx.ModuleContextFactory;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAware {
+public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAware,
+		IOrganizationContextAware {
 	private ID roleId;
 
 	private ERoleMemberType memberType;
@@ -77,6 +77,10 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 	}
 
 	public ID getDeptId() {
+		if (deptId == null && getMemberType() == ERoleMemberType.user) {
+			final User user = _userService.getBean(getMemberId());
+			return user != null ? user.getDepartmentId() : null;
+		}
 		return deptId;
 	}
 
@@ -96,16 +100,14 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 
 	@Override
 	public String toString() {
-		final IOrganizationContext context = ModuleContextFactory.get(IOrganizationContext.class);
 		final StringBuilder sb = new StringBuilder();
 		final ERoleMemberType mType = getMemberType();
 		if (mType == ERoleMemberType.user) {
-			sb.append(context.getUserService().getBean(getMemberId()));
+			sb.append(_userService.getBean(getMemberId()));
 		} else {
-			final IRoleService rService = context.getRoleService();
-			final Role role = rService.getBean(getMemberId());
+			final Role role = _roleService.getBean(getMemberId());
 			if (role != null) {
-				final RoleChart chart = rService.getRoleChart(role);
+				final RoleChart chart = _roleService.getRoleChart(role);
 				sb.append(chart.getText()).append(":").append(role.getText());
 			}
 		}
