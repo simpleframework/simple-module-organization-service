@@ -15,9 +15,10 @@ public interface IRoleMemberService extends IDbBeanService<RoleMember> {
 	 * 获取指定角色的成员
 	 * 
 	 * @param role
+	 * @param dept
 	 * @return 当角色类型为规则角色时，返回空集合
 	 */
-	IDataQuery<RoleMember> queryMembers(Role role);
+	IDataQuery<RoleMember> queryRoleMembers(Role role, Department dept);
 
 	/**
 	 * 设置当前成员为主要成员

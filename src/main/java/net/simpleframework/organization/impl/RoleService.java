@@ -211,17 +211,12 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return isMember(user, PermissionConst.ROLE_MANAGER, variables);
 	}
 
-	@Override
-	public IDataQuery<RoleMember> members(final Role role) {
-		return _rolemService.queryMembers(role);
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<User> users(final Role role, final ID deptId, final Map<String, Object> variables) {
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
-			final IDataQuery<RoleMember> dq = members(role);
+			final IDataQuery<RoleMember> dq = _rolemService.queryRoleMembers(role, null);
 			return new AbstractIterator<User>() {
 				@Override
 				public boolean hasNext() {
@@ -363,7 +358,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					if (role.getRoleMark() == ERoleMark.builtIn) {
 						throw OrganizationException.of($m("RoleService.0"));
 					}
-					if (_rolemService.queryMembers(role).getCount() > 0) {
+					if (_rolemService.queryRoleMembers(role, null).getCount() > 0) {
 						throw OrganizationException.of($m("RoleService.3"));
 					}
 					// 删除成员

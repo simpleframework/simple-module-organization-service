@@ -1,12 +1,16 @@
 package net.simpleframework.organization.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.coll.ArrayUtils;
+import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleMemberType;
+import net.simpleframework.organization.ERoleType;
 import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleMember;
@@ -21,11 +25,17 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 		IRoleMemberService {
 
 	@Override
-	public IDataQuery<RoleMember> queryMembers(final Role role) {
-		if (role == null) {
+	public IDataQuery<RoleMember> queryRoleMembers(final Role role, final Department dept) {
+		if (role == null || role.getRoleType() != ERoleType.normal) {
 			return DataQueryUtils.nullQuery();
 		}
-		return query("roleid=? order by oorder", role.getId());
+		final StringBuilder sb = new StringBuilder("roleid=?");
+		final List<Object> params = ArrayUtils.toParams(role.getId());
+		if (dept != null) {
+			sb.append(" and deptid=?");
+			params.add(dept.getId());
+		}
+		return query(sb.append(" order by oorder"), params.toArray());
 	}
 
 	@Override
@@ -60,19 +70,6 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 	@Override
 	public void onInit() throws Exception {
 		super.onInit();
-
-		// patch
-		// final IDataQuery<RoleMember> dq =
-		// query("membertype=? and deptId is null",
-		// ERoleMemberType.user);
-		// RoleMember rm;
-		// while ((rm = dq.next()) != null) {
-		// final User user = _userService.getBean(rm.getMemberId());
-		// if (user != null) {
-		// rm.setDeptId(user.getDepartmentId());
-		// update(new String[] { "deptId" }, rm);
-		// }
-		// }
 
 		addListener(new DbEntityAdapterEx<RoleMember>() {
 			@Override

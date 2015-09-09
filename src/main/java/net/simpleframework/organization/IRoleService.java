@@ -106,14 +106,6 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	boolean isManager(User user, Map<String, Object> variables);
 
 	/**
-	 * 获取指定角色的成员
-	 * 
-	 * @param role
-	 * @return 当角色类型为规则角色时，返回空集合
-	 */
-	IDataQuery<RoleMember> members(Role role);
-
-	/**
 	 * 获取角色的成员列表，和{@link #members(IRole)}的区别：members返回成员的关系，而users返回用户
 	 * 
 	 * @param role
