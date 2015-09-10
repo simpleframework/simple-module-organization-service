@@ -1,5 +1,7 @@
 package net.simpleframework.organization;
 
+import java.util.Map;
+
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 
@@ -19,6 +21,8 @@ public interface IRoleMemberService extends IDbBeanService<RoleMember> {
 	 * @return 当角色类型为规则角色时，返回空集合
 	 */
 	IDataQuery<RoleMember> queryRoleMembers(Role role, Department dept);
+
+	Map<Department, Integer> getMemberNums(Role role);
 
 	/**
 	 * 设置当前成员为主要成员

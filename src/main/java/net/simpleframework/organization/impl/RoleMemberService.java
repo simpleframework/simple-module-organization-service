@@ -1,13 +1,19 @@
 package net.simpleframework.organization.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.simpleframework.ado.IParamsValue;
+import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.Convert;
 import net.simpleframework.common.coll.ArrayUtils;
+import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.ERoleMemberType;
 import net.simpleframework.organization.ERoleType;
@@ -36,6 +42,26 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 			params.add(dept.getId());
 		}
 		return query(sb.append(" order by oorder"), params.toArray());
+	}
+
+	@Override
+	public Map<Department, Integer> getMemberNums(final Role role) {
+		if (role == null || role.getRoleType() != ERoleType.normal) {
+			return CollectionUtils.EMPTY_MAP();
+		}
+		final Map<Department, Integer> stat = new HashMap<Department, Integer>();
+		final StringBuilder sb = new StringBuilder("select deptid, count(*) as c from ").append(
+				getTablename(RoleMember.class)).append(" where roleid=? group by deptid");
+		final IDbDataQuery<Map<String, Object>> dq = getEntityManager().queryMapSet(
+				new SQLValue(sb, role.getId()));
+		Map<String, Object> row;
+		while ((row = dq.next()) != null) {
+			final Department dept = _deptService.getBean(row.get("deptid"));
+			if (dept != null) {
+				stat.put(dept, Convert.toInt(row.get("c")));
+			}
+		}
+		return stat;
 	}
 
 	@Override
