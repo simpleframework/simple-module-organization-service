@@ -300,6 +300,11 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
+	protected ColumnData[] getDefaultOrderColumns() {
+		return ORDER_CREATEDATE;
+	}
+
+	@Override
 	public Account doSave(final Account account, final String name, final String password,
 			final EAccountStatus status, final Map<String, Object> userData) {
 		return doSave(account, name, password, EAccountMark.normal, status, userData);
