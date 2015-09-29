@@ -9,7 +9,7 @@ import java.util.Map;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.TextNamedObject;
 import net.simpleframework.ctx.IApplicationContext;
-import net.simpleframework.ctx.IApplicationStartup;
+import net.simpleframework.ctx.hdl.IApplicationStartupHandler;
 import net.simpleframework.ctx.permission.PermissionConst;
 
 /**
@@ -18,7 +18,7 @@ import net.simpleframework.ctx.permission.PermissionConst;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RolenameW extends PermissionConst implements IApplicationStartup {
+public class RolenameW implements IApplicationStartupHandler {
 
 	public static final String ROLECHART_SYSTEM = "syschart";
 	public static final String ROLECHART_ORG_DEFAULT = "odefault";
@@ -50,11 +50,11 @@ public class RolenameW extends PermissionConst implements IApplicationStartup {
 
 	@Override
 	public void onStartup(final IApplicationContext application) throws Exception {
-		ROLE_ANONYMOUS = toUniqueRolename(ROLECHART_SYSTEM, "anonymous");
-		ROLE_ALL_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_all");
-		ROLE_LOCK_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_lock");
-		ROLE_INDEPT = toUniqueRolename(ROLECHART_SYSTEM, "indept");
-		ROLE_MANAGER = toUniqueRolename(ROLECHART_SYSTEM, "manager");
+		PermissionConst.ROLE_ANONYMOUS = toUniqueRolename(ROLECHART_SYSTEM, "anonymous");
+		PermissionConst.ROLE_ALL_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_all");
+		PermissionConst.ROLE_LOCK_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_lock");
+		PermissionConst.ROLE_INDEPT = toUniqueRolename(ROLECHART_SYSTEM, "indept");
+		PermissionConst.ROLE_MANAGER = toUniqueRolename(ROLECHART_SYSTEM, "manager");
 
 		ROLE_ORGANIZATION_MANAGER = RolenameW.toUniqueRolename(RolenameW.ROLECHART_SYSTEM, "orgmgr");
 

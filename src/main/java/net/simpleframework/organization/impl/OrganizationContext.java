@@ -7,7 +7,6 @@ import java.util.Map;
 
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.db.DbEntityTable;
-import net.simpleframework.ado.db.IDbEntityTableRegistry;
 import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
@@ -39,7 +38,7 @@ import net.simpleframework.organization.UserLob;
  *         http://www.simpleframework.net
  */
 public abstract class OrganizationContext extends AbstractADOModuleContext implements
-		IOrganizationContext, IDbEntityTableRegistry {
+		IOrganizationContext {
 	/* 机构管理员角色 */
 	public static String ROLE_ORGANIZATION_MANAGER;
 
@@ -55,7 +54,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 	}
 
 	@Override
-	public DbEntityTable[] createEntityTables() {
+	protected DbEntityTable[] createEntityTables() {
 		return new DbEntityTable[] {
 				new DbEntityTable(Account.class, "sf_organization_account"),
 				new DbEntityTable(User.class, "sf_organization_user"),
