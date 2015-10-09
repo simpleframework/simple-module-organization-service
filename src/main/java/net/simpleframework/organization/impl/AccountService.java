@@ -27,7 +27,7 @@ import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.PermissionConst;
-import net.simpleframework.ctx.task.ExecutorRunnable;
+import net.simpleframework.ctx.task.ExecutorRunnableEx;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
@@ -498,13 +498,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			}
 		});
 
-		getTaskExecutor().addScheduledTask(new ExecutorRunnable() {
-
-			@Override
-			public int getPeriod() {
-				return 60 * 2;
-			}
-
+		getTaskExecutor().addScheduledTask(new ExecutorRunnableEx("account_stat") {
 			@Override
 			protected void task(final Map<String, Object> cache) throws Exception {
 				_updateStats(_UPDATE_ASYNC);
