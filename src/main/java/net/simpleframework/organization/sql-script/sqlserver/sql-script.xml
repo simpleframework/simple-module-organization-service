@@ -142,20 +142,6 @@
   </tran-sql>
   <tran-sql>
     <![CDATA[
-      create table sf_organization_roleresource (
-      	id char(32) not null,
-        roleid char(32) not null,
-        resourcetype tinyint not null,
-        resourceid char(32) not null,
-        resourcetext varchar(64),
-        description varchar(256),
-        primary key(id),
-        unique(roleid, resourcetype, resourceid)
-      );
-    ]]>
-  </tran-sql>
-  <tran-sql>
-    <![CDATA[
       create table sf_organization_accountstat (
         id char(32) not null,
         deptid char(32),
