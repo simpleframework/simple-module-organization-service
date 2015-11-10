@@ -1,4 +1,4 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization.role;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -7,7 +7,6 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.organization.IOrganizationContextAware;
-import net.simpleframework.organization.IRoleHandler;
 import net.simpleframework.organization.User;
 
 /**

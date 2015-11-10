@@ -29,18 +29,18 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.task.ExecutorRunnableEx;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Account.EAccountMark;
+import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.EAccountMark;
-import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.EDepartmentType;
-import net.simpleframework.organization.ERoleMemberType;
+import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountSession;
 import net.simpleframework.organization.IOrganizationContext;
 import net.simpleframework.organization.LoginObject;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.OrganizationMessageRef;
+import net.simpleframework.organization.RoleMember.ERoleMemberType;
 import net.simpleframework.organization.User;
 
 /**

@@ -20,16 +20,17 @@ import net.simpleframework.organization.IAccountStatService;
 import net.simpleframework.organization.IDepartmentService;
 import net.simpleframework.organization.IOrganizationContext;
 import net.simpleframework.organization.IRoleChartService;
-import net.simpleframework.organization.IRoleHandler;
 import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.Role;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
-import net.simpleframework.organization.RolenameW;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
+import net.simpleframework.organization.role.BuiltInRole;
+import net.simpleframework.organization.role.IRoleHandler;
+import net.simpleframework.organization.role.RolenameW;
 
 /**
  * Licensed under the Apache License, Version 2.0

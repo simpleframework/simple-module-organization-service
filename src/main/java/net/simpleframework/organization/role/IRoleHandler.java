@@ -1,7 +1,9 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.role;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import net.simpleframework.organization.User;
 
 /**
  * Licensed under the Apache License, Version 2.0

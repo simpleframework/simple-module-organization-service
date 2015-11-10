@@ -7,6 +7,7 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.ITreeBeanServiceAware;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
+import net.simpleframework.organization.role.IRoleHandler;
 
 /**
  * Licensed under the Apache License, Version 2.0

@@ -9,11 +9,11 @@ import net.simpleframework.common.BeanUtils.PropertyWrapper;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.AccountStat.EStatType;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.EAccountStatus;
-import net.simpleframework.organization.EDepartmentType;
+import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IAccountStatService;
 import net.simpleframework.organization.User;
 

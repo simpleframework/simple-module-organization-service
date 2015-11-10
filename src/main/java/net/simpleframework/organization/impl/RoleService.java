@@ -22,18 +22,18 @@ import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.ERoleMark;
-import net.simpleframework.organization.ERoleMemberType;
-import net.simpleframework.organization.ERoleType;
-import net.simpleframework.organization.IRoleHandler;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.Role;
+import net.simpleframework.organization.Role.ERoleMark;
+import net.simpleframework.organization.Role.ERoleType;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
-import net.simpleframework.organization.RolenameW;
-import net.simpleframework.organization.RolenameW.RoleW;
+import net.simpleframework.organization.RoleMember.ERoleMemberType;
 import net.simpleframework.organization.User;
+import net.simpleframework.organization.role.IRoleHandler;
+import net.simpleframework.organization.role.RolenameW;
+import net.simpleframework.organization.role.RolenameW.RoleW;
 
 /**
  * Licensed under the Apache License, Version 2.0

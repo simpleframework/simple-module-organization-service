@@ -8,7 +8,7 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.EDepartmentType;
+import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IDepartmentService;
 import net.simpleframework.organization.OrganizationException;
 

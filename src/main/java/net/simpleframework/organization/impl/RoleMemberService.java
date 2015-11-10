@@ -15,11 +15,11 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.ERoleMemberType;
-import net.simpleframework.organization.ERoleType;
 import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.Role;
+import net.simpleframework.organization.Role.ERoleType;
 import net.simpleframework.organization.RoleMember;
+import net.simpleframework.organization.RoleMember.ERoleMemberType;
 
 /**
  * Licensed under the Apache License, Version 2.0

@@ -1,9 +1,11 @@
 package net.simpleframework.organization;
 
+import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
+import net.simpleframework.organization.Role.ERoleType;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -112,6 +114,32 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 			}
 		}
 		return sb.toString();
+	}
+
+	public static enum ERoleMemberType {
+		/* 用户 */
+		user {
+			@Override
+			public String toString() {
+				return $m("ERoleMemberType.user");
+			}
+		},
+
+		/* 角色，不能嵌套 */
+		role {
+			@Override
+			public String toString() {
+				return $m("ERoleMemberType.role");
+			}
+		},
+
+		/* 部门 */
+		dept2 {
+			@Override
+			public String toString() {
+				return $m("ERoleMemberType.dept");
+			}
+		}
 	}
 
 	private static final long serialVersionUID = -6268885963912176924L;

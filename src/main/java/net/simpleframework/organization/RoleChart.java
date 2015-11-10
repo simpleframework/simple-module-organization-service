@@ -41,5 +41,17 @@ public class RoleChart extends AbstractOrganizationBean {
 		this.chartMark = chartMark;
 	}
 
+	public static enum ERoleChartMark {
+		/**
+		 * 正常标识
+		 */
+		normal,
+
+		/**
+		 * 内置角色视图标识
+		 */
+		builtIn
+	}
+
 	private static final long serialVersionUID = 7240516228770129459L;
 }

@@ -1,4 +1,4 @@
-package net.simpleframework.organization.impl;
+package net.simpleframework.organization.role;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -7,8 +7,8 @@ import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
+import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.EAccountStatus;
 import net.simpleframework.organization.User;
 
 /**

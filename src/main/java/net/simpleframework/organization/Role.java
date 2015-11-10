@@ -121,5 +121,54 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 		this.members = Math.max(members, 0);
 	}
 
+	public static enum ERoleType {
+
+		/**
+		 * 正常的角色类型，需要分配角色成员
+		 */
+		normal {
+
+			@Override
+			public String toString() {
+				return $m("ERoleType.normal");
+			}
+		},
+
+		/**
+		 * 接口类型
+		 */
+		handle {
+
+			@Override
+			public String toString() {
+				return $m("ERoleType.handle");
+			}
+		},
+
+		/**
+		 * 表达式返回Boolean，判断是否角色成员
+		 */
+		script {
+
+			@Override
+			public String toString() {
+				return $m("ERoleType.script");
+			}
+		}
+	}
+
+	public static enum ERoleMark {
+
+		/**
+		 * 正常标识
+		 */
+		normal,
+
+		/**
+		 * 内置角色标识
+		 */
+		builtIn
+	}
+
 	private static final long serialVersionUID = -911479175612535742L;
 }

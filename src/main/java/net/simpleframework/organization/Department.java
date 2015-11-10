@@ -1,5 +1,6 @@
 package net.simpleframework.organization;
 
+import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.bean.ITreeBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
@@ -43,6 +44,28 @@ public class Department extends AbstractOrganizationBean implements ITreeBeanAwa
 	// public void setUsers(final int users) {
 	// this.users = users;
 	// }
+	public static enum EDepartmentType {
+		/**
+		 * 部门
+		 */
+		department {
+
+			@Override
+			public String toString() {
+				return $m("EDepartmentType.department");
+			}
+		},
+		/**
+		 * 机构
+		 */
+		organization {
+
+			@Override
+			public String toString() {
+				return $m("EDepartmentType.organization");
+			}
+		}
+	}
 
 	private static final long serialVersionUID = 4763200601974069965L;
 }

@@ -6,13 +6,13 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.organization.Department;
-import net.simpleframework.organization.EDepartmentType;
-import net.simpleframework.organization.ERoleChartMark;
+import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.RoleChart;
-import net.simpleframework.organization.RolenameW;
-import net.simpleframework.organization.RolenameW.ChartW;
+import net.simpleframework.organization.RoleChart.ERoleChartMark;
+import net.simpleframework.organization.role.RolenameW;
+import net.simpleframework.organization.role.RolenameW.ChartW;
 
 /**
  * Licensed under the Apache License, Version 2.0

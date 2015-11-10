@@ -1,5 +1,7 @@
 package net.simpleframework.organization;
 
+import static net.simpleframework.common.I18n.$m;
+
 import java.util.Date;
 
 import net.simpleframework.ado.ColumnMeta;
@@ -232,6 +234,80 @@ public class Account extends AbstractNameBean {
 
 	public static String encrypt(final String password) {
 		return AlgorithmUtils.md5Hex(password == null ? "" : password.trim());
+	}
+
+	public static enum EAccountMark {
+
+		/**
+		 * 正常标识
+		 */
+		normal,
+
+		/**
+		 * 内置账号标识
+		 */
+		builtIn
+	}
+
+	public static enum EAccountStatus {
+
+		/**
+		 * 正常
+		 */
+		normal {
+			@Override
+			public String toString() {
+				return $m("EAccountStatus.normal");
+			}
+		},
+
+		/**
+		 * 注册
+		 */
+		registration {
+			@Override
+			public String toString() {
+				return $m("EAccountStatus.registration");
+			}
+		},
+
+		/**
+		 * 锁定
+		 */
+		locked {
+			@Override
+			public String toString() {
+				return $m("EAccountStatus.locked");
+			}
+		},
+
+		/**
+		 * 删除
+		 */
+		delete {
+			@Override
+			public String toString() {
+				return $m("EAccountStatus.delete");
+			}
+		}
+	}
+
+	public static enum EAccountType {
+
+		/**
+		 * 正常账号
+		 */
+		normal,
+
+		/**
+		 * 用电子邮件作为账号登录
+		 */
+		email,
+
+		/**
+		 * 用手机作为账号登录
+		 */
+		mobile
 	}
 
 	public static final int TYPE_ALL = -1, TYPE_STATE_NORMAL = -11, TYPE_STATE_REGISTRATION = -12,

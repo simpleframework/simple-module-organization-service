@@ -6,6 +6,8 @@ import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
+import net.simpleframework.organization.Account.EAccountMark;
+import net.simpleframework.organization.Account.EAccountStatus;
 
 /**
  * Licensed under the Apache License, Version 2.0
