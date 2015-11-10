@@ -83,6 +83,7 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
 			final ColumnData order) {
+		final AccountService _accountServiceImpl = (AccountService) _accountService;
 		final IDataQuery<User> dq = query(_accountServiceImpl.toAccountsSQLValue(dept, accountType,
 				false, new ColumnData[] { order != null ? order : ColumnData.DESC("u.oorder") }));
 		dq.setCount(_accountServiceImpl.getAccountCount(dept, accountType));
@@ -122,6 +123,7 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			public void onAfterUpdate(final IDbEntityManager<User> manager, final String[] columns,
 					final User[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
+				final AccountService _accountServiceImpl = (AccountService) _accountService;
 				for (final User user : beans) {
 					final String _deptId = Convert.toString(user.getAttr("_deptId"));
 					final String deptId = Convert.toString(user.getDepartmentId());
@@ -135,7 +137,4 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			}
 		});
 	}
-
-	final static AccountService _accountServiceImpl = (AccountService) orgContext
-			.getAccountService();
 }

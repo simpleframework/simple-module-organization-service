@@ -39,9 +39,9 @@ import net.simpleframework.organization.IOrganizationContext;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.OrganizationMessageRef;
 import net.simpleframework.organization.RoleMember.ERoleMemberType;
+import net.simpleframework.organization.User;
 import net.simpleframework.organization.login.IAccountSession;
 import net.simpleframework.organization.login.LoginObject;
-import net.simpleframework.organization.User;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -542,15 +542,16 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		if (dept == null) {
 			return;
 		}
+		final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
 		final AccountStat stat = _accountStatService.getDeptAccountStat(dept);
 		_accountStatServiceImpl.reset(stat);
-		_accountStatServiceImpl.setDeptStats(stat);
+		_accountStatServiceImpl.setDeptStat(stat);
 		_accountStatService.update(stat);
 	}
 
 	void updateAllStats() {
 		final AccountStat stat = _accountStatService.getAllAccountStat();
-		_accountStatServiceImpl.reset(stat);
+		((AccountStatService) _accountStatService).reset(stat);
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager()
 				.query(
 						"select status, count(*) as c from " + getTablename(Account.class)
@@ -570,7 +571,4 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
 		_accountStatService.update(stat);
 	}
-
-	static final AccountStatService _accountStatServiceImpl = (AccountStatService) orgContext
-			.getAccountStatService();
 }

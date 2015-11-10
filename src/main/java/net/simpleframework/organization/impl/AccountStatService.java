@@ -68,10 +68,10 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 					if (org != null) {
 						stat.setOrgId(org.getId());
 					}
-					setDeptStats(stat);
+					setDeptStat(stat);
 				} else if (statType == EStatType.org) {
 					stat.setOrgId(_dept.getId());
-					setOrgStats(stat);
+					setOrgStat(stat);
 				}
 			}
 			insert(stat);
@@ -79,7 +79,7 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		return stat;
 	}
 
-	void setDeptStats(final AccountStat stat) {
+	void setDeptStat(final AccountStat stat) {
 		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
 				"select status, count(*) as c from " + getTablename(Account.class) + " a left join "
 						+ getTablename(User.class)
@@ -97,7 +97,7 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		stat.setNums(nums);
 	}
 
-	void setOrgStats(final AccountStat stat) {
+	void setOrgStat(final AccountStat stat) {
 		final Map<String, Object> data = getQueryManager().queryForMap(
 				"select sum(nums) as s1, sum(online_nums) as s2, "
 						+ "sum(state_normal) as s3, sum(state_registration) as s4, "
@@ -133,7 +133,7 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 				}
 				final AccountStat _stat = getOrgAccountStat(orgId);
 				reset(_stat);
-				setOrgStats(_stat);
+				setOrgStat(_stat);
 				update(_stat);
 			}
 
