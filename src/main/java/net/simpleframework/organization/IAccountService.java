@@ -8,6 +8,8 @@ import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.organization.Account.EAccountMark;
 import net.simpleframework.organization.Account.EAccountStatus;
+import net.simpleframework.organization.login.IAccountSession;
+import net.simpleframework.organization.login.LoginObject;
 
 /**
  * Licensed under the Apache License, Version 2.0

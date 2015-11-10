@@ -1,4 +1,5 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.login;
+
 
 /**
  * Licensed under the Apache License, Version 2.0

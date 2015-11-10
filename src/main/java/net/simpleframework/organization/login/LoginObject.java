@@ -1,4 +1,4 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.login;
 
 import java.io.Serializable;
 
