@@ -45,6 +45,15 @@ public abstract class BuiltInRole {
 		}
 	}
 
+	public static class InOrg extends AbstractRoleHandler {
+
+		@Override
+		public boolean isMember(final User user, final Map<String, Object> variables) {
+			final Object orgId = variables.get(PermissionConst.VAR_ORGID);
+			return orgId != null && orgId.toString().equals(user.getOrgId().toString());
+		}
+	}
+
 	public static class InDept extends AbstractRoleHandler {
 		@Override
 		public boolean isMember(final User user, final Map<String, Object> variables) {

@@ -17,6 +17,7 @@ import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.ctx.permission.LoginUser;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
@@ -355,7 +356,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 						throw OrganizationException.of($m("RoleService.1"));
 					}
 					// 内置角色
-					if (role.getRoleMark() == ERoleMark.builtIn) {
+					if (!LoginUser.user().isAdmin() && role.getRoleMark() == ERoleMark.builtIn) {
 						throw OrganizationException.of($m("RoleService.0"));
 					}
 					if (_rolemService.queryRoleMembers(role, null).getCount() > 0) {
