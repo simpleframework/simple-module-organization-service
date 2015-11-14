@@ -54,17 +54,20 @@ public class RolenameW implements IApplicationStartupHandler {
 		PermissionConst.ROLE_ANONYMOUS = toUniqueRolename(ROLECHART_SYSTEM, "anonymous");
 		PermissionConst.ROLE_ALL_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_all");
 		PermissionConst.ROLE_LOCK_ACCOUNT = toUniqueRolename(ROLECHART_SYSTEM, "account_lock");
-		PermissionConst.ROLE_INDEPT = toUniqueRolename(ROLECHART_SYSTEM, "indept");
-		PermissionConst.ROLE_MANAGER = toUniqueRolename(ROLECHART_SYSTEM, "manager");
 
-		ROLE_ORGANIZATION_MANAGER = RolenameW.toUniqueRolename(RolenameW.ROLECHART_SYSTEM, "orgmgr");
+		PermissionConst.ROLE_INDEPT = toUniqueRolename(ROLECHART_SYSTEM, "indept");
+		PermissionConst.ROLE_INORG = toUniqueRolename(ROLECHART_SYSTEM, "inorg");
+
+		PermissionConst.ROLE_MANAGER = toUniqueRolename(ROLECHART_SYSTEM, "manager");
+		ROLE_ORGANIZATION_MANAGER = toUniqueRolename(RolenameW.ROLECHART_SYSTEM, "orgmgr");
 
 		// 注册chart
 		registChart(ROLECHART_SYSTEM, $m("RoleChartService.0"), $m("RoleChartService.1"), false);
 		registChart(ROLECHART_ORG_DEFAULT, $m("RoleChartService.5"), $m("RoleChartService.6"), true);
 
 		// 注册角色
-		for (final String r : new String[] { "anonymous", "account_all", "account_lock", "indept" }) {
+		for (final String r : new String[] { "anonymous", "account_all", "account_lock", "indept",
+				"inorg" }) {
 			registRole(r, $m("RoleChartService." + r), null, ERoleType.handle);
 		}
 		for (final String r : new String[] { "manager", "orgmgr" }) {

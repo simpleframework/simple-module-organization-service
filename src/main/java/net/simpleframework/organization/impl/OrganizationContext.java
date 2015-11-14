@@ -52,6 +52,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 		registRoleHandler(PermissionConst.ROLE_LOCK_ACCOUNT, BuiltInRole.Lock.class);
 		registRoleHandler(PermissionConst.ROLE_ANONYMOUS, BuiltInRole.Anonymous.class);
 		registRoleHandler(PermissionConst.ROLE_INDEPT, BuiltInRole.InDept.class);
+		registRoleHandler(PermissionConst.ROLE_INORG, BuiltInRole.InOrg.class);
 	}
 
 	@Override
