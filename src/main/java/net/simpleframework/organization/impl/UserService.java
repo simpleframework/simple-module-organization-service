@@ -85,7 +85,7 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			final ColumnData order) {
 		final AccountService _accountServiceImpl = (AccountService) _accountService;
 		final IDataQuery<User> dq = query(_accountServiceImpl.toAccountsSQLValue(dept, accountType,
-				false, new ColumnData[] { order != null ? order : ColumnData.DESC("u.oorder") }));
+				false, new ColumnData[] { order != null ? order : ColumnData.ASC("u.oorder") }));
 		dq.setCount(_accountServiceImpl.getAccountCount(dept, accountType));
 		return dq;
 	}
