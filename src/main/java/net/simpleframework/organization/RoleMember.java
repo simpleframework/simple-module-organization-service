@@ -134,7 +134,7 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 		},
 
 		/* 部门 */
-		dept2 {
+		dept {
 			@Override
 			public String toString() {
 				return $m("ERoleMemberType.dept");
