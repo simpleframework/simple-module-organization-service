@@ -133,8 +133,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		}
 		if (role != null && role.getOrgId() != null) {
 			// 此处不能直接传递variables
-			if (_isMember(user, getRoleByName(OrganizationContext.ROLE_ORGANIZATION_MANAGER),
-					new KVMap())) {
+			if (_isMember(user, getRoleByName(PermissionConst.ROLE_DOMAIN_MANAGER), new KVMap())) {
 				return true;
 			}
 		}
