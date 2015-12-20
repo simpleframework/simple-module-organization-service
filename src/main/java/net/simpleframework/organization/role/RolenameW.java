@@ -71,7 +71,7 @@ public class RolenameW implements IApplicationStartupHandler {
 				"inorg" }) {
 			registRole(r, $m("RoleChartService." + r), null, ERoleType.handle);
 		}
-		for (final String r : new String[] { "manager", "orgmgr", "modulemgr" }) {
+		for (final String r : new String[] { "manager", "domain_mgr", "module_mgr" }) {
 			registRole(r, $m("RoleChartService." + r), null, ERoleType.normal);
 		}
 	}
