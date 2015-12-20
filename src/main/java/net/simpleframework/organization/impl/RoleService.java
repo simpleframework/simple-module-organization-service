@@ -364,8 +364,26 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					// 删除成员
 					_rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.role,
 							role.getId());
+
+					// 统计
+					doUpdateRoles(role, -1);
+				}
+			}
+
+			@Override
+			public void onAfterInsert(final IDbEntityManager<Role> manager, final Role[] beans)
+					throws Exception {
+				super.onAfterInsert(manager, beans);
+				for (final Role role : beans) {
+					doUpdateRoles(role, 0);
 				}
 			}
 		});
+	}
+
+	private void doUpdateRoles(final Role role, final int delta) {
+		final RoleChart chart = _rolecService.getBean(role.getRoleChartId());
+		chart.setRoles(count("rolechartid=?", chart.getId()) + delta);
+		_rolecService.update(new String[] { "roles" }, chart);
 	}
 }
