@@ -14,8 +14,9 @@ import net.simpleframework.common.ID;
 public class RoleChart extends AbstractOrganizationBean {
 	/* 机构id */
 	private ID orgId;
-	/* 是否内置的 */
-	private ERoleChartMark chartMark;
+
+	/* 统计字段，角色数 */
+	private int roles;
 
 	public ID getOrgId() {
 		return orgId;
@@ -33,24 +34,12 @@ public class RoleChart extends AbstractOrganizationBean {
 		super.setName(name);
 	}
 
-	public ERoleChartMark getChartMark() {
-		return chartMark == null ? ERoleChartMark.normal : chartMark;
+	public int getRoles() {
+		return roles;
 	}
 
-	public void setChartMark(final ERoleChartMark chartMark) {
-		this.chartMark = chartMark;
-	}
-
-	public static enum ERoleChartMark {
-		/**
-		 * 正常标识
-		 */
-		normal,
-
-		/**
-		 * 内置角色视图标识
-		 */
-		builtIn
+	public void setRoles(final int roles) {
+		this.roles = roles;
 	}
 
 	private static final long serialVersionUID = 7240516228770129459L;

@@ -10,7 +10,6 @@ import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.RoleChart;
-import net.simpleframework.organization.RoleChart.ERoleChartMark;
 import net.simpleframework.organization.role.RolenameW;
 import net.simpleframework.organization.role.RolenameW.ChartW;
 
@@ -88,7 +87,6 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 		chart.setName(w.getName());
 		chart.setText(w.getText());
 		chart.setDescription(w.getDescription());
-		chart.setChartMark(ERoleChartMark.builtIn);
 		return chart;
 	}
 
@@ -103,11 +101,6 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 				super.onBeforeDelete(manager, paramsValue);
 
 				for (final RoleChart chart : coll(manager, paramsValue)) {
-					// 内置视图
-					if (chart.getChartMark() == ERoleChartMark.builtIn) {
-						throw OrganizationException.of($m("RoleChartService.2"));
-					}
-
 					// 已存在角色
 					if (_roleService.queryRoot(chart).getCount() > 0) {
 						throw OrganizationException.of($m("RoleChartService.3"));
