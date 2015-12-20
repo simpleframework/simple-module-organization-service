@@ -114,7 +114,7 @@
         orgid char(32),
         name varchar(32) not null,
         text varchar(32) not null,
-        chartmark tinyint not null,
+        roles int not null,
         description varchar(256),
         oorder int not null,
         primary key(id),
