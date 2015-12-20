@@ -103,7 +103,7 @@ public class RoleChartService extends AbstractOrganizationService<RoleChart> imp
 				for (final RoleChart chart : coll(manager, paramsValue)) {
 					// 已存在角色
 					if (_roleService.queryRoot(chart).getCount() > 0) {
-						throw OrganizationException.of($m("RoleChartService.3"));
+						throw OrganizationException.of($m("RoleChartService.2"));
 					}
 				}
 			}

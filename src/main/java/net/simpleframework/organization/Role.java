@@ -24,7 +24,6 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 
 	private ERoleType roleType;
 	private String ruleHandler, ruleScript;
-	private ERoleMark roleMark;
 
 	/* 标识用户识别的角色，比如，全体注册用户，这个用户是不能理解的，也没有意义的 */
 	private boolean userRole;
@@ -97,14 +96,6 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 		this.ruleScript = ruleScript;
 	}
 
-	public ERoleMark getRoleMark() {
-		return roleMark == null ? ERoleMark.normal : roleMark;
-	}
-
-	public void setRoleMark(final ERoleMark roleMark) {
-		this.roleMark = roleMark;
-	}
-
 	public boolean isUserRole() {
 		return userRole;
 	}
@@ -155,19 +146,6 @@ public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
 				return $m("ERoleType.script");
 			}
 		}
-	}
-
-	public static enum ERoleMark {
-
-		/**
-		 * 正常标识
-		 */
-		normal,
-
-		/**
-		 * 内置角色标识
-		 */
-		builtIn
 	}
 
 	private static final long serialVersionUID = -911479175612535742L;

@@ -17,7 +17,6 @@ import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
-import net.simpleframework.ctx.permission.LoginUser;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.script.IScriptEval;
 import net.simpleframework.ctx.script.ScriptEvalFactory;
@@ -26,7 +25,6 @@ import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.Role;
-import net.simpleframework.organization.Role.ERoleMark;
 import net.simpleframework.organization.Role.ERoleType;
 import net.simpleframework.organization.RoleChart;
 import net.simpleframework.organization.RoleMember;
@@ -93,7 +91,6 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		r.setText(w.getText());
 		r.setDescription(w.getDescription());
 		r.setRoleType(w.getRoleType());
-		r.setRoleMark(ERoleMark.builtIn);
 		return r;
 	}
 
@@ -354,17 +351,12 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					if (queryChildren(role).getCount() > 0) {
 						throw OrganizationException.of($m("RoleService.1"));
 					}
-					// 内置角色
-					if (!LoginUser.isAdmin() && role.getRoleMark() == ERoleMark.builtIn) {
-						throw OrganizationException.of($m("RoleService.0"));
-					}
 					if (_rolemService.queryRoleMembers(role, null).getCount() > 0) {
 						throw OrganizationException.of($m("RoleService.3"));
 					}
 					// 删除成员
 					_rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.role,
 							role.getId());
-
 					// 统计
 					doUpdateRoles(role, -1);
 				}
