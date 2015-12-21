@@ -148,6 +148,11 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		if (jt == ERoleType.normal) {
 			if (_rolemService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
 					ERoleMemberType.user, user.getId()) != null) {
+				// 当含有角色成员，递归，VAR_ROLEID的值是用户的实际角色
+				variables.put(PermissionConst.VAR_ROLEID, role.getId());
+				return true;
+			} else if (_rolemService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
+					ERoleMemberType.dept, user.getDepartmentId()) != null) {
 				variables.put(PermissionConst.VAR_ROLEID, role.getId());
 				return true;
 			} else {
@@ -224,12 +229,22 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					RoleMember jm;
 					while ((jm = dq.next()) != null) {
 						final ID memberId = jm.getMemberId();
-						if (jm.getMemberType() == ERoleMemberType.user) {
+						final ERoleMemberType rmType = jm.getMemberType();
+						if (rmType == ERoleMemberType.user) {
 							user = _userService.getBean(memberId);
 							if (user != null && (deptId == null || deptId.equals(user.getDepartmentId()))) {
 								variables.put(PermissionConst.VAR_ROLEID, role.getId());
 								variables.put(PermissionConst.VAR_DEPTID, jm.getDeptId());
 								return true;
+							}
+						} else if (rmType == ERoleMemberType.dept) {
+							final Department dept = _deptService.getBean(memberId);
+							if (dept != null) {
+								if ((nest = DataQueryUtils.toIterator(_userService.queryUsers(dept)))
+										.hasNext()) {
+									user = nest.next();
+									return true;
+								}
 							}
 						} else {
 							if ((nest = users(getBean(memberId), deptId, variables)).hasNext()) {
@@ -266,8 +281,9 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public Iterator<RoleM> roles(final User user, final Map<String, Object> variables) {
-		final IDataQuery<RoleMember> dq = _rolemService.query("memberType=? and memberId=?",
-				ERoleMemberType.user, user.getId());
+		final IDataQuery<RoleMember> dq = _rolemService.query(
+				"(memberType=? and memberId=?) or (memberType=? and memberId=?)", ERoleMemberType.user,
+				user.getId(), ERoleMemberType.dept, user.getDepartmentId());
 		// 是否仅显示用户识别的角色
 		final boolean _userRole = Convert.toBool(variables.get("userRole"), false);
 		// 是否分析规则角色

@@ -106,12 +106,14 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 		final ERoleMemberType mType = getMemberType();
 		if (mType == ERoleMemberType.user) {
 			sb.append(_userService.getBean(getMemberId()));
-		} else {
+		} else if (mType == ERoleMemberType.role) {
 			final Role role = _roleService.getBean(getMemberId());
 			if (role != null) {
 				final RoleChart chart = _roleService.getRoleChart(role);
 				sb.append(chart.getText()).append(":").append(role.getText());
 			}
+		} else {
+			sb.append(_deptService.getBean(getMemberId()));
 		}
 		return sb.toString();
 	}
