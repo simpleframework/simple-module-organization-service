@@ -229,13 +229,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 					RoleMember jm;
 					while ((jm = dq.next()) != null) {
 						final ID memberId = jm.getMemberId();
-						final ID mdeptId = jm.getDeptId();
+						final ID mDeptId = jm.getDeptId();
 						final ERoleMemberType rmType = jm.getMemberType();
 						if (rmType == ERoleMemberType.user) {
 							user = _userService.getBean(memberId);
-							if (user != null && (deptId == null || deptId.equals(mdeptId))) {
+							if (user != null && (deptId == null || deptId.equals(mDeptId))) {
 								variables.put(PermissionConst.VAR_ROLEID, role.getId());
-								variables.put(PermissionConst.VAR_DEPTID, mdeptId);
+								variables.put(PermissionConst.VAR_DEPTID, mDeptId);
 								return true;
 							}
 						} else if (rmType == ERoleMemberType.dept) {
