@@ -146,23 +146,40 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
+			// 判断用户成员
+			final Object deptId = variables.get(PermissionConst.VAR_DEPTID);
+			if (deptId != null) {
+				if (_rolemService.getBean("roleid=? and membertype=? and memberid=? and deptid=?",
+						role.getId(), ERoleMemberType.user, user.getId(), deptId) != null) {
+					// 当含有角色成员，递归，VAR_ROLEID的值是用户的实际角色
+					variables.put(PermissionConst.VAR_ROLEID, role.getId());
+					return true;
+				}
+			} else {
+				RoleMember rm;
+				if ((rm = _rolemService.getBean("roleid=? and membertype=? and memberid=?",
+						role.getId(), ERoleMemberType.user, user.getId())) != null) {
+					// 当含有角色成员，递归，VAR_ROLEID的值是用户的实际角色
+					variables.put(PermissionConst.VAR_ROLEID, role.getId());
+					variables.put(PermissionConst.VAR_DEPTID, rm.getDeptId());
+					return true;
+				}
+			}
+
+			// 判断部门成员
 			if (_rolemService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
-					ERoleMemberType.user, user.getId()) != null) {
-				// 当含有角色成员，递归，VAR_ROLEID的值是用户的实际角色
-				variables.put(PermissionConst.VAR_ROLEID, role.getId());
-				return true;
-			} else if (_rolemService.getBean("roleid=? and membertype=? and memberid=?", role.getId(),
 					ERoleMemberType.dept, user.getDepartmentId()) != null) {
 				variables.put(PermissionConst.VAR_ROLEID, role.getId());
 				return true;
-			} else {
-				final IDataQuery<RoleMember> dq = _rolemService.query("roleid=? and membertype=?",
-						role.getId(), ERoleMemberType.role);
-				RoleMember jm;
-				while ((jm = dq.next()) != null) {
-					if (_isMember(user, getBean(jm.getMemberId()), variables)) {
-						return true;
-					}
+			}
+
+			// 判断角色成员
+			final IDataQuery<RoleMember> dq = _rolemService.query("roleid=? and membertype=?",
+					role.getId(), ERoleMemberType.role);
+			RoleMember jm;
+			while ((jm = dq.next()) != null) {
+				if (_isMember(user, getBean(jm.getMemberId()), variables)) {
+					return true;
 				}
 			}
 		} else if (jt == ERoleType.handle) {
