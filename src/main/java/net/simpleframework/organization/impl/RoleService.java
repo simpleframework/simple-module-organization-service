@@ -234,6 +234,9 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<User> users(final Role role, final Map<String, Object> variables) {
+		if (role == null) {
+			return CollectionUtils.EMPTY_ITERATOR;
+		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
 			final Object deptId = variables.get(PermissionConst.VAR_DEPTID);
@@ -299,8 +302,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return roles(user, new KVMap());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<RoleM> roles(final User user, final Map<String, Object> variables) {
+		if (user == null) {
+			return CollectionUtils.EMPTY_ITERATOR;
+		}
+
 		final IDataQuery<RoleMember> dq = _rolemService.query(
 				"(memberType=? and memberId=?) or (memberType=? and memberId=?)", ERoleMemberType.user,
 				user.getId(), ERoleMemberType.dept, user.getDepartmentId());
