@@ -61,7 +61,6 @@ public abstract class BuiltInRole {
 			return deptId != null && deptId.toString().equals(user.getDepartmentId().toString());
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public Iterator<User> members(final Map<String, Object> variables) {
 			if (variables != null) {
@@ -76,7 +75,7 @@ public abstract class BuiltInRole {
 					return DataQueryUtils.toIterator(_userService.queryUsers(dept));
 				}
 			}
-			return CollectionUtils.EMPTY_ITERATOR;
+			return CollectionUtils.EMPTY_ITERATOR();
 		}
 	}
 }

@@ -231,11 +231,10 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return isMember(user, PermissionConst.ROLE_MANAGER, variables);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<User> users(final Role role, final Map<String, Object> variables) {
 		if (role == null) {
-			return CollectionUtils.EMPTY_ITERATOR;
+			return CollectionUtils.EMPTY_ITERATOR();
 		}
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
@@ -294,7 +293,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				return rHandler.members(variables);
 			}
 		}
-		return CollectionUtils.EMPTY_ITERATOR;
+		return CollectionUtils.EMPTY_ITERATOR();
 	}
 
 	@Override
@@ -302,11 +301,10 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return roles(user, new KVMap());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<RoleM> roles(final User user, final Map<String, Object> variables) {
 		if (user == null) {
-			return CollectionUtils.EMPTY_ITERATOR;
+			return CollectionUtils.EMPTY_ITERATOR();
 		}
 
 		final IDataQuery<RoleMember> dq = _rolemService.query(
