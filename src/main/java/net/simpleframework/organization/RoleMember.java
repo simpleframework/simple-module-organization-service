@@ -79,9 +79,14 @@ public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAwa
 	}
 
 	public ID getDeptId() {
-		if (deptId == null && getMemberType() == ERoleMemberType.user) {
-			final User user = _userService.getBean(getMemberId());
-			return user != null ? user.getDepartmentId() : null;
+		if (deptId == null) {
+			final ERoleMemberType mt = getMemberType();
+			if (mt == ERoleMemberType.user) {
+				final User user = _userService.getBean(getMemberId());
+				return user != null ? user.getDepartmentId() : null;
+			} else if (mt == ERoleMemberType.dept) {
+				return getMemberId();
+			}
 		}
 		return deptId;
 	}
