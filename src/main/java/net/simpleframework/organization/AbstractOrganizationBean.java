@@ -21,7 +21,7 @@ public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBe
 
 	@Override
 	public String getName() {
-		return name;
+		return name != null ? name.trim() : null;
 	}
 
 	@Override
