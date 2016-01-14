@@ -2,6 +2,7 @@ package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -229,6 +230,53 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 			return true;
 		}
 		return isMember(user, PermissionConst.ROLE_MANAGER, variables);
+	}
+
+	@Override
+	public Iterator<User> users(final Department dept, final boolean all,
+			final Map<String, Object> variables) {
+		if (dept == null) {
+			return CollectionUtils.EMPTY_ITERATOR();
+		}
+
+		final IDataQuery<User> dq = _userService.queryUsers(dept);
+		final IDataQuery<RoleMember> dq2 = all ? _rolemService.query("membertype=? and deptid=?",
+				ERoleMemberType.user, dept.getId()) : null;
+
+		return new AbstractIterator<User>() {
+			private final HashSet<ID> idSet = new HashSet<ID>();
+
+			private User user;
+
+			@Override
+			public boolean hasNext() {
+				User user2;
+				if ((user2 = dq.next()) != null) {
+					idSet.add(user2.getId());
+					user = user2;
+					return true;
+				} else if (dq2 != null) {
+					RoleMember rm;
+					while ((rm = dq2.next()) != null) {
+						final ID userId = rm.getMemberId();
+						if (idSet.contains(userId)) {
+							// 如果存在该部门则忽略
+							continue;
+						}
+						user = _userService.getBean(rm.getMemberId());
+						if (user != null) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public User next() {
+				return user;
+			}
+		};
 	}
 
 	@Override

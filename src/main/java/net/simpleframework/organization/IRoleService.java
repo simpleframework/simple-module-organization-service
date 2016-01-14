@@ -115,6 +115,17 @@ public interface IRoleService extends IDbBeanService<Role>, ITreeBeanServiceAwar
 	Iterator<User> users(Role role, Map<String, Object> variables);
 
 	/**
+	 * 获取某一部门下的所有用户，包含角色成员
+	 * 
+	 * @param dept
+	 * @param all
+	 *        包含角色成员
+	 * @param variables
+	 * @return
+	 */
+	Iterator<User> users(Department dept, boolean all, Map<String, Object> variables);
+
+	/**
 	 * 获取指定用户的角色
 	 * 
 	 * @param user
