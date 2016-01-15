@@ -193,10 +193,8 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		Department dept;
 		final ArrayList<Object> depts = new ArrayList<Object>();
 		while ((dept = dq.next()) != null) {
-			if (dept.getDepartmentType() == EDepartmentType.department) {
-				// 没有则创建
-				depts.add(dept);
-			}
+			// 没有则创建
+			depts.add(dept);
 		}
 		updateDeptStats(depts.toArray());
 
