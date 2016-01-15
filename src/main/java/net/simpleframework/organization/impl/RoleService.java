@@ -233,15 +233,15 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 	}
 
 	@Override
-	public Iterator<User> users(final Department dept, final boolean all,
+	public Iterator<User> users(final Department dept, final boolean rolemember,
 			final Map<String, Object> variables) {
 		if (dept == null) {
 			return CollectionUtils.EMPTY_ITERATOR();
 		}
 
 		final IDataQuery<User> dq = _userService.queryUsers(dept);
-		final IDataQuery<RoleMember> dq2 = all ? _rolemService.query("membertype=? and deptid=?",
-				ERoleMemberType.user, dept.getId()) : null;
+		final IDataQuery<RoleMember> dq2 = rolemember ? _rolemService.query(
+				"membertype=? and deptid=?", ERoleMemberType.user, dept.getId()) : null;
 
 		return new AbstractIterator<User>() {
 			private final HashSet<ID> idSet = new HashSet<ID>();
