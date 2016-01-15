@@ -1,5 +1,6 @@
 package net.simpleframework.organization;
 
+import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractIdBean;
 import net.simpleframework.common.ID;
 
@@ -58,6 +59,11 @@ public class AccountStat extends AbstractIdBean {
 
 	public int getNums() {
 		return nums;
+	}
+
+	@ColumnMeta(ignore = true)
+	public int getRnums() {
+		return getNums() - getState_delete();
 	}
 
 	public void setNums(final int nums) {

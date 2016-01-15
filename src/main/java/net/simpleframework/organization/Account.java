@@ -291,7 +291,6 @@ public class Account extends AbstractNameBean {
 
 	public static final int TYPE_NO_DEPT = -3;
 	public static final int TYPE_DEPT = -4;
-	public static final int TYPE_ORG = -5;
 
 	public static final int TYPE_STATE_NORMAL = -11;
 	public static final int TYPE_STATE_REGISTRATION = -12;

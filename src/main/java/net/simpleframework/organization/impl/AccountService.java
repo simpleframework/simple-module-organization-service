@@ -216,7 +216,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	@Override
 	public IDataQuery<Account> queryAccounts(final Department dept, final int accountType,
 			final ColumnData order) {
-
 		final IDataQuery<Account> dq = query(toAccountsSQLValue(dept, accountType, true,
 				new ColumnData[] { order != null ? order : ColumnData.DESC("a.createdate") }));
 		dq.setCount(getAccountCount(dept, accountType));
@@ -230,10 +229,19 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	protected int getAccountCount(final Department dept, final int accountType) {
 		// 大数据下，count性能太差
+		// 使用统计数据
+		AccountStat stat = null;
 		if (dept == null) {
-			final AccountStat stat = _accountStatService.getAllAccountStat();
+			stat = _accountStatService.getAllAccountStat();
+		} else {
+			if (dept.getDepartmentType() == EDepartmentType.organization) {
+				stat = _accountStatService.getOrgAccountStat(dept);
+			}
+		}
+
+		if (stat != null) {
 			if (accountType == Account.TYPE_ALL) {
-				return stat.getNums();
+				return stat.getRnums();
 			} else if (accountType == Account.TYPE_STATE_NORMAL) {
 				return stat.getState_normal();
 			} else if (accountType == Account.TYPE_STATE_LOCKED) {
@@ -257,40 +265,33 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				.append(getTablename(Account.class)).append(" a ").append(account ? "left" : "right")
 				.append(" join ").append(getTablename(User.class)).append(" u on a.id=u.id where 1=1");
 
+		// 状态
 		final boolean _status = accountType >= Account.TYPE_STATE_DELETE
 				&& accountType <= Account.TYPE_STATE_NORMAL;
-		boolean _dept = false;
-		if (dept != null) {
-			if (dept.getDepartmentType() == EDepartmentType.department) {
-				sql.append(" and u.departmentid=?");
-				_dept = true;
-			} else {
-				sql.append(" and u.orgid=?");
-			}
-			params.add(dept.getId());
-			if (!_status) {
-				sql.append(" and a.status<>?");
-				params.add(EAccountStatus.delete);
-			}
-		}
-
 		if (_status) {
 			sql.append(" and a.status=?");
 			params.add(EAccountStatus.values()[Account.TYPE_STATE_NORMAL - accountType]);
-		} else if (accountType == Account.TYPE_ONLINE) {
-			sql.append(" and a.login=? and a.status=?");
-			params.add(Boolean.TRUE);
-			params.add(EAccountStatus.normal);
-		} else if (!_dept) {
-			if (accountType == Account.TYPE_NO_DEPT) {
-				sql.append(" and u.departmentid is null and a.status<>?");
-				params.add(EAccountStatus.delete);
-			} else if (accountType == Account.TYPE_DEPT) {
-				sql.append(" and u.departmentid is not null and a.status<>?");
-				params.add(EAccountStatus.delete);
+		} else {
+			// 部门
+			if (dept != null) {
+				if (accountType == Account.TYPE_ALL
+						&& dept.getDepartmentType() == EDepartmentType.organization) {
+					sql.append(" and u.orgid=?");
+				} else {
+					sql.append(" and u.departmentid=?");
+				}
+				params.add(dept.getId());
+			} else {
+				if (accountType == Account.TYPE_NO_DEPT) {
+					sql.append(" and u.departmentid is null");
+				} else if (accountType == Account.TYPE_DEPT) {
+					sql.append(" and u.departmentid is not null");
+				}
 			}
-		}
 
+			sql.append(" and a.status<>?");
+			params.add(EAccountStatus.delete);
+		}
 		// left join => createdate排序
 		sql.append(toOrderSQL(orderCols));
 		return new SQLValue(sql, params.toArray());

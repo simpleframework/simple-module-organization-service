@@ -126,9 +126,8 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		// 求机构的在线人数
 		stat.setOnline_nums(getQueryManager().queryForInt(
 				new SQLValue("select count(*) from " + _accountService.getTablename() + " a left join "
-						+ _userService.getTablename()
-						+ " u on a.id=u.id where a.login=? and a.status=? and u.orgid=?", Boolean.TRUE,
-						EAccountStatus.normal, orgId)));
+						+ _userService.getTablename() + " u on a.id=u.id where a.login=? and u.orgid=?",
+						Boolean.TRUE, orgId)));
 	}
 
 	void updateDeptStats(final Object... depts) {
