@@ -11,7 +11,6 @@
        	name varchar(32) not null,
         password varchar(32) default '' not null,
         status int2 not null,
-        accountmark int2 not null,
         createdate timestamp not null,
         login bool not null,
         sessionid varchar(32),

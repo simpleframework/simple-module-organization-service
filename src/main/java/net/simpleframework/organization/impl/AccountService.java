@@ -27,7 +27,6 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.task.ExecutorRunnableEx;
 import net.simpleframework.organization.Account;
-import net.simpleframework.organization.Account.EAccountMark;
 import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.Department;
@@ -194,10 +193,10 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		}
 		final double[] around = LngLatUtils.getRange(lng, lat, dis);
 		final StringBuilder sql = new StringBuilder(
-				"(longitude<>0 and latitude<>0 and status=? and accountmark=?) and ")
+				"(longitude<>0 and latitude<>0 and status=?) and ")
 				.append("(longitude between ? and ?) and (latitude between ? and ?)");
-		final List<Object> params = ArrayUtils.toParams(EAccountStatus.normal, EAccountMark.normal,
-				around[0], around[1], around[2], around[3]);
+		final List<Object> params = ArrayUtils.toParams(EAccountStatus.normal, around[0], around[1],
+				around[2], around[3]);
 		if (StringUtils.hasText(sex)) {
 			final StringBuilder sql2 = new StringBuilder();
 			sql2.append("select a.* from ")
@@ -303,15 +302,8 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	}
 
 	@Override
-	public Account doSave(final Account account, final String name, final String password,
-			final EAccountStatus status, final Map<String, Object> userData) {
-		return doSave(account, name, password, EAccountMark.normal, status, userData);
-	}
-
-	@Override
 	public Account doSave(Account account, final String name, final String password,
-			final EAccountMark accountMark, final EAccountStatus status,
-			final Map<String, Object> userData) {
+			final EAccountStatus status, final Map<String, Object> userData) {
 		final boolean insert = account == null;
 		if (insert) {
 			account = createBean();
@@ -325,7 +317,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				account.setPassword(Account.encrypt(password));
 			}
 		}
-		account.setAccountMark(accountMark);
 		account.setStatus(status);
 
 		final String openid = (String) userData.get("openid");
@@ -360,7 +351,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	@Override
 	public void regist(final String username, final String password,
 			final Map<String, Object> userData) {
-		doSave(null, username, password, null, EAccountStatus.registration, userData);
+		doSave(null, username, password, EAccountStatus.registration, userData);
 	}
 
 	@Override
@@ -398,7 +389,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		for (final Object id : ids) {
 			final Account account = getBean(id);
 			if (account.getStatus() != from) {
-				throw OrganizationException.of($m("AccountService.1", account.getStatus(), from));
+				throw OrganizationException.of($m("AccountService.0", account.getStatus(), from));
 			}
 			account.setStatus(to);
 			update(new String[] { "status" }, account);
@@ -413,7 +404,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 		final Account admin = getAccountByName(PermissionConst.ADMIN);
 		if (admin == null) {
-			doSave(null, PermissionConst.ADMIN, PermissionConst.ADMIN, EAccountMark.builtIn, null,
+			doSave(null, PermissionConst.ADMIN, PermissionConst.ADMIN, null,
 					new KVMap().add("text", PermissionConst.ADMIN));
 		}
 
@@ -423,30 +414,12 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 					final IParamsValue paramsValue) throws Exception {
 				super.onBeforeDelete(manager, paramsValue);
 				for (final Account account : coll(manager, paramsValue)) {
-					if (account.getAccountMark() == EAccountMark.builtIn) {
-						throw OrganizationException.of($m("AccountService.0"));
-					}
-
 					// 删除成员
 					deleteMember(account);
 					// 删除用户
 					_userService.delete(account.getId());
 				}
 			}
-
-			@Override
-			public void onBeforeUpdate(final IDbEntityManager<Account> service,
-					final String[] columns, final Account[] beans) throws Exception {
-				super.onBeforeUpdate(service, columns, beans);
-				for (final Account account : beans) {
-					if (account.getStatus() == EAccountStatus.delete
-							&& account.getAccountMark() == EAccountMark.builtIn) {
-						throw OrganizationException.of($m("AccountService.0"));
-					}
-				}
-			}
-
-			/*------------------------------after ope--------------------------------*/
 
 			@Override
 			public void onAfterInsert(final IDbEntityManager<Account> manager, final Account[] beans)

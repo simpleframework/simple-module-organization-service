@@ -11,7 +11,6 @@
        	name varchar2(32 char) not null,
         password varchar2(32 char) default '' not null,
         status number(4) not null,
-        accountmark number(4) not null,
         createdate timestamp not null,
         login number(1) not null,
         sessionid varchar2(32 char),

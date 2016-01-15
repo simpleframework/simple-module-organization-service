@@ -29,9 +29,6 @@ public class Account extends AbstractNameBean {
 	@ColumnMeta(columnText = "#(Account.1)")
 	private EAccountStatus status;
 
-	/* 标识 */
-	private EAccountMark accountMark;
-
 	/* 创建时间 */
 	private Date createDate;
 
@@ -95,14 +92,6 @@ public class Account extends AbstractNameBean {
 
 	public void setStatus(final EAccountStatus status) {
 		this.status = status;
-	}
-
-	public EAccountMark getAccountMark() {
-		return accountMark == null ? EAccountMark.normal : accountMark;
-	}
-
-	public void setAccountMark(final EAccountMark accountMark) {
-		this.accountMark = accountMark;
 	}
 
 	public boolean isLogin() {
@@ -234,19 +223,6 @@ public class Account extends AbstractNameBean {
 
 	public static String encrypt(final String password) {
 		return AlgorithmUtils.md5Hex(password == null ? "" : password.trim());
-	}
-
-	public static enum EAccountMark {
-
-		/**
-		 * 正常标识
-		 */
-		normal,
-
-		/**
-		 * 内置账号标识
-		 */
-		builtIn
 	}
 
 	public static enum EAccountStatus {

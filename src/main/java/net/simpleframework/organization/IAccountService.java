@@ -6,7 +6,6 @@ import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
-import net.simpleframework.organization.Account.EAccountMark;
 import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.login.IAccountSession;
 import net.simpleframework.organization.login.LoginObject;
@@ -71,9 +70,6 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @param status
 	 * @param userData
 	 */
-	Account doSave(Account account, String name, String password, EAccountMark accountMark,
-			EAccountStatus status, Map<String, Object> userData);
-
 	Account doSave(Account account, String name, String password, EAccountStatus status,
 			Map<String, Object> userData);
 
