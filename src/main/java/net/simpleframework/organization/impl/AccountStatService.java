@@ -1,9 +1,12 @@
 package net.simpleframework.organization.impl;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.db.common.SQLValue;
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.BeanUtils.PropertyWrapper;
 import net.simpleframework.common.Convert;
@@ -97,23 +100,6 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		stat.setNums(nums);
 	}
 
-	void setOrgStat(final AccountStat stat) {
-		final Map<String, Object> data = getQueryManager().queryForMap(
-				"select sum(nums) as s1, sum(online_nums) as s2, "
-						+ "sum(state_normal) as s3, sum(state_registration) as s4, "
-						+ "sum(state_locked) as s5, sum(state_delete) as s6 from "
-						+ getTablename(AccountStat.class) + " where orgid=? and stattype=?",
-				stat.getOrgId(), EStatType.dept);
-		if (data != null) {
-			stat.setNums(Convert.toInt(data.get("s1")));
-			stat.setOnline_nums(Convert.toInt(data.get("s2")));
-			stat.setState_normal(Convert.toInt(data.get("s3")));
-			stat.setState_registration(Convert.toInt(data.get("s4")));
-			stat.setState_locked(Convert.toInt(data.get("s5")));
-			stat.setState_delete(Convert.toInt(data.get("s6")));
-		}
-	}
-
 	void reset(final AccountStat stat) {
 		for (final PropertyWrapper p : BeanUtils.getProperties(AccountStat.class).values()) {
 			if ("int".equals(p.type.getName())) {
@@ -122,30 +108,113 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		}
 	}
 
+	private void setOrgStat(final AccountStat stat) {
+		final ID orgId = stat.getOrgId();
+		final Map<String, Object> data = getQueryManager().queryForMap(
+				"select sum(nums) as s1, sum(state_normal) as s2, sum(state_registration) as s3, "
+						+ "sum(state_locked) as s4, sum(state_delete) as s5 from "
+						+ getTablename(AccountStat.class) + " where orgid=? and stattype=?", orgId,
+				EStatType.dept);
+		if (data != null) {
+			stat.setNums(Convert.toInt(data.get("s1")));
+			stat.setState_normal(Convert.toInt(data.get("s2")));
+			stat.setState_registration(Convert.toInt(data.get("s3")));
+			stat.setState_locked(Convert.toInt(data.get("s4")));
+			stat.setState_delete(Convert.toInt(data.get("s5")));
+		}
+
+		// 求机构的在线人数
+		stat.setOnline_nums(getQueryManager().queryForInt(
+				new SQLValue("select count(*) from " + _accountService.getTablename() + " a left join "
+						+ _userService.getTablename()
+						+ " u on a.id=u.id where a.login=? and a.status=? and u.orgid=?", Boolean.TRUE,
+						EAccountStatus.normal, orgId)));
+	}
+
+	void updateDeptStats(final Object... depts) {
+		final ArrayList<AccountStat> stats = new ArrayList<AccountStat>();
+		for (final Object dept : depts) {
+			final AccountStat stat = getDeptAccountStat(dept);
+			if (stat != null) {
+				reset(stat);
+				setDeptStat(stat);
+				stats.add(stat);
+			}
+		}
+		update(stats.toArray(new AccountStat[stats.size()]));
+	}
+
+	private void updateOrgStat(final Object orgId) {
+		final AccountStat stat = getOrgAccountStat(orgId);
+		if (stat != null) {
+			reset(stat);
+			setOrgStat(stat);
+			update(stat);
+		}
+	}
+
+	private void updateAllStat() {
+		final AccountStat stat = getAllAccountStat();
+		reset(stat);
+		final Map<String, Object> data = getQueryManager().queryForMap(
+				"select sum(nums) as s1, sum(online_nums) as s2, "
+						+ "sum(state_normal) as s3, sum(state_registration) as s4, "
+						+ "sum(state_locked) as s5, sum(state_delete) as s6 from "
+						+ getTablename(AccountStat.class) + " where stattype=?", EStatType.org);
+		if (data != null) {
+			stat.setNums(Convert.toInt(data.get("s1")));
+			stat.setOnline_nums(Convert.toInt(data.get("s2")));
+			stat.setState_normal(Convert.toInt(data.get("s3")));
+			stat.setState_registration(Convert.toInt(data.get("s4")));
+			stat.setState_locked(Convert.toInt(data.get("s5")));
+			stat.setState_delete(Convert.toInt(data.get("s6")));
+		}
+		update(stat);
+	}
+
+	void updateStat(final Object... depts) {
+		final ArrayList<AccountStat> stats = new ArrayList<AccountStat>();
+		final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
+		for (final Object dept : depts) {
+			final AccountStat stat = getDeptAccountStat(dept);
+			_accountStatServiceImpl.reset(stat);
+			_accountStatServiceImpl.setDeptStat(stat);
+			stats.add(stat);
+		}
+		update(stats.toArray(new AccountStat[stats.size()]));
+	}
+
 	@Override
 	public void onInit() throws Exception {
 		super.onInit();
 
-		addListener(new DbEntityAdapterEx<AccountStat>() {
-			private void updateOrgStat(final ID orgId) {
-				if (orgId == null) {
-					return;
-				}
-				final AccountStat _stat = getOrgAccountStat(orgId);
-				reset(_stat);
-				setOrgStat(_stat);
-				update(_stat);
+		// 初始化
+		final IDataQuery<Department> dq = _deptService.queryAll();
+		Department dept;
+		final ArrayList<Object> depts = new ArrayList<Object>();
+		while ((dept = dq.next()) != null) {
+			if (dept.getDepartmentType() == EDepartmentType.department) {
+				// 没有则创建
+				depts.add(dept);
 			}
+		}
+		updateDeptStats(depts.toArray());
 
+		addListener(new DbEntityAdapterEx<AccountStat>() {
 			@Override
 			public void onAfterUpdate(final IDbEntityManager<AccountStat> manager,
 					final String[] columns, final AccountStat[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
+				boolean orgUpdate = false;
 				for (final AccountStat stat : beans) {
 					final Department dept = _deptService.getBean(stat.getDeptId());
 					if (dept != null && dept.getDepartmentType() == EDepartmentType.department) {
 						updateOrgStat(stat.getOrgId());
+						orgUpdate = true;
 					}
+				}
+				if (orgUpdate) {
+					updateAllStat();
 				}
 			}
 		});

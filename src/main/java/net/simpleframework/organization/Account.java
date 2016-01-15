@@ -310,14 +310,17 @@ public class Account extends AbstractNameBean {
 		mobile
 	}
 
-	public static final int TYPE_ALL = -1, TYPE_STATE_NORMAL = -11, TYPE_STATE_REGISTRATION = -12,
-			TYPE_STATE_LOCKED = -13, TYPE_STATE_DELETE = -14;
-
+	public static final int TYPE_ALL = -1;
 	public static final int TYPE_ONLINE = -2;
 
 	public static final int TYPE_NO_DEPT = -3;
-
 	public static final int TYPE_DEPT = -4;
+	public static final int TYPE_ORG = -5;
+
+	public static final int TYPE_STATE_NORMAL = -11;
+	public static final int TYPE_STATE_REGISTRATION = -12;
+	public static final int TYPE_STATE_LOCKED = -13;
+	public static final int TYPE_STATE_DELETE = -14;
 
 	private static final long serialVersionUID = -2003319378229277570L;
 }

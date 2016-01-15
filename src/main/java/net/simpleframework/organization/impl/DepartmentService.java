@@ -58,8 +58,6 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 	public void onInit() throws Exception {
 		super.onInit();
 
-		final AccountStatService statService = (AccountStatService) orgContext
-				.getAccountStatService();
 		addListener(new DbEntityAdapterEx<Department>() {
 			@Override
 			public void onBeforeInsert(final IDbEntityManager<Department> manager,
@@ -94,6 +92,8 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 			public void onBeforeDelete(final IDbEntityManager<Department> manager,
 					final IParamsValue paramsValue) throws Exception {
 				super.onBeforeDelete(manager, paramsValue);
+				final AccountStatService statService = (AccountStatService) orgContext
+						.getAccountStatService();
 				for (final Department dept : coll(manager, paramsValue)) {
 					// 存在子部门
 					if (queryChildren(dept).getCount() > 0) {

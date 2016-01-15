@@ -12,13 +12,11 @@ import java.util.Set;
 
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.IParamsValue;
-import net.simpleframework.ado.db.IDbDataQuery;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.BeanUtils;
-import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.LngLatUtils;
 import net.simpleframework.common.StringUtils;
@@ -428,6 +426,11 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 					if (account.getAccountMark() == EAccountMark.builtIn) {
 						throw OrganizationException.of($m("AccountService.0"));
 					}
+
+					// 删除成员
+					deleteMember(account);
+					// 删除用户
+					_userService.delete(account.getId());
 				}
 			}
 
@@ -446,20 +449,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			/*------------------------------after ope--------------------------------*/
 
 			@Override
-			public void onAfterDelete(final IDbEntityManager<Account> manager,
-					final IParamsValue paramsValue) throws Exception {
-				super.onAfterDelete(manager, paramsValue);
-				for (final Account account : coll(manager, paramsValue)) {
-					// 删除用户
-					_userService.delete(account.getId());
-					deleteMember(account);
-					// 同步统计
-					updateStats(getUser(account.getId()).getDepartmentId());
-				}
-				updateAllStats();
-			}
-
-			@Override
 			public void onAfterInsert(final IDbEntityManager<Account> manager, final Account[] beans)
 					throws Exception {
 				super.onAfterInsert(manager, beans);
@@ -468,10 +457,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 					if (ref != null) {
 						((OrganizationMessageRef) ref).doAccountCreatedMessage(account);
 					}
-					// 同步统计
-					updateStats(getUser(account.getId()).getDepartmentId());
 				}
-				updateAllStats();
 			}
 
 			@Override
@@ -481,11 +467,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 				final Set<ID> _UPDATE_SYNC = new HashSet<ID>();
 				for (final Account account : beans) {
-					if (account.getStatus() == EAccountStatus.delete) {
-						// 删除成员角色
-						deleteMember(account);
-					}
-
 					if (ArrayUtils.contains(columns, "status", true)) {
 						_UPDATE_SYNC.add(account.getId());
 					} else if (ArrayUtils.isEmpty(columns)
@@ -494,14 +475,14 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 						_UPDATE_ASYNC.add(account.getId());
 					}
 				}
-				_updateStats(_UPDATE_SYNC);
+				_updateDeptStats(_UPDATE_SYNC);
 			}
 		});
 
 		getTaskExecutor().addScheduledTask(new ExecutorRunnableEx("account_stat") {
 			@Override
 			protected void task(final Map<String, Object> cache) throws Exception {
-				_updateStats(_UPDATE_ASYNC);
+				_updateDeptStats(_UPDATE_ASYNC);
 
 				// 校正在线状态
 				final Calendar cal = Calendar.getInstance();
@@ -517,58 +498,25 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		});
 	}
 
-	private synchronized void _updateStats(final Set<ID> set) {
+	private synchronized void _updateDeptStats(final Set<ID> set) {
 		if (set == null || set.size() == 0) {
 			return;
 		}
+		final ArrayList<Object> stats = new ArrayList<Object>();
 		for (final ID id : set) {
-			final User user = getUser(id);
+			User user;
 			ID deptId;
-			if (user != null && (deptId = user.getDepartmentId()) != null) {
-				updateStats(deptId);
+			if ((user = getUser(id)) != null && (deptId = user.getDepartmentId()) != null) {
+				stats.add(deptId);
 			}
 		}
+		((AccountStatService) _accountStatService).updateDeptStats(stats.toArray());
 		set.clear();
-		updateAllStats();
 	}
 
 	void deleteMember(final Account account) {
 		// 删除成员角色
 		_rolemService
 				.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
-	}
-
-	void updateStats(final Object dept) {
-		if (dept == null) {
-			return;
-		}
-		final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
-		final AccountStat stat = _accountStatService.getDeptAccountStat(dept);
-		_accountStatServiceImpl.reset(stat);
-		_accountStatServiceImpl.setDeptStat(stat);
-		_accountStatService.update(stat);
-	}
-
-	void updateAllStats() {
-		final AccountStat stat = _accountStatService.getAllAccountStat();
-		((AccountStatService) _accountStatService).reset(stat);
-		final IDbDataQuery<Map<String, Object>> dq = getQueryManager()
-				.query(
-						"select status, count(*) as c from " + getTablename(Account.class)
-								+ " group by status");
-		int nums = 0;
-		Map<String, Object> data;
-		while ((data = dq.next()) != null) {
-			final int c = Convert.toInt(data.get("c"));
-			final EAccountStatus status = Convert.toEnum(EAccountStatus.class, data.get("status"));
-			if (status != null) {
-				BeanUtils.setProperty(stat, "state_" + status.name(), c);
-			}
-			nums += c;
-		}
-		// 全部及在线
-		stat.setNums(nums);
-		stat.setOnline_nums(count("login=? and status=?", Boolean.TRUE, EAccountStatus.normal));
-		_accountStatService.update(stat);
 	}
 }

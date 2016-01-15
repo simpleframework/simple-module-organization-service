@@ -14,14 +14,14 @@ public interface IOrganizationContextAware extends IModuleContextAware {
 	static final IOrganizationContext orgContext = ModuleContextFactory
 			.get(IOrganizationContext.class);
 
-	static final IAccountService _accountService = orgContext.getAccountService();
-	static final IAccountStatService _accountStatService = orgContext.getAccountStatService();
-
-	static final IUserService _userService = orgContext.getUserService();
-
 	static final IDepartmentService _deptService = orgContext.getDepartmentService();
+
+	static final IAccountService _accountService = orgContext.getAccountService();
+	static final IUserService _userService = orgContext.getUserService();
 
 	static final IRoleService _roleService = orgContext.getRoleService();
 	static final IRoleChartService _rolecService = orgContext.getRoleChartService();
 	static final IRoleMemberService _rolemService = orgContext.getRoleMemberService();
+
+	static final IAccountStatService _accountStatService = orgContext.getAccountStatService();
 }
