@@ -277,7 +277,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 			// 部门
 			if (dept != null) {
-				if (accountType == Account.TYPE_ALL
+				if ((accountType == Account.TYPE_ALL || accountType == Account.TYPE_ONLINE)
 						&& dept.getDepartmentType() == EDepartmentType.organization) {
 					sql.append(" and u.orgid=?");
 				} else {
