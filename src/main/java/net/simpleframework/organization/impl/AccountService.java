@@ -272,6 +272,9 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			sql.append(" and a.status=?");
 			params.add(EAccountStatus.values()[Account.TYPE_STATE_NORMAL - accountType]);
 		} else {
+			sql.append(" and a.status<>?");
+			params.add(EAccountStatus.delete);
+
 			// 部门
 			if (dept != null) {
 				if (accountType == Account.TYPE_ALL
@@ -282,18 +285,18 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				}
 				params.add(dept.getId());
 			} else {
-				if (accountType == Account.TYPE_ONLINE) {
-					sql.append(" and a.login=?");
-					params.add(Boolean.TRUE);
-				} else if (accountType == Account.TYPE_NO_DEPT) {
+				if (accountType == Account.TYPE_NO_DEPT) {
 					sql.append(" and u.departmentid is null");
 				} else if (accountType == Account.TYPE_DEPT) {
 					sql.append(" and u.departmentid is not null");
 				}
 			}
 
-			sql.append(" and a.status<>?");
-			params.add(EAccountStatus.delete);
+			// 在线
+			if (accountType == Account.TYPE_ONLINE) {
+				sql.append(" and a.login=?");
+				params.add(Boolean.TRUE);
+			}
 		}
 		// left join => createdate排序
 		sql.append(toOrderSQL(orderCols));
