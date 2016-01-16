@@ -282,7 +282,10 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				}
 				params.add(dept.getId());
 			} else {
-				if (accountType == Account.TYPE_NO_DEPT) {
+				if (accountType == Account.TYPE_ONLINE) {
+					sql.append(" and a.login=?");
+					params.add(Boolean.TRUE);
+				} else if (accountType == Account.TYPE_NO_DEPT) {
 					sql.append(" and u.departmentid is null");
 				} else if (accountType == Account.TYPE_DEPT) {
 					sql.append(" and u.departmentid is not null");
@@ -456,8 +459,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		getTaskExecutor().addScheduledTask(new ExecutorRunnableEx("account_stat") {
 			@Override
 			protected void task(final Map<String, Object> cache) throws Exception {
-				_updateDeptStats(_UPDATE_ASYNC);
-
 				// 校正在线状态
 				final Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.HOUR_OF_DAY, -12);
@@ -468,6 +469,8 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 					account.setLogin(false);
 					update(new String[] { "login" }, account);
 				}
+				// 统计
+				_updateDeptStats(_UPDATE_ASYNC);
 			}
 		});
 	}
@@ -484,7 +487,11 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				stats.add(deptId);
 			}
 		}
-		((AccountStatService) _accountStatService).updateDeptStats(stats.toArray());
+		final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
+		_accountStatServiceImpl.updateDeptStats(stats.toArray());
+		if (stats.size() == 0) {
+			_accountStatServiceImpl.updateAllStat();
+		}
 		set.clear();
 	}
 
