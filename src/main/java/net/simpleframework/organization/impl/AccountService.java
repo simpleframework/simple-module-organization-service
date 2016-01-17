@@ -276,26 +276,27 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			params.add(EAccountStatus.delete);
 
 			// 部门
+			boolean isdept = false;
 			if (dept != null) {
-				if ((accountType == Account.TYPE_ALL || accountType == Account.TYPE_ONLINE)
-						&& dept.getDepartmentType() == EDepartmentType.organization) {
-					sql.append(" and u.orgid=?");
-				} else {
+				if (accountType == Account.TYPE_DEPT
+						&& dept.getDepartmentType() == EDepartmentType.department) {
 					sql.append(" and u.departmentid=?");
+					isdept = true;
+				} else {
+					sql.append(" and u.orgid=?");
 				}
 				params.add(dept.getId());
-			} else {
-				if (accountType == Account.TYPE_NO_DEPT) {
+			}
+
+			if (!isdept) {
+				if (accountType == Account.TYPE_NO_DEPT) { // 没有部门
 					sql.append(" and u.departmentid is null");
 				} else if (accountType == Account.TYPE_DEPT) {
 					sql.append(" and u.departmentid is not null");
+				} else if (accountType == Account.TYPE_ONLINE) { // 在线
+					sql.append(" and a.login=?");
+					params.add(Boolean.TRUE);
 				}
-			}
-
-			// 在线
-			if (accountType == Account.TYPE_ONLINE) {
-				sql.append(" and a.login=?");
-				params.add(Boolean.TRUE);
 			}
 		}
 		// left join => createdate排序
