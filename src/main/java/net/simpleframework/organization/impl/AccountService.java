@@ -278,8 +278,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			// 部门
 			boolean isdept = false;
 			if (dept != null) {
-				if (accountType == Account.TYPE_DEPT
-						&& dept.getDepartmentType() == EDepartmentType.department) {
+				if (accountType == Account.TYPE_DEPT) {
 					sql.append(" and u.departmentid=?");
 					isdept = true;
 				} else {
