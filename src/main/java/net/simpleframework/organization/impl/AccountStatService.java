@@ -183,15 +183,17 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 	public void onInit() throws Exception {
 		super.onInit();
 
-		// 初始化
-		final IDataQuery<Department> dq = _deptService.queryAll();
-		Department dept;
-		final ArrayList<Object> depts = new ArrayList<Object>();
-		while ((dept = dq.next()) != null) {
-			// 没有则创建
-			depts.add(dept);
+		if (count() == 0) {
+			// 初始化
+			final IDataQuery<Department> dq = _deptService.queryAll();
+			Department dept;
+			final ArrayList<Object> depts = new ArrayList<Object>();
+			while ((dept = dq.next()) != null) {
+				// 没有则创建
+				depts.add(dept);
+			}
+			updateDeptStats(depts.toArray());
 		}
-		updateDeptStats(depts.toArray());
 	}
 
 	private void updateOrgStat(final Object orgId) {
