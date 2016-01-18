@@ -243,43 +243,46 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				: Account.TYPE_DEPT);
 		// 是否包含角色成员
 		final boolean rolemember = Convert.toBool(variables.get("role-member"));
-		final IDataQuery<RoleMember> dq2 = rolemember ? _rolemService.query(
-				"membertype=? and deptid=?", ERoleMemberType.user, dept.getId()) : null;
+		if (rolemember) {
+			final IDataQuery<RoleMember> dq2 = rolemember ? _rolemService.query(
+					"membertype=? and deptid=?", ERoleMemberType.user, dept.getId()) : null;
+			return new AbstractIterator<User>() {
+				private final HashSet<ID> idSet = new HashSet<ID>();
 
-		return new AbstractIterator<User>() {
-			private final HashSet<ID> idSet = new HashSet<ID>();
+				private User user;
 
-			private User user;
-
-			@Override
-			public boolean hasNext() {
-				User user2;
-				if ((user2 = dq.next()) != null) {
-					idSet.add(user2.getId());
-					user = user2;
-					return true;
-				} else if (dq2 != null) {
-					RoleMember rm;
-					while ((rm = dq2.next()) != null) {
-						final ID userId = rm.getMemberId();
-						if (idSet.contains(userId)) {
-							// 如果存在该部门则忽略
-							continue;
-						}
-						user = _userService.getBean(rm.getMemberId());
-						if (user != null) {
-							return true;
+				@Override
+				public boolean hasNext() {
+					User user2;
+					if ((user2 = dq.next()) != null) {
+						idSet.add(user2.getId());
+						user = user2;
+						return true;
+					} else if (dq2 != null) {
+						RoleMember rm;
+						while ((rm = dq2.next()) != null) {
+							final ID userId = rm.getMemberId();
+							if (idSet.contains(userId)) {
+								// 如果存在该部门则忽略
+								continue;
+							}
+							user = _userService.getBean(rm.getMemberId());
+							if (user != null) {
+								return true;
+							}
 						}
 					}
+					return false;
 				}
-				return false;
-			}
 
-			@Override
-			public User next() {
-				return user;
-			}
-		};
+				@Override
+				public User next() {
+					return user;
+				}
+			};
+		} else {
+			return DataQueryUtils.toIterator(dq);
+		}
 	}
 
 	@Override
