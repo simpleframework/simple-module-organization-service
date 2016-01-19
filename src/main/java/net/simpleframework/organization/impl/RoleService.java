@@ -318,8 +318,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 							if (deptId == null || deptId.equals(memberId)) {
 								final Department dept = _deptService.getBean(memberId);
 								if (dept != null) {
-									if ((nest = DataQueryUtils.toIterator(_userService.queryUsers(dept)))
-											.hasNext()) {
+									if ((nest = DataQueryUtils.toIterator(_userService.queryUsers(dept,
+											Account.TYPE_DEPT))).hasNext()) {
 										user = nest.next();
 										return true;
 									}

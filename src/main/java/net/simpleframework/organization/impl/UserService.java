@@ -13,6 +13,7 @@ import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
+import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
@@ -99,7 +100,9 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept) {
-		return queryUsers(dept, Account.TYPE_ALL);
+		return queryUsers(dept,
+				dept.getDepartmentType() == EDepartmentType.organization ? Account.TYPE_ALL
+						: Account.TYPE_DEPT);
 	}
 
 	@Override
