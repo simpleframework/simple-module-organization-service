@@ -53,8 +53,10 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 	/** 邮政编码 **/
 	private String postcode;
 
-	private String qq;
-	private String msn;
+	/* 昵称 */
+	private String nick;
+	/* 职务 */
+	private String job;
 
 	/* 部门id */
 	private ID departmentId;
@@ -176,19 +178,19 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 		this.postcode = postcode;
 	}
 
-	public String getQq() {
-		return qq;
+	public String getNick() {
+		return nick;
 	}
 
-	public void setQq(final String qq) {
-		this.qq = qq;
+	public void setNick(final String nick) {
+		this.nick = nick;
 	}
 
-	public String getMsn() {
-		return msn;
+	public String getJob() {
+		return job;
 	}
 
-	public void setMsn(final String msn) {
-		this.msn = msn;
+	public void setJob(final String job) {
+		this.job = job;
 	}
 }
