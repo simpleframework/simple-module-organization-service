@@ -67,7 +67,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		} else if (arr.length == 2) {
 			return getRoleByName(_rolecService.getRoleChartByName(arr[0]), arr[1]);
 		} else {
-			throw OrganizationException.of($m("RoleService.2"));
+			throw OrganizationException.of($m("RoleService.2", name));
 		}
 	}
 
