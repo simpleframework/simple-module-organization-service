@@ -26,6 +26,7 @@ import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.task.ExecutorRunnableEx;
+import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.AccountStat;
@@ -462,20 +463,25 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		getTaskExecutor().addScheduledTask(new ExecutorRunnableEx("account_stat") {
 			@Override
 			protected void task(final Map<String, Object> cache) throws Exception {
-				// 校正在线状态
-				final Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.HOUR_OF_DAY, -12);
-				final IDataQuery<Account> dq = query("login=? and lastlogindate<?", Boolean.TRUE,
-						cal.getTime());
-				Account account;
-				while ((account = dq.next()) != null) {
-					account.setLogin(false);
-					update(new String[] { "login" }, account);
-				}
-				// 统计
-				_updateDeptStats(_UPDATE_ASYNC);
+				doStatTask_inTran();
 			}
 		});
+	}
+
+	@Transaction(context = IOrganizationContext.class)
+	public void doStatTask_inTran() {
+		// 校正在线状态
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -12);
+		final IDataQuery<Account> dq = query("login=? and lastlogindate<?", Boolean.TRUE,
+				cal.getTime());
+		Account account;
+		while ((account = dq.next()) != null) {
+			account.setLogin(false);
+			update(new String[] { "login" }, account);
+		}
+		// 统计
+		_updateDeptStats(_UPDATE_ASYNC);
 	}
 
 	private synchronized void _updateDeptStats(final Set<ID> set) {
