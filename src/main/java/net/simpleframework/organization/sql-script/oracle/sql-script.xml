@@ -38,6 +38,7 @@
         departmentid char(32),
         orgid char(32),
 	      text varchar2(32 char) not null,
+        py varchar2(32),
 	      sex varchar2(2 char) not null,
 	      birthday date,
 	      hometown varchar2(32 char),

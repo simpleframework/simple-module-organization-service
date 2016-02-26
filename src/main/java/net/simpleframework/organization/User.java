@@ -9,6 +9,7 @@ import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.Pinyin;
 import net.simpleframework.common.StringUtils;
 
 /**
@@ -24,6 +25,8 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 		IOrganizationContextAware {
 	private static final long serialVersionUID = -4938630954415307539L;
 
+	/** 拼音 **/
+	private String py;
 	/** 性别 **/
 	private String sex;
 
@@ -86,6 +89,20 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 
 	public void setOrgId(final ID orgId) {
 		this.orgId = orgId;
+	}
+
+	@Override
+	public void setText(final String text) {
+		super.setText(text);
+		setPy(Pinyin.toPinYin(text));
+	}
+
+	public String getPy() {
+		return py;
+	}
+
+	public void setPy(final String py) {
+		this.py = py;
 	}
 
 	@Override
