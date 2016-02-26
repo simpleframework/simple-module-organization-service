@@ -23,6 +23,11 @@
     </dependency>
     
     <dependency>
+      <groupId>com.belerweb</groupId>
+      <artifactId>pinyin4j</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>net.simpleframework</groupId>
       <artifactId>simple-module-msg-service</artifactId>
       <optional>true</optional>
