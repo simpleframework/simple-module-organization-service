@@ -9,7 +9,6 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
-import net.simpleframework.common.Pinyin;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.organization.Account;
@@ -109,14 +108,6 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	@Override
 	public void onInit() throws Exception {
 		super.onInit();
-
-		final IDataQuery<User> dq = queryAll();
-		User user;
-		while ((user = dq.next()) != null) {
-			user.setPy(Pinyin.toPinYin(user.getText()));
-			update(new String[] { "py" }, user);
-			System.out.println(user.getText() + " -> " + user.getPy());
-		}
 
 		addListener(new DbEntityAdapterEx<User>() {
 			@Override
