@@ -1,5 +1,7 @@
 package net.simpleframework.organization.impl;
 
+import static net.simpleframework.common.I18n.$m;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -15,6 +17,7 @@ import net.simpleframework.organization.Account;
 import net.simpleframework.organization.Department;
 import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IUserService;
+import net.simpleframework.organization.OrganizationException;
 import net.simpleframework.organization.User;
 import net.simpleframework.organization.UserLob;
 
@@ -108,6 +111,42 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	@Override
 	public void onInit() throws Exception {
 		super.onInit();
+
+		addListener(new DbEntityAdapterEx<User>() {
+			@Override
+			public void onBeforeInsert(final IDbEntityManager<User> manager, final User[] beans)
+					throws Exception {
+				super.onBeforeInsert(manager, beans);
+				for (final User user : beans) {
+					final String email = user.getEmail();
+					if (email != null && getUserByEmail(email) != null) {
+						throw OrganizationException.of($m("UserService.0", email));
+					}
+					final String mobile = user.getMobile();
+					if (mobile != null && getUserByMobile(mobile) != null) {
+						throw OrganizationException.of($m("UserService.1", mobile));
+					}
+				}
+			}
+
+			@Override
+			public void onBeforeUpdate(final IDbEntityManager<User> manager, final String[] columns,
+					final User[] beans) throws Exception {
+				super.onBeforeUpdate(manager, columns, beans);
+				for (final User user : beans) {
+					final String email = user.getEmail();
+					User user2;
+					if (email != null && (user2 = getUserByEmail(email)) != null && !user2.equals(user)) {
+						throw OrganizationException.of($m("UserService.0", email));
+					}
+					final String mobile = user.getMobile();
+					if (mobile != null && (user2 = getUserByMobile(mobile)) != null
+							&& !user2.equals(user)) {
+						throw OrganizationException.of($m("UserService.1", mobile));
+					}
+				}
+			}
+		});
 
 		addListener(new DbEntityAdapterEx<User>() {
 			@Override
