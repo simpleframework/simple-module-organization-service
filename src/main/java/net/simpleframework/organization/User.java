@@ -140,7 +140,8 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 	}
 
 	public String getEmail() {
-		return email;
+		// index
+		return "".equals(email) ? null : email;
 	}
 
 	public void setEmail(final String email) {
@@ -148,7 +149,8 @@ public class User extends AbstractTextDescriptionBean implements IOrderBeanAware
 	}
 
 	public String getMobile() {
-		return mobile;
+		// index
+		return "".equals(mobile) ? null : mobile;
 	}
 
 	public void setMobile(final String mobile) {
