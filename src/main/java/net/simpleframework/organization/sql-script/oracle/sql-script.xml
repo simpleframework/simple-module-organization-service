@@ -54,7 +54,9 @@
 	      description varchar2(256 char),
 	      oorder number(11) not null,
 	      primary key(id),
-        unique(oorder)
+        unique(oorder),
+        unique(email),
+        unique(mobile)
 	    );
     ]]>
 	</tran-sql>
