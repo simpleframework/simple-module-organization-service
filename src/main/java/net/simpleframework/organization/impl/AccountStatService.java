@@ -110,23 +110,25 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 
 	private void setOrgStat(final AccountStat stat) {
 		final ID orgId = stat.getOrgId();
-		final Map<String, Object> data = getQueryManager().queryForMap(
-				"select sum(nums) as s1, sum(state_normal) as s2, sum(state_registration) as s3, "
-						+ "sum(state_locked) as s4, sum(state_delete) as s5 from "
-						+ getTablename(AccountStat.class) + " where orgid=? and stattype=?", orgId,
-				EStatType.dept);
-		if (data != null) {
-			stat.setNums(Convert.toInt(data.get("s1")));
-			stat.setState_normal(Convert.toInt(data.get("s2")));
-			stat.setState_registration(Convert.toInt(data.get("s3")));
-			stat.setState_locked(Convert.toInt(data.get("s4")));
-			stat.setState_delete(Convert.toInt(data.get("s5")));
+		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
+				"select status, count(*) as c from " + getTablename(Account.class) + " a left join "
+						+ getTablename(User.class) + " u on a.id=u.id where u.orgid=? group by status",
+				orgId);
+		int nums = 0;
+		Map<String, Object> data;
+		while ((data = dq.next()) != null) {
+			final int c = Convert.toInt(data.get("c"));
+			final EAccountStatus status = Convert.toEnum(EAccountStatus.class, data.get("status"));
+			if (status != null) {
+				BeanUtils.setProperty(stat, "state_" + status.name(), c);
+			}
+			nums += c;
 		}
-
+		stat.setNums(nums);
 		// 求机构的在线人数
 		stat.setOnline_nums(getQueryManager().queryForInt(
-				new SQLValue("select count(*) from " + _accountService.getTablename() + " a left join "
-						+ _userService.getTablename() + " u on a.id=u.id where a.login=? and u.orgid=?",
+				new SQLValue("select count(*) from " + getTablename(Account.class) + " a left join "
+						+ getTablename(User.class) + " u on a.id=u.id where a.login=? and u.orgid=?",
 						Boolean.TRUE, orgId)));
 	}
 
@@ -150,6 +152,15 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		}
 		// 更新全部
 		updateAllStat();
+	}
+
+	void updateOrgStat(final Object orgId) {
+		final AccountStat stat = getOrgAccountStat(orgId);
+		if (stat != null) {
+			reset(stat);
+			setOrgStat(stat);
+			update(stat);
+		}
 	}
 
 	void updateAllStat() {
@@ -193,15 +204,6 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 				depts.add(dept);
 			}
 			updateDeptStats(depts.toArray());
-		}
-	}
-
-	private void updateOrgStat(final Object orgId) {
-		final AccountStat stat = getOrgAccountStat(orgId);
-		if (stat != null) {
-			reset(stat);
-			setOrgStat(stat);
-			update(stat);
 		}
 	}
 }

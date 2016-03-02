@@ -182,14 +182,24 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 					throws Exception {
 				super.onAfterInsert(manager, beans);
 				final ArrayList<Object> depts = new ArrayList<Object>();
+				final ArrayList<Object> orgs = new ArrayList<Object>();
 				for (final User user : beans) {
 					// 同步统计
 					final ID deptId = user.getDepartmentId();
 					if (deptId != null) {
 						depts.add(deptId);
+					} else {
+						final ID orgId = user.getOrgId();
+						if (orgId != null) {
+							orgs.add(orgId);
+						}
 					}
 				}
-				((AccountStatService) _accountStatService).updateDeptStats(depts.toArray());
+				final AccountStatService statService = (AccountStatService) _accountStatService;
+				statService.updateDeptStats(depts.toArray());
+				for (final Object org : orgs) {
+					statService.updateOrgStat(org);
+				}
 			}
 
 			@Override
