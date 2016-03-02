@@ -4,6 +4,7 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.IParamsValue;
@@ -181,9 +182,28 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			public void onAfterInsert(final IDbEntityManager<User> manager, final User[] beans)
 					throws Exception {
 				super.onAfterInsert(manager, beans);
+				updateStat(beans);
+			}
+
+			@Override
+			public void onBeforeDelete(final IDbEntityManager<User> manager,
+					final IParamsValue paramsValue) throws Exception {
+				super.onBeforeDelete(manager, paramsValue);
+				coll(manager, paramsValue);
+			}
+
+			@Override
+			public void onAfterDelete(final IDbEntityManager<User> manager,
+					final IParamsValue paramsValue) throws Exception {
+				super.onAfterDelete(manager, paramsValue);
+				final Collection<User> coll = coll(manager, paramsValue);
+				updateStat(coll.toArray(new User[coll.size()]));
+			}
+
+			private void updateStat(final User[] coll) {
 				final ArrayList<Object> depts = new ArrayList<Object>();
 				final ArrayList<Object> orgs = new ArrayList<Object>();
-				for (final User user : beans) {
+				for (final User user : coll) {
 					// 同步统计
 					final ID deptId = user.getDepartmentId();
 					if (deptId != null) {
@@ -200,28 +220,6 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 				for (final Object org : orgs) {
 					statService.updateOrgStat(org);
 				}
-			}
-
-			@Override
-			public void onBeforeDelete(final IDbEntityManager<User> manager,
-					final IParamsValue paramsValue) throws Exception {
-				super.onBeforeDelete(manager, paramsValue);
-				coll(manager, paramsValue);
-			}
-
-			@Override
-			public void onAfterDelete(final IDbEntityManager<User> manager,
-					final IParamsValue paramsValue) throws Exception {
-				super.onAfterDelete(manager, paramsValue);
-				final ArrayList<Object> depts = new ArrayList<Object>();
-				for (final User user : coll(manager, paramsValue)) {
-					// 同步统计
-					final ID deptId = user.getDepartmentId();
-					if (deptId != null) {
-						depts.add(deptId);
-					}
-				}
-				((AccountStatService) _accountStatService).updateDeptStats(depts.toArray());
 			}
 		});
 	}
