@@ -488,19 +488,14 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		if (set == null || set.size() == 0) {
 			return;
 		}
-		final ArrayList<Object> stats = new ArrayList<Object>();
+		final ArrayList<User> users = new ArrayList<User>();
 		for (final ID id : set) {
 			User user;
-			ID deptId;
-			if ((user = getUser(id)) != null && (deptId = user.getDepartmentId()) != null) {
-				stats.add(deptId);
+			if ((user = getUser(id)) != null) {
+				users.add(user);
 			}
 		}
-		final AccountStatService _accountStatServiceImpl = (AccountStatService) _accountStatService;
-		_accountStatServiceImpl.updateDeptStats(stats.toArray());
-		if (stats.size() == 0) {
-			_accountStatServiceImpl.updateAllStat();
-		}
+		((AccountStatService) _accountStatService).updateStats(users.toArray(new User[users.size()]));
 		set.clear();
 	}
 

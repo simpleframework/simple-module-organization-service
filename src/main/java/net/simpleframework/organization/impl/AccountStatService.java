@@ -1,7 +1,6 @@
 package net.simpleframework.organization.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 
 import net.simpleframework.ado.db.IDbDataQuery;
@@ -17,6 +16,7 @@ import net.simpleframework.organization.Account.EAccountStatus;
 import net.simpleframework.organization.AccountStat;
 import net.simpleframework.organization.AccountStat.EStatType;
 import net.simpleframework.organization.Department;
+import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IAccountStatService;
 import net.simpleframework.organization.User;
 
@@ -132,26 +132,41 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 						Boolean.TRUE, orgId)));
 	}
 
-	void updateDeptStats(final Object... depts) {
-		final HashSet<ID> orgIds = new HashSet<ID>();
-		for (final Object dept : depts) {
-			final AccountStat stat = getDeptAccountStat(dept);
-			if (stat != null) {
-				reset(stat);
-				setDeptStat(stat);
-				update(stat);
-				final ID orgId = stat.getOrgId();
+	void updateStats(final User... users) {
+		final ArrayList<Object> depts = new ArrayList<Object>();
+		final ArrayList<Object> orgs = new ArrayList<Object>();
+		for (final User user : users) {
+			// 同步统计
+			final ID deptId = user.getDepartmentId();
+			if (deptId != null) {
+				depts.add(deptId);
+			} else {
+				final ID orgId = user.getOrgId();
 				if (orgId != null) {
-					orgIds.add(orgId);
+					orgs.add(orgId);
 				}
 			}
 		}
+
+		// 更新部门
+		for (final Object dept : depts) {
+			updateDeptStat(dept);
+		}
 		// 更新org
-		for (final ID orgId : orgIds) {
-			updateOrgStat(orgId);
+		for (final Object org : orgs) {
+			updateOrgStat(org);
 		}
 		// 更新全部
 		updateAllStat();
+	}
+
+	void updateDeptStat(final Object dept) {
+		final AccountStat stat = getDeptAccountStat(dept);
+		if (stat != null) {
+			reset(stat);
+			setDeptStat(stat);
+			update(stat);
+		}
 	}
 
 	void updateOrgStat(final Object orgId) {
@@ -197,13 +212,27 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		if (count() == 0) {
 			// 初始化
 			final IDataQuery<Department> dq = _deptService.queryAll();
-			Department dept;
-			final ArrayList<Object> depts = new ArrayList<Object>();
-			while ((dept = dq.next()) != null) {
+			Department oDept;
+			final ArrayList<Department> depts = new ArrayList<Department>();
+			final ArrayList<Department> orgs = new ArrayList<Department>();
+			while ((oDept = dq.next()) != null) {
 				// 没有则创建
-				depts.add(dept);
+				if (oDept.getDepartmentType() == EDepartmentType.department) {
+					depts.add(oDept);
+				} else {
+					orgs.add(oDept);
+				}
 			}
-			updateDeptStats(depts.toArray());
+			// 更新部门
+			for (final Department dept : depts) {
+				updateDeptStat(dept);
+			}
+			// 更新org
+			for (final Object org : orgs) {
+				updateOrgStat(org);
+			}
+			// 更新全部
+			updateAllStat();
 		}
 	}
 }

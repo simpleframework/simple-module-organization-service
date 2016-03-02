@@ -3,7 +3,6 @@ package net.simpleframework.organization.impl;
 import static net.simpleframework.common.I18n.$m;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import net.simpleframework.ado.ColumnData;
@@ -173,7 +172,9 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 					final String deptId = Convert.toString(user.getDepartmentId());
 					if (!ObjectUtils.objectEquals(_deptId, deptId)) {
 						// 更新变化前后部门的统计值
-						((AccountStatService) _accountStatService).updateDeptStats(deptId, _deptId);
+						final AccountStatService statService = (AccountStatService) _accountStatService;
+						statService.updateDeptStat(deptId);
+						statService.updateDeptStat(_deptId);
 					}
 				}
 			}
@@ -182,7 +183,7 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 			public void onAfterInsert(final IDbEntityManager<User> manager, final User[] beans)
 					throws Exception {
 				super.onAfterInsert(manager, beans);
-				updateStat(beans);
+				((AccountStatService) _accountStatService).updateStats(beans);
 			}
 
 			@Override
@@ -197,29 +198,8 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 					final IParamsValue paramsValue) throws Exception {
 				super.onAfterDelete(manager, paramsValue);
 				final Collection<User> coll = coll(manager, paramsValue);
-				updateStat(coll.toArray(new User[coll.size()]));
-			}
-
-			private void updateStat(final User[] coll) {
-				final ArrayList<Object> depts = new ArrayList<Object>();
-				final ArrayList<Object> orgs = new ArrayList<Object>();
-				for (final User user : coll) {
-					// 同步统计
-					final ID deptId = user.getDepartmentId();
-					if (deptId != null) {
-						depts.add(deptId);
-					} else {
-						final ID orgId = user.getOrgId();
-						if (orgId != null) {
-							orgs.add(orgId);
-						}
-					}
-				}
-				final AccountStatService statService = (AccountStatService) _accountStatService;
-				statService.updateDeptStats(depts.toArray());
-				for (final Object org : orgs) {
-					statService.updateOrgStat(org);
-				}
+				((AccountStatService) _accountStatService).updateStats(coll.toArray(new User[coll
+						.size()]));
 			}
 		});
 	}
