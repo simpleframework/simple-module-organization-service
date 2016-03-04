@@ -3,7 +3,7 @@ package net.simpleframework.organization;
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.coll.KVMap;
-import net.simpleframework.ctx.IModuleContext;
+import net.simpleframework.ctx.IContextBase;
 import net.simpleframework.module.msg.MessageRef;
 import net.simpleframework.module.msg.plugin.NoticeMessageCategory;
 import net.simpleframework.module.msg.plugin.NoticeMessagePlugin;
@@ -19,7 +19,7 @@ public class OrganizationMessageRef extends MessageRef {
 	protected NoticeMessageCategory MC_ACCOUNT;
 
 	@Override
-	public void onInit(final IModuleContext context) throws Exception {
+	public void onInit(final IContextBase context) throws Exception {
 		super.onInit(context);
 
 		final NoticeMessagePlugin plugin = getNoticeMessagePlugin();

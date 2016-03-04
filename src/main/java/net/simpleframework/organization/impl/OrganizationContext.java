@@ -11,6 +11,7 @@ import net.simpleframework.ctx.AbstractADOModuleContext;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
+import net.simpleframework.ctx.ModuleRefUtils;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.organization.Account;
 import net.simpleframework.organization.AccountStat;
@@ -117,7 +118,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 
 	@Override
 	public IModuleRef getMessageRef() {
-		return getRef("net.simpleframework.organization.OrganizationMessageRef");
+		return ModuleRefUtils.getRef("net.simpleframework.organization.OrganizationMessageRef");
 	}
 
 	static Map<String, Class<? extends IRoleHandler>> rHandleRegistry;
