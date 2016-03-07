@@ -5,11 +5,11 @@ import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.organization.Department;
-import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IRoleChartService;
 import net.simpleframework.organization.OrganizationException;
-import net.simpleframework.organization.RoleChart;
+import net.simpleframework.organization.bean.Department;
+import net.simpleframework.organization.bean.Department.EDepartmentType;
+import net.simpleframework.organization.bean.RoleChart;
 import net.simpleframework.organization.role.RolenameW;
 import net.simpleframework.organization.role.RolenameW.ChartW;
 

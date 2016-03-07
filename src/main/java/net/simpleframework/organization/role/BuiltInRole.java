@@ -6,10 +6,10 @@ import java.util.Map;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.common.coll.CollectionUtils;
 import net.simpleframework.ctx.permission.PermissionConst;
-import net.simpleframework.organization.Account;
-import net.simpleframework.organization.Account.EAccountStatus;
-import net.simpleframework.organization.Department;
-import net.simpleframework.organization.User;
+import net.simpleframework.organization.bean.Account;
+import net.simpleframework.organization.bean.Account.EAccountStatus;
+import net.simpleframework.organization.bean.Department;
+import net.simpleframework.organization.bean.User;
 
 /**
  * Licensed under the Apache License, Version 2.0

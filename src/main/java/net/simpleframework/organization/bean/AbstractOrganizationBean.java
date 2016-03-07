@@ -1,4 +1,4 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import net.simpleframework.ado.bean.AbstractTextDescriptionBean;
 import net.simpleframework.ado.bean.INameBeanAware;

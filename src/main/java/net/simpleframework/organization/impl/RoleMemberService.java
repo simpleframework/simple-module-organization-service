@@ -14,12 +14,12 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.CollectionUtils;
-import net.simpleframework.organization.Department;
 import net.simpleframework.organization.IRoleMemberService;
-import net.simpleframework.organization.Role;
-import net.simpleframework.organization.Role.ERoleType;
-import net.simpleframework.organization.RoleMember;
-import net.simpleframework.organization.RoleMember.ERoleMemberType;
+import net.simpleframework.organization.bean.Department;
+import net.simpleframework.organization.bean.Role;
+import net.simpleframework.organization.bean.Role.ERoleType;
+import net.simpleframework.organization.bean.RoleMember;
+import net.simpleframework.organization.bean.RoleMember.ERoleMemberType;
 
 /**
  * Licensed under the Apache License, Version 2.0

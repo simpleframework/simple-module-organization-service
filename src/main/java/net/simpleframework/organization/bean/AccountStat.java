@@ -1,4 +1,4 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractIdBean;

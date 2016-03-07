@@ -7,6 +7,7 @@ import net.simpleframework.ctx.IContextBase;
 import net.simpleframework.module.msg.MessageRef;
 import net.simpleframework.module.msg.plugin.NoticeMessageCategory;
 import net.simpleframework.module.msg.plugin.NoticeMessagePlugin;
+import net.simpleframework.organization.bean.Account;
 
 /**
  * Licensed under the Apache License, Version 2.0

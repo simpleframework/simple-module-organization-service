@@ -2,6 +2,7 @@ package net.simpleframework.organization;
 
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.IModuleRef;
+import net.simpleframework.organization.bean.RoleChart;
 
 /**
  * Licensed under the Apache License, Version 2.0

@@ -1,11 +1,12 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
-import net.simpleframework.organization.Role.ERoleType;
+import net.simpleframework.organization.IOrganizationContextAware;
+import net.simpleframework.organization.bean.Role.ERoleType;
 
 /**
  * Licensed under the Apache License, Version 2.0

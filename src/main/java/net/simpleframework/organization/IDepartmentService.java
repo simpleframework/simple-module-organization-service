@@ -4,7 +4,8 @@ import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.service.ado.ITreeBeanServiceAware;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
-import net.simpleframework.organization.Department.EDepartmentType;
+import net.simpleframework.organization.bean.Department;
+import net.simpleframework.organization.bean.Department.EDepartmentType;
 
 /**
  * Licensed under the Apache License, Version 2.0

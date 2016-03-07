@@ -1,4 +1,4 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.bean.ITreeBeanAware;

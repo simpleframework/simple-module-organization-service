@@ -1,4 +1,4 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import java.io.InputStream;
 

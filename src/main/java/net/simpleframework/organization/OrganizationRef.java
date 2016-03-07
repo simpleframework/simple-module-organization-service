@@ -2,6 +2,7 @@ package net.simpleframework.organization;
 
 import net.simpleframework.ctx.AbstractModuleRef;
 import net.simpleframework.ctx.ModuleContextFactory;
+import net.simpleframework.organization.bean.Department;
 
 /**
  * Licensed under the Apache License, Version 2.0

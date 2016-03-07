@@ -1,4 +1,4 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
 
@@ -11,6 +11,7 @@ import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.Pinyin;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.organization.IOrganizationContextAware;
 
 /**
  * Licensed under the Apache License, Version 2.0

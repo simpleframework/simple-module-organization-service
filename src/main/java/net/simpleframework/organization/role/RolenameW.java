@@ -10,7 +10,7 @@ import net.simpleframework.common.object.TextNamedObject;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.hdl.IApplicationStartupHandler;
 import net.simpleframework.ctx.permission.PermissionConst;
-import net.simpleframework.organization.Role.ERoleType;
+import net.simpleframework.organization.bean.Role.ERoleType;
 
 /**
  * Licensed under the Apache License, Version 2.0

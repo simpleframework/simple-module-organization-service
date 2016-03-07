@@ -1,6 +1,7 @@
 package net.simpleframework.organization;
 
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
+import net.simpleframework.organization.bean.AccountStat;
 
 /**
  * Licensed under the Apache License, Version 2.0

@@ -1,9 +1,11 @@
-package net.simpleframework.organization;
+package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.bean.ITreeBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
+import net.simpleframework.organization.IOrganizationContextAware;
+import net.simpleframework.organization.OrganizationException;
 
 /**
  * Licensed under the Apache License, Version 2.0

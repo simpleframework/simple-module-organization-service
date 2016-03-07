@@ -13,13 +13,13 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
-import net.simpleframework.organization.Account;
-import net.simpleframework.organization.Department;
-import net.simpleframework.organization.Department.EDepartmentType;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.OrganizationException;
-import net.simpleframework.organization.User;
-import net.simpleframework.organization.UserLob;
+import net.simpleframework.organization.bean.Account;
+import net.simpleframework.organization.bean.Department;
+import net.simpleframework.organization.bean.Department.EDepartmentType;
+import net.simpleframework.organization.bean.User;
+import net.simpleframework.organization.bean.UserLob;
 
 /**
  * Licensed under the Apache License, Version 2.0

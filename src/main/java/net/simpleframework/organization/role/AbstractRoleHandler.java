@@ -7,7 +7,7 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.organization.IOrganizationContextAware;
-import net.simpleframework.organization.User;
+import net.simpleframework.organization.bean.User;
 
 /**
  * Licensed under the Apache License, Version 2.0
