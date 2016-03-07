@@ -26,6 +26,7 @@
         openprovider varchar(16),
         openid varchar(64),
         mdevid varchar(32),
+        expiredate timestamp,
         primary key(id),
         unique(name)
       );

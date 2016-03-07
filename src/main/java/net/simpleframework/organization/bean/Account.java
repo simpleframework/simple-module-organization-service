@@ -72,6 +72,9 @@ public class Account extends AbstractNameBean {
 	/* 移动设备号 */
 	private String mdevid;
 
+	/* 帐号过期时间 */
+	private Date expireDate;
+
 	@ColumnMeta(ignore = true)
 	public boolean isAdmin() {
 		return PermissionConst.ADMIN.equals(getName());
@@ -212,6 +215,14 @@ public class Account extends AbstractNameBean {
 
 	public void setMdevid(final String mdevid) {
 		this.mdevid = mdevid;
+	}
+
+	public Date getExpireDate() {
+		return expireDate;
+	}
+
+	public void setExpireDate(final Date expireDate) {
+		this.expireDate = expireDate;
 	}
 
 	@Override
