@@ -7,7 +7,6 @@ import java.util.Date;
 import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractNameBean;
 import net.simpleframework.ado.db.common.EntityInterceptor;
-import net.simpleframework.common.AlgorithmUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.permission.PermissionConst;
 
@@ -219,10 +218,6 @@ public class Account extends AbstractNameBean {
 	public String toString() {
 		final String name = getName();
 		return StringUtils.hasText(name) ? name : super.toString();
-	}
-
-	public static String encrypt(final String password) {
-		return AlgorithmUtils.md5Hex(password == null ? "" : password.trim());
 	}
 
 	public static enum EAccountStatus {

@@ -16,6 +16,7 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.AlgorithmUtils;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.LngLatUtils;
@@ -150,7 +151,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	@Override
 	public boolean verifyPassword(final Account account, final String password) {
-		return account.getPassword().equals(Account.encrypt(password));
+		return account.getPassword().equals(AlgorithmUtils.encryptPass(password));
 	}
 
 	@Override
@@ -322,7 +323,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			if (password.startsWith("encrypt:")) {
 				account.setPassword(password.substring(8));
 			} else {
-				account.setPassword(Account.encrypt(password));
+				account.setPassword(AlgorithmUtils.encryptPass(password));
 			}
 		}
 		account.setStatus(status);
