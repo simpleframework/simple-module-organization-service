@@ -159,6 +159,10 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 						if (_deptId != null) {
 							user.setAttr("_deptId", _deptId);
 						}
+						final Object _orgId = queryFor("orgId", "id=?", user.getOrgId());
+						if (_orgId != null) {
+							user.setAttr("_orgId", _orgId);
+						}
 					}
 				}
 			}
@@ -168,13 +172,19 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 					final User[] beans) throws Exception {
 				super.onAfterUpdate(manager, columns, beans);
 				for (final User user : beans) {
+					final AccountStatService statService = (AccountStatService) _accountStatService;
 					final String _deptId = Convert.toString(user.getAttr("_deptId"));
 					final String deptId = Convert.toString(user.getDepartmentId());
 					if (!ObjectUtils.objectEquals(_deptId, deptId)) {
 						// 更新变化前后部门的统计值
-						final AccountStatService statService = (AccountStatService) _accountStatService;
-						statService.updateDeptStat(deptId);
 						statService.updateDeptStat(_deptId);
+						statService.updateDeptStat(deptId);
+					}
+					final String _orgId = Convert.toString(user.getAttr("_orgId"));
+					final String orgId = Convert.toString(user.getOrgId());
+					if (!ObjectUtils.objectEquals(_orgId, orgId)) {
+						statService.updateOrgStat(_orgId);
+						statService.updateOrgStat(orgId);
 					}
 				}
 			}
