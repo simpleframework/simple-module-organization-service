@@ -287,11 +287,15 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public Iterator<User> users(final Role role, final Map<String, Object> variables) {
+		return users(role, variables.get(PermissionConst.VAR_DEPTID), variables);
+	}
+
+	private Iterator<User> users(final Role role, final Object deptId,
+			final Map<String, Object> variables) {
 		if (role == null) {
 			return CollectionUtils.EMPTY_ITERATOR();
 		}
 
-		final Object deptId = variables.get(PermissionConst.VAR_DEPTID);
 		final ERoleType jt = role.getRoleType();
 		if (jt == ERoleType.normal) {
 			final IDataQuery<RoleMember> dq = _rolemService.queryRoleMembers(role, null);
@@ -326,7 +330,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 								}
 							}
 						} else {
-							if ((nest = users(getBean(memberId), variables)).hasNext()) {
+							if ((nest = users(getBean(memberId), deptId, variables)).hasNext()) {
 								user = nest.next();
 								return true;
 							}
