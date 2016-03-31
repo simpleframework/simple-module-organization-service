@@ -1,5 +1,6 @@
 package net.simpleframework.organization;
 
+import java.util.List;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
@@ -26,6 +27,14 @@ public interface IRoleMemberService extends IDbBeanService<RoleMember> {
 	IDataQuery<RoleMember> queryRoleMembers(Role role, Department dept);
 
 	Map<Department, Integer> getMemberNums(Role role);
+
+	/**
+	 * 获取用户所在部门列表(基于角色)
+	 * 
+	 * @param user
+	 * @return
+	 */
+	List<Department> getDeptsByUser(Object user);
 
 	/**
 	 * 设置当前成员为主要成员

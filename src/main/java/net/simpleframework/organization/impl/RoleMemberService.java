@@ -93,6 +93,22 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 		update(new String[] { "primaryrole" }, beans.toArray(new RoleMember[beans.size()]));
 	}
 
+	public List<Department> getDeptsByUser(final Object user) {
+		final IDataQuery<Map<String, Object>> dq = getQueryManager().query(
+				new SQLValue("select deptid from " + getTablename()
+						+ " where membertype=? and memberid=? group by deptid", ERoleMemberType.user,
+						getIdParam(user)));
+		Map<String, Object> data;
+		final List<Department> depts = new ArrayList<Department>();
+		while ((data = dq.next()) != null) {
+			final Department dept = _deptService.getBean(data.get("deptid"));
+			if (dept != null) {
+				depts.add(dept);
+			}
+		}
+		return depts;
+	}
+
 	@Override
 	public void onInit() throws Exception {
 		super.onInit();
