@@ -93,6 +93,7 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 		update(new String[] { "primaryrole" }, beans.toArray(new RoleMember[beans.size()]));
 	}
 
+	@Override
 	public List<Department> getDeptsByUser(final Object user) {
 		final IDataQuery<Map<String, Object>> dq = getQueryManager().query(
 				new SQLValue("select deptid from " + getTablename()
