@@ -140,11 +140,10 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 			final ID deptId = user.getDepartmentId();
 			if (deptId != null) {
 				depts.add(deptId);
-			} else {
-				final ID orgId = user.getOrgId();
-				if (orgId != null) {
-					orgs.add(orgId);
-				}
+			}
+			final ID orgId = user.getOrgId();
+			if (orgId != null) {
+				orgs.add(orgId);
 			}
 		}
 
