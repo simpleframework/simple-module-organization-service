@@ -326,6 +326,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 				account.setPassword(AlgorithmUtils.encryptPass(password));
 			}
 		}
+		account.setName(name);
 		account.setStatus(status);
 
 		final String openid = (String) userData.get("openid");
@@ -334,7 +335,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		}
 
 		if (insert) {
-			account.setName(name); // 不允许修改
 			insert(account);
 		} else {
 			update(account);
