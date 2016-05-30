@@ -76,7 +76,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 
 	@Override
 	protected Module createModule() {
-		return new Module().setRole(PermissionConst.ROLE_MANAGER)
+		return super.createModule().setRole(PermissionConst.ROLE_MANAGER)
 				.setManagerRole(PermissionConst.ROLE_MANAGER).setName(MODULE_NAME)
 				.setText($m("OrganizationContext.0")).setOrder(11);
 	}
