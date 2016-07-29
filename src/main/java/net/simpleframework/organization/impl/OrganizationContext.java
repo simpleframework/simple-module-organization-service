@@ -22,6 +22,7 @@ import net.simpleframework.organization.IRoleMemberService;
 import net.simpleframework.organization.IRoleService;
 import net.simpleframework.organization.IUserService;
 import net.simpleframework.organization.bean.Account;
+import net.simpleframework.organization.bean.AccountSSO;
 import net.simpleframework.organization.bean.AccountStat;
 import net.simpleframework.organization.bean.Department;
 import net.simpleframework.organization.bean.Role;
@@ -59,15 +60,19 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 	protected DbEntityTable[] createEntityTables() {
 		return new DbEntityTable[] {
 				new DbEntityTable(Account.class, "sf_organization_account"),
+				new DbEntityTable(AccountStat.class, "sf_organization_accountstat"),
+				new DbEntityTable(AccountSSO.class, "sf_organization_account_sso"),
+
 				new DbEntityTable(User.class, "sf_organization_user"),
 				new DbEntityTable(UserLob.class, "sf_organization_user_lob").setNoCache(true),
+
 				new DbEntityTable(Department.class, "sf_organization_department"),
+
 				new DbEntityTable(Role.class, "sf_organization_role").setDefaultOrder(ColumnData
 						.ASC("oorder")),
 				new DbEntityTable(RoleChart.class, "sf_organization_rolechart")
 						.setDefaultOrder(ColumnData.ASC("oorder")),
-				new DbEntityTable(RoleMember.class, "sf_organization_rolemember"),
-				new DbEntityTable(AccountStat.class, "sf_organization_accountstat") };
+				new DbEntityTable(RoleMember.class, "sf_organization_rolemember") };
 	}
 
 	@Override

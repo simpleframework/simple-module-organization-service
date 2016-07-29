@@ -23,12 +23,21 @@
         longitude float not null,
         latitude float not null,
         citycode varchar(16),
-        openprovider varchar(16),
-        openid varchar(64),
         mdevid varchar(32),
         expiredate timestamp,
         primary key(id),
         unique(name)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_account_sso (
+        id char(32) not null,
+        accountid char(32) not null,
+        openprovider varchar(16) not null,
+        openid varchar(64) not null,
+        primary key(id)
       );
     ]]>
   </tran-sql>

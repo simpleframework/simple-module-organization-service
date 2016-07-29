@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sql-script>
-	<version>1.0.0</version>
-	<name>organization</name>
-	<description>organization database script.</description>
-	<tran-sql>
-		<description></description>
+  <version>1.0.0</version>
+  <name>organization</name>
+  <description>organization database script.</description>
+  <tran-sql>
+    <description></description>
     <![CDATA[
       create table sf_organization_account (
        	id char(32) not null,
@@ -23,16 +23,25 @@
         longitude double not null,
         latitude double not null,
         citycode varchar(16),
-        openprovider varchar(16),
-        openid varchar(64),
         mdevid varchar(32),
         expiredate timestamp,
         primary key(id),
         unique(name)
       );
     ]]>
-	</tran-sql>
-	<tran-sql>
+  </tran-sql>
+  <tran-sql>
+    <![CDATA[
+      create table sf_organization_account_sso (
+        id char(32) not null,
+        accountid char(32) not null,
+        openprovider varchar(16) not null,
+        openid varchar(64) not null,
+        primary key(id)
+      );
+    ]]>
+  </tran-sql>
+  <tran-sql>
     <![CDATA[
 	    create table sf_organization_user (
 	      id char(32) not null,
@@ -60,8 +69,8 @@
         unique(mobile)
 	    );
     ]]>
-	</tran-sql>
-	<tran-sql>
+  </tran-sql>
+  <tran-sql>
     <![CDATA[
     	create table sf_organization_user_lob (
     		id char(32) not null,
@@ -69,8 +78,8 @@
     		primary key(id)
     	);
     ]]>
-	</tran-sql>
-	<tran-sql>
+  </tran-sql>
+  <tran-sql>
     <![CDATA[
     	create table sf_organization_department (
         id char(32) not null,
@@ -86,8 +95,8 @@
         unique(oorder)
       );
     ]]>
-	</tran-sql>
-	<tran-sql>
+  </tran-sql>
+  <tran-sql>
     <![CDATA[
       create table sf_organization_role (
         id char(32) not null,
@@ -108,8 +117,8 @@
         unique(oorder)
       );
     ]]>
-	</tran-sql>
-	<tran-sql>
+  </tran-sql>
+  <tran-sql>
     <![CDATA[
       create table sf_organization_rolechart (
         id char(32) not null,
@@ -124,8 +133,8 @@
         unique(oorder)
       );
     ]]>
-	</tran-sql>
-	<tran-sql>
+  </tran-sql>
+  <tran-sql>
     <![CDATA[
       create table sf_organization_rolemember (
       	id char(32) not null,

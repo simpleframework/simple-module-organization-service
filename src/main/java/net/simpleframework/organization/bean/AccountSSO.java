@@ -43,6 +43,4 @@ public class AccountSSO extends AbstractIdBean {
 	}
 
 	private static final long serialVersionUID = -5044278411352969789L;
-
-	// Account getAccountByOpenid(String openid);
 }
