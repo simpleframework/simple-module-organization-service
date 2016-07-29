@@ -64,11 +64,6 @@ public class Account extends AbstractNameBean {
 	/* 所在的城市编码 */
 	private String cityCode;
 
-	/* 第三方帐号服务商 */
-	private String openprovider;
-	/* 第三方帐号id */
-	private String openid;
-
 	/* 移动设备号 */
 	private String mdevid;
 
@@ -191,22 +186,6 @@ public class Account extends AbstractNameBean {
 
 	public void setCityCode(final String cityCode) {
 		this.cityCode = cityCode;
-	}
-
-	public String getOpenprovider() {
-		return openprovider;
-	}
-
-	public void setOpenprovider(final String openprovider) {
-		this.openprovider = openprovider;
-	}
-
-	public String getOpenid() {
-		return openid;
-	}
-
-	public void setOpenid(final String openid) {
-		this.openid = openid;
 	}
 
 	public String getMdevid() {

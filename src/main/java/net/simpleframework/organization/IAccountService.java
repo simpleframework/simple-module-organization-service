@@ -16,7 +16,8 @@ import net.simpleframework.organization.login.LoginObject;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public interface IAccountService extends IDbBeanService<Account> {
@@ -28,14 +29,6 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @return
 	 */
 	Account getAccountByName(String name);
-
-	/**
-	 * 通过openid获取帐号
-	 * 
-	 * @param openid
-	 * @return
-	 */
-	Account getAccountByOpenid(String openid);
 
 	/**
 	 * 通过sessionid获取

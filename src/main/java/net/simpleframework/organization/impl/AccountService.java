@@ -45,7 +45,8 @@ import net.simpleframework.organization.login.LoginObject;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public class AccountService extends AbstractOrganizationService<Account> implements IAccountService {
@@ -58,11 +59,6 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 	@Override
 	public Account getAdmin() {
 		return getAccountByName(PermissionConst.ADMIN);
-	}
-
-	@Override
-	public Account getAccountByOpenid(final String openid) {
-		return openid == null ? null : getBean("openid=?", openid);
 	}
 
 	@Override
@@ -329,10 +325,10 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		account.setName(name);
 		account.setStatus(status);
 
-		final String openid = (String) userData.get("openid");
-		if (StringUtils.hasText(openid)) {
-			account.setOpenid(openid);
-		}
+		// final String openid = (String) userData.get("openid");
+		// if (StringUtils.hasText(openid)) {
+		// account.setOpenid(openid);
+		// }
 
 		if (insert) {
 			insert(account);
