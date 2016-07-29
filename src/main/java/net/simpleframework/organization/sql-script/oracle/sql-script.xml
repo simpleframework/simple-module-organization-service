@@ -37,7 +37,8 @@
         accountid char(32) not null,
         openprovider varchar2(16 char) not null,
         openid varchar2(64 char) not null,
-        primary key(id)
+        primary key(id),
+        unique(openprovider, openid)
       );
     ]]>
   </tran-sql>

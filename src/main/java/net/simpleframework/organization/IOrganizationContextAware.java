@@ -15,14 +15,22 @@ public interface IOrganizationContextAware extends IModuleContextAware {
 	static final IOrganizationContext orgContext = ModuleContextFactory
 			.get(IOrganizationContext.class);
 
+	/* 帐号服务 */
+	static final IAccountService _accountService = orgContext.getAccountService();
+	/* 帐号单点服务 */
+	static final IAccountSSOService _accountSSOService = orgContext.getAccountSSOService();
+	/* 帐号统计服务 */
+	static final IAccountStatService _accountStatService = orgContext.getAccountStatService();
+
+	/* 用户服务 */
+	static final IUserService _userService = orgContext.getUserService();
+	/* 用户部门服务 */
 	static final IDepartmentService _deptService = orgContext.getDepartmentService();
 
-	static final IAccountService _accountService = orgContext.getAccountService();
-	static final IUserService _userService = orgContext.getUserService();
-
+	/* 角色服务 */
 	static final IRoleService _roleService = orgContext.getRoleService();
+	/* 角色视图服务 */
 	static final IRoleChartService _rolecService = orgContext.getRoleChartService();
+	/* 角色成员服务 */
 	static final IRoleMemberService _rolemService = orgContext.getRoleMemberService();
-
-	static final IAccountStatService _accountStatService = orgContext.getAccountStatService();
 }

@@ -29,6 +29,8 @@ public interface IOrganizationContext extends IModuleContext {
 	 */
 	IAccountService getAccountService();
 
+	IAccountSSOService getAccountSSOService();
+
 	/**
 	 * 获取用户管理器
 	 * 

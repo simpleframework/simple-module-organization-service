@@ -13,6 +13,7 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
 import net.simpleframework.ctx.ModuleRefUtils;
 import net.simpleframework.ctx.permission.PermissionConst;
+import net.simpleframework.organization.IAccountSSOService;
 import net.simpleframework.organization.IAccountService;
 import net.simpleframework.organization.IAccountStatService;
 import net.simpleframework.organization.IDepartmentService;
@@ -90,6 +91,11 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 	@Override
 	public IAccountService getAccountService() {
 		return singleton(AccountService.class);
+	}
+
+	@Override
+	public IAccountSSOService getAccountSSOService() {
+		return singleton(AccountSSOService.class);
 	}
 
 	@Override
