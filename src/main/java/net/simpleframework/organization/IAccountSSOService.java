@@ -41,4 +41,6 @@ public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
 	 * @return
 	 */
 	AccountSSO getAccountSSO(String openprovider, String openid);
+
+	AccountSSO getAccountSSO(String openprovider, ID accountId);
 }

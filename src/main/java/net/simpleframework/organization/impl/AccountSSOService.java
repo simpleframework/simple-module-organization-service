@@ -36,4 +36,9 @@ public class AccountSSOService extends AbstractOrganizationService<AccountSSO> i
 	public AccountSSO getAccountSSO(final String openprovider, final String openid) {
 		return getBean("openprovider=? and openid=?", openprovider, openid);
 	}
+
+	@Override
+	public AccountSSO getAccountSSO(final String openprovider, final ID accountId) {
+		return getBean("openprovider=? and accountid=?", openprovider, accountId);
+	}
 }
