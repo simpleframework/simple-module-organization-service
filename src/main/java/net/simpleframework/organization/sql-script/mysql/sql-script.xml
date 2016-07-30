@@ -34,6 +34,7 @@
     <![CDATA[
       create table sf_organization_account_sso (
         id char(32) not null,
+        createdate datetime not null,
         accountid char(32) not null,
         openprovider varchar(16) not null,
         openid varchar(64) not null,

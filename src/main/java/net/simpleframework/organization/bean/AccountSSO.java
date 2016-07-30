@@ -1,15 +1,16 @@
 package net.simpleframework.organization.bean;
 
-import net.simpleframework.ado.bean.AbstractIdBean;
+import net.simpleframework.ado.bean.AbstractDateAwareBean;
 import net.simpleframework.common.ID;
 
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountSSO extends AbstractIdBean {
+public class AccountSSO extends AbstractDateAwareBean {
 	/* 帐号id */
 	private ID accountId;
 
