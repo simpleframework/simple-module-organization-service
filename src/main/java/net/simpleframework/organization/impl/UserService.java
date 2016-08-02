@@ -83,11 +83,6 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 	}
 
 	@Override
-	protected ColumnData[] getDefaultOrderColumns() {
-		return ORDER_OORDER;
-	}
-
-	@Override
 	public IDataQuery<User> queryUsers(final Department dept, final int accountType,
 			final ColumnData order) {
 		final AccountService _accountServiceImpl = (AccountService) _accountService;

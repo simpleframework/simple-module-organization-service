@@ -51,11 +51,6 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 	}
 
 	@Override
-	protected ColumnData[] getDefaultOrderColumns() {
-		return ORDER_OORDER;
-	}
-
-	@Override
 	public void onInit() throws Exception {
 		super.onInit();
 

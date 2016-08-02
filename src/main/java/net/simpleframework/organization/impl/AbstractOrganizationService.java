@@ -2,7 +2,6 @@ package net.simpleframework.organization.impl;
 
 import java.io.Serializable;
 
-import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.ctx.service.ado.db.AbstractDbBeanService;
 import net.simpleframework.organization.IOrganizationContextAware;
@@ -20,10 +19,5 @@ public abstract class AbstractOrganizationService<T extends Serializable> extend
 	@Override
 	public IModuleContext getModuleContext() {
 		return orgContext;
-	}
-
-	@Override
-	protected ColumnData[] getDefaultOrderColumns() {
-		return ORDER_OORDER;
 	}
 }
