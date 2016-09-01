@@ -24,6 +24,7 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.common.th.NotImplementedException;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.ctx.task.ExecutorRunnableEx;
@@ -495,5 +496,10 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		// 删除成员角色
 		_rolemService
 				.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
+	}
+
+	@Override
+	public void sentBindingSMS(final String mobile) {
+		throw NotImplementedException.of(getClass(), "sentBindingSMS");
 	}
 }

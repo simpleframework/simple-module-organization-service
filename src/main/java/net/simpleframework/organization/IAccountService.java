@@ -180,4 +180,6 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 * @return
 	 */
 	IDataQuery<Account> queryAccounts(double lng, double lat, double dis, String sex);
+
+	void sentBindingSMS(String mobile);
 }
