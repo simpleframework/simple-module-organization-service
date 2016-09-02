@@ -12,8 +12,8 @@ import net.simpleframework.ado.bean.IOrderBeanAware;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings("serial")
-public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBean implements
-		INameBeanAware, IOrderBeanAware {
+public abstract class AbstractOrganizationBean extends AbstractTextDescriptionBean
+		implements INameBeanAware, IOrderBeanAware {
 
 	private String name;
 

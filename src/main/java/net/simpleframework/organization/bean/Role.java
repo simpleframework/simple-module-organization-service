@@ -1,6 +1,7 @@
 package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.bean.ITreeBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
@@ -14,8 +15,8 @@ import net.simpleframework.organization.OrganizationException;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class Role extends AbstractOrganizationBean implements ITreeBeanAware,
-		IOrganizationContextAware {
+public class Role extends AbstractOrganizationBean
+		implements ITreeBeanAware, IOrganizationContextAware {
 
 	/* 关联的角色视图id */
 	private ID roleChartId;

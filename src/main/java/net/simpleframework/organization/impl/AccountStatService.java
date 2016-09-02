@@ -27,8 +27,8 @@ import net.simpleframework.organization.bean.User;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountStatService extends AbstractOrganizationService<AccountStat> implements
-		IAccountStatService {
+public class AccountStatService extends AbstractOrganizationService<AccountStat>
+		implements IAccountStatService {
 
 	@Override
 	public AccountStat getAllAccountStat() {
@@ -84,10 +84,12 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 	}
 
 	void setDeptStat(final AccountStat stat) {
-		final IDbDataQuery<Map<String, Object>> dq = getQueryManager().query(
-				"select status, count(*) as c from " + getTablename(Account.class) + " a left join "
-						+ getTablename(User.class)
-						+ " u on a.id=u.id where u.departmentid=? group by status", stat.getDeptId());
+		final IDbDataQuery<Map<String, Object>> dq = getQueryManager()
+				.query(
+						"select status, count(*) as c from " + getTablename(Account.class)
+								+ " a left join " + getTablename(User.class)
+								+ " u on a.id=u.id where u.departmentid=? group by status",
+						stat.getDeptId());
 		int nums = 0;
 		Map<String, Object> data;
 		while ((data = dq.next()) != null) {
@@ -127,10 +129,10 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		}
 		stat.setNums(nums);
 		// 求机构的在线人数
-		stat.setOnline_nums(getQueryManager().queryForInt(
-				new SQLValue("select count(*) from " + getTablename(Account.class) + " a left join "
+		stat.setOnline_nums(getQueryManager().queryForInt(new SQLValue(
+				"select count(*) from " + getTablename(Account.class) + " a left join "
 						+ getTablename(User.class) + " u on a.id=u.id where a.login=? and u.orgid=?",
-						Boolean.TRUE, orgId)));
+				Boolean.TRUE, orgId)));
 	}
 
 	void updateStats(final User... users) {
@@ -199,8 +201,9 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 		// 全部及在线
 		stat.setNums(nums);
 
-		stat.setOnline_nums(qmgr.queryForInt(new SQLValue("select count(*) from "
-				+ _accountService.getTablename() + " where login=?", Boolean.TRUE)));
+		stat.setOnline_nums(qmgr.queryForInt(new SQLValue(
+				"select count(*) from " + _accountService.getTablename() + " where login=?",
+				Boolean.TRUE)));
 
 		update(stat);
 	}

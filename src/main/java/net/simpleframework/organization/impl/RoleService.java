@@ -140,7 +140,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		return _isMember(user, role, variables);
 	}
 
-	private boolean _isMember(final User user, final Role role, final Map<String, Object> variables) {
+	private boolean _isMember(final User user, final Role role,
+			final Map<String, Object> variables) {
 		if (user == null || role == null) {
 			return false;
 		}
@@ -240,13 +241,13 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		}
 
 		final boolean orgusers = Convert.toBool(variables.get("org-users"));
-		final IDataQuery<User> dq = _userService.queryUsers(dept, orgusers ? Account.TYPE_ALL
-				: Account.TYPE_DEPT);
+		final IDataQuery<User> dq = _userService.queryUsers(dept,
+				orgusers ? Account.TYPE_ALL : Account.TYPE_DEPT);
 		// 是否包含角色成员
 		final boolean rolemember = Convert.toBool(variables.get("role-member"));
 		if (rolemember) {
-			final IDataQuery<RoleMember> dq2 = rolemember ? _rolemService.query(
-					"membertype=? and deptid=?", ERoleMemberType.user, dept.getId()) : null;
+			final IDataQuery<RoleMember> dq2 = rolemember ? _rolemService
+					.query("membertype=? and deptid=?", ERoleMemberType.user, dept.getId()) : null;
 			return new AbstractIterator<User>() {
 				private final HashSet<ID> idSet = new HashSet<ID>();
 
@@ -323,8 +324,9 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 							if (deptId == null || deptId.equals(memberId)) {
 								final Department dept = _deptService.getBean(memberId);
 								if (dept != null) {
-									if ((nest = DataQueryUtils.toIterator(_userService.queryUsers(dept,
-											Account.TYPE_DEPT))).hasNext()) {
+									if ((nest = DataQueryUtils
+											.toIterator(_userService.queryUsers(dept, Account.TYPE_DEPT)))
+													.hasNext()) {
 										user = nest.next();
 										return true;
 									}

@@ -42,8 +42,8 @@ import net.simpleframework.organization.role.RolenameW;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class OrganizationContext extends AbstractADOModuleContext implements
-		IOrganizationContext {
+public abstract class OrganizationContext extends AbstractADOModuleContext
+		implements IOrganizationContext {
 
 	@Override
 	public void onInit(final IApplicationContext application) throws Exception {
@@ -59,8 +59,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 
 	@Override
 	protected DbEntityTable[] createEntityTables() {
-		return new DbEntityTable[] {
-				new DbEntityTable(Account.class, "sf_organization_account"),
+		return new DbEntityTable[] { new DbEntityTable(Account.class, "sf_organization_account"),
 				new DbEntityTable(AccountStat.class, "sf_organization_accountstat"),
 				new DbEntityTable(AccountSSO.class, "sf_organization_account_sso"),
 
@@ -69,8 +68,8 @@ public abstract class OrganizationContext extends AbstractADOModuleContext imple
 
 				new DbEntityTable(Department.class, "sf_organization_department"),
 
-				new DbEntityTable(Role.class, "sf_organization_role").setDefaultOrder(ColumnData
-						.ASC("oorder")),
+				new DbEntityTable(Role.class, "sf_organization_role")
+						.setDefaultOrder(ColumnData.ASC("oorder")),
 				new DbEntityTable(RoleChart.class, "sf_organization_rolechart")
 						.setDefaultOrder(ColumnData.ASC("oorder")),
 				new DbEntityTable(RoleMember.class, "sf_organization_rolemember") };

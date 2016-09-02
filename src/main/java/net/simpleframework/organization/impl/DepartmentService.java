@@ -1,6 +1,7 @@
 package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.IParamsValue;
@@ -19,8 +20,8 @@ import net.simpleframework.organization.bean.Department.EDepartmentType;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class DepartmentService extends AbstractOrganizationService<Department> implements
-		IDepartmentService {
+public class DepartmentService extends AbstractOrganizationService<Department>
+		implements IDepartmentService {
 
 	@Override
 	public Department getDepartmentByName(final String name) {
@@ -96,7 +97,8 @@ public class DepartmentService extends AbstractOrganizationService<Department> i
 						throw OrganizationException.of($m("DepartmentService.0"));
 					}
 					// 存在用户
-					if (((UserService) _userService).query("departmentId=?", dept.getId()).getCount() > 0) {
+					if (((UserService) _userService).query("departmentId=?", dept.getId())
+							.getCount() > 0) {
 						throw OrganizationException.of($m("DepartmentService.1"));
 					}
 

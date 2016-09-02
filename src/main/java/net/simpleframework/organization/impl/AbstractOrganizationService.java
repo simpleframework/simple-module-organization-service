@@ -13,8 +13,8 @@ import net.simpleframework.organization.IOrganizationContextAware;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class AbstractOrganizationService<T extends Serializable> extends
-		AbstractDbBeanService<T> implements IOrganizationContextAware {
+public abstract class AbstractOrganizationService<T extends Serializable>
+		extends AbstractDbBeanService<T> implements IOrganizationContextAware {
 
 	@Override
 	public IModuleContext getModuleContext() {

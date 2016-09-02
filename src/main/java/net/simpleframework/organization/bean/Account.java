@@ -18,7 +18,7 @@ import net.simpleframework.ctx.permission.PermissionConst;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityUpdateLogAdapter",
 		"net.simpleframework.module.log.EntityDeleteLogAdapter" }, columns = { "name", "password",
-		"status", "mailbinding", "mobilebinding" })
+				"status", "mailbinding", "mobilebinding" })
 public class Account extends AbstractNameBean {
 	/* 密码 */
 	@ColumnMeta(columnText = "#(Account.0)")

@@ -14,8 +14,8 @@ import net.simpleframework.organization.bean.Department.EDepartmentType;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IDepartmentService extends IDbBeanService<Department>,
-		ITreeBeanServiceAware<Department> {
+public interface IDepartmentService
+		extends IDbBeanService<Department>, ITreeBeanServiceAware<Department> {
 
 	Department getDepartmentByName(String name);
 

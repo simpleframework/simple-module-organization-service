@@ -99,9 +99,8 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept) {
-		return queryUsers(dept,
-				dept.getDepartmentType() == EDepartmentType.organization ? Account.TYPE_ALL
-						: Account.TYPE_DEPT);
+		return queryUsers(dept, dept.getDepartmentType() == EDepartmentType.organization
+				? Account.TYPE_ALL : Account.TYPE_DEPT);
 	}
 
 	@Override
@@ -132,7 +131,8 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 				for (final User user : beans) {
 					final String email = user.getEmail();
 					User user2;
-					if (email != null && (user2 = getUserByEmail(email)) != null && !user2.equals(user)) {
+					if (email != null && (user2 = getUserByEmail(email)) != null
+							&& !user2.equals(user)) {
 						throw OrganizationException.of($m("UserService.0", email));
 					}
 					final String mobile = user.getMobile();
@@ -204,8 +204,8 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 					final IParamsValue paramsValue) throws Exception {
 				super.onAfterDelete(manager, paramsValue);
 				final Collection<User> coll = coll(manager, paramsValue);
-				((AccountStatService) _accountStatService).updateStats(coll.toArray(new User[coll
-						.size()]));
+				((AccountStatService) _accountStatService)
+						.updateStats(coll.toArray(new User[coll.size()]));
 			}
 		});
 	}

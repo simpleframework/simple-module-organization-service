@@ -1,6 +1,7 @@
 package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.bean.AbstractDescriptionBean;
 import net.simpleframework.ado.bean.IOrderBeanAware;
 import net.simpleframework.ado.db.common.EntityInterceptor;
@@ -16,8 +17,8 @@ import net.simpleframework.organization.bean.Role.ERoleType;
  *         http://www.simpleframework.net
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityDeleteLogAdapter" })
-public class RoleMember extends AbstractDescriptionBean implements IOrderBeanAware,
-		IOrganizationContextAware {
+public class RoleMember extends AbstractDescriptionBean
+		implements IOrderBeanAware, IOrganizationContextAware {
 	private ID roleId;
 
 	private ERoleMemberType memberType;

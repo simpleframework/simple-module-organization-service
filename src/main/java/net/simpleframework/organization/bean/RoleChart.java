@@ -1,6 +1,7 @@
 package net.simpleframework.organization.bean;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.db.common.EntityInterceptor;
 import net.simpleframework.common.ID;
 import net.simpleframework.organization.OrganizationException;

@@ -15,8 +15,8 @@ import net.simpleframework.organization.bean.User;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class AbstractRoleHandler extends ObjectEx implements IRoleHandler,
-		IOrganizationContextAware {
+public abstract class AbstractRoleHandler extends ObjectEx
+		implements IRoleHandler, IOrganizationContextAware {
 
 	@Override
 	public Iterator<User> members(final Map<String, Object> variables) {

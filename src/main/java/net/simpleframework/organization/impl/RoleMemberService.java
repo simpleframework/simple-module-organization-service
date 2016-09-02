@@ -28,8 +28,8 @@ import net.simpleframework.organization.bean.RoleMember.ERoleMemberType;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleMemberService extends AbstractOrganizationService<RoleMember> implements
-		IRoleMemberService {
+public class RoleMemberService extends AbstractOrganizationService<RoleMember>
+		implements IRoleMemberService {
 
 	@Override
 	public IDataQuery<RoleMember> queryRoleMembers(final Role role, final Department dept) {
@@ -51,10 +51,10 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 			return CollectionUtils.EMPTY_MAP();
 		}
 		final Map<Department, Integer> stat = new HashMap<Department, Integer>();
-		final StringBuilder sb = new StringBuilder("select deptid, count(*) as c from ").append(
-				getTablename(RoleMember.class)).append(" where roleid=? group by deptid");
-		final IDbDataQuery<Map<String, Object>> dq = getEntityManager().queryMapSet(
-				new SQLValue(sb, role.getId()));
+		final StringBuilder sb = new StringBuilder("select deptid, count(*) as c from ")
+				.append(getTablename(RoleMember.class)).append(" where roleid=? group by deptid");
+		final IDbDataQuery<Map<String, Object>> dq = getEntityManager()
+				.queryMapSet(new SQLValue(sb, role.getId()));
 		Map<String, Object> row;
 		while ((row = dq.next()) != null) {
 			final Department dept = _deptService.getBean(row.get("deptid"));
@@ -96,10 +96,10 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember> i
 
 	@Override
 	public List<Department> getDeptsByUser(final Object user) {
-		final IDataQuery<Map<String, Object>> dq = getQueryManager().query(
-				new SQLValue("select deptid from " + getTablename()
-						+ " where membertype=? and memberid=? group by deptid", ERoleMemberType.user,
-						getIdParam(user)));
+		final IDataQuery<Map<String, Object>> dq = getQueryManager().query(new SQLValue(
+				"select deptid from " + getTablename()
+						+ " where membertype=? and memberid=? group by deptid",
+				ERoleMemberType.user, getIdParam(user)));
 		Map<String, Object> data;
 		final List<Department> depts = new ArrayList<Department>();
 		while ((data = dq.next()) != null) {

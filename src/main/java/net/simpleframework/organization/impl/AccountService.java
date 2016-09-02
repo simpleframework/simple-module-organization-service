@@ -50,7 +50,8 @@ import net.simpleframework.organization.login.LoginObject;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountService extends AbstractOrganizationService<Account> implements IAccountService {
+public class AccountService extends AbstractOrganizationService<Account>
+		implements IAccountService {
 
 	@Override
 	public Account getAccountByName(final String name) {
@@ -110,8 +111,7 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 			login.setLastLoginIP(accountSession.getRemoteAddr());
 			login.setLastLoginDate(new Date());
 			login.setLoginTimes(login.getLoginTimes() + 1);
-			update(
-					new String[] { "login", "sessionid", "lastLoginIP", "lastLoginDate", "loginTimes" },
+			update(new String[] { "login", "sessionid", "lastLoginIP", "lastLoginDate", "loginTimes" },
 					login);
 			accountSession.setLogin(oLogin);
 		}
@@ -193,18 +193,16 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 		final double[] around = LngLatUtils.getRange(lng, lat, dis);
 		final StringBuilder sql = new StringBuilder(
 				"(longitude<>0 and latitude<>0 and status=?) and ")
-				.append("(longitude between ? and ?) and (latitude between ? and ?)");
+						.append("(longitude between ? and ?) and (latitude between ? and ?)");
 		final List<Object> params = ArrayUtils.toParams(EAccountStatus.normal, around[0], around[1],
 				around[2], around[3]);
 		if (StringUtils.hasText(sex)) {
 			final StringBuilder sql2 = new StringBuilder();
-			sql2.append("select a.* from ")
-					.append(getTablename(Account.class))
-					.append(" a left join ")
-					.append(getTablename(User.class))
-					.append(" u on a.id=u.id where ")
+			sql2.append("select a.* from ").append(getTablename(Account.class)).append(" a left join ")
+					.append(getTablename(User.class)).append(" u on a.id=u.id where ")
 					.append("(a.longitude<>0 and a.latitude<>0 and a.status=? and a.accountmark=?) and ")
-					.append("(a.longitude between ? and ?) and (a.latitude between ? and ?) and u.sex=?");
+					.append(
+							"(a.longitude between ? and ?) and (a.latitude between ? and ?) and u.sex=?");
 			params.add(sex);
 			return query(new SQLValue(sql2, params.toArray()));
 		} else {
@@ -494,8 +492,8 @@ public class AccountService extends AbstractOrganizationService<Account> impleme
 
 	void deleteMember(final Account account) {
 		// 删除成员角色
-		_rolemService
-				.deleteWith("membertype=? and memberid=?", ERoleMemberType.user, account.getId());
+		_rolemService.deleteWith("membertype=? and memberid=?", ERoleMemberType.user,
+				account.getId());
 	}
 
 	@Override

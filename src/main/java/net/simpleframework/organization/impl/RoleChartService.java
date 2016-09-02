@@ -1,6 +1,7 @@
 package net.simpleframework.organization.impl;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.IParamsValue;
 import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.DataQueryUtils;
@@ -20,8 +21,8 @@ import net.simpleframework.organization.role.RolenameW.ChartW;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class RoleChartService extends AbstractOrganizationService<RoleChart> implements
-		IRoleChartService {
+public class RoleChartService extends AbstractOrganizationService<RoleChart>
+		implements IRoleChartService {
 
 	@Override
 	public IDataQuery<RoleChart> queryOrgCharts(final Department org) {

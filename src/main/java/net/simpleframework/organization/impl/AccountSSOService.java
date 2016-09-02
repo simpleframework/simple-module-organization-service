@@ -14,8 +14,8 @@ import net.simpleframework.organization.bean.AccountSSO;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountSSOService extends AbstractOrganizationService<AccountSSO> implements
-		IAccountSSOService {
+public class AccountSSOService extends AbstractOrganizationService<AccountSSO>
+		implements IAccountSSOService {
 	@Override
 	public AccountSSO addAccountSSO(final ID accountId, final String openprovider,
 			final String openid) {

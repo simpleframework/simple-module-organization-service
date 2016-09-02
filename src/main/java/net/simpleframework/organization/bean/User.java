@@ -21,9 +21,9 @@ import net.simpleframework.organization.IOrganizationContextAware;
  */
 @EntityInterceptor(listenerTypes = { "net.simpleframework.module.log.EntityUpdateLogAdapter",
 		"net.simpleframework.module.log.EntityDeleteLogAdapter" }, columns = { "text", "email",
-		"mobile", "departmentId" })
-public class User extends AbstractTextDescriptionBean implements IOrderBeanAware,
-		IOrganizationContextAware {
+				"mobile", "departmentId" })
+public class User extends AbstractTextDescriptionBean
+		implements IOrderBeanAware, IOrganizationContextAware {
 	private static final long serialVersionUID = -4938630954415307539L;
 
 	/** 拼音 **/

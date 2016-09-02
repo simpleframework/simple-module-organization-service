@@ -40,8 +40,8 @@ public class OrganizationMessageRef extends MessageRef {
 
 	protected NoticeMessageCategory MC_ACCOUNT_CREATED() throws IOException {
 		return new NoticeMessageCategory("MC_ACCOUNT", $m("OrganizationMessageRef.0"),
-				$m("OrganizationMessageRef.1"), ClassUtils.getResourceAsString(
-						OrganizationMessageRef.class, "MC_ACCOUNT_CREATED.txt"));
+				$m("OrganizationMessageRef.1"),
+				ClassUtils.getResourceAsString(OrganizationMessageRef.class, "MC_ACCOUNT_CREATED.txt"));
 	}
 
 	public void doAccountCreatedMessage(final Account account) {
