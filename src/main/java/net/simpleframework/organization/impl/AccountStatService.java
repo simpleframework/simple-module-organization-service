@@ -214,7 +214,7 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 
 		if (count() == 0) {
 			// 初始化
-			final IDataQuery<Department> dq = _deptService.queryAll();
+			final IDataQuery<Department> dq = orgContext.getDepartmentService().queryAll();
 			Department oDept;
 			final ArrayList<Department> depts = new ArrayList<Department>();
 			final ArrayList<Department> orgs = new ArrayList<Department>();
