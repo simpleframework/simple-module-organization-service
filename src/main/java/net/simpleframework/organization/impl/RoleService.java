@@ -127,9 +127,15 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 
 	@Override
 	public boolean isMember(final User user, final Role role, final Map<String, Object> variables) {
+		final boolean _member = _isMember(user, role, variables);
+		if (_member) {
+			return true;
+		}
+
 		if (isManager(user, variables)) {
 			return true;
 		}
+
 		if (role != null && role.getOrgId() != null) {
 			// 判断是否域管理员
 			// 此处不能直接传递variables
@@ -137,7 +143,7 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 				return true;
 			}
 		}
-		return _isMember(user, role, variables);
+		return false;
 	}
 
 	private boolean _isMember(final User user, final Role role,
