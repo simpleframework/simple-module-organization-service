@@ -17,6 +17,7 @@ import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.AlgorithmUtils;
+import net.simpleframework.common.Base64;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.LngLatUtils;
@@ -148,7 +149,13 @@ public class AccountService extends AbstractOrganizationService<Account>
 
 	@Override
 	public boolean verifyPassword(final Account account, final String password) {
-		return account.getPassword().equals(AlgorithmUtils.encryptPass(password));
+		final String pass = Base64.decodeToString(password);
+		final String _pass = account.getPassword();
+		final boolean ret = _pass.equals(AlgorithmUtils.encryptPass(pass));
+		if (ret) {
+			return true;
+		}
+		return _pass.equals(AlgorithmUtils.encryptPass(password));
 	}
 
 	@Override
