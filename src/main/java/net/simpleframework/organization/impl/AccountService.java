@@ -424,6 +424,8 @@ public class AccountService extends AbstractOrganizationService<Account>
 					deleteMember(account);
 					// 删除用户
 					_userService.delete(account.getId());
+					// 删除sso
+					_accountSSOService.deleteWith("accountid=?", account.getId());
 				}
 			}
 
