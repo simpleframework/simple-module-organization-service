@@ -132,7 +132,8 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 			return true;
 		}
 
-		if (isManager(user, variables)) {
+		if (!Convert.toBool(variables.get(PermissionConst.VAR_DISABLE_MANAGER))
+				&& isManager(user, variables)) {
 			return true;
 		}
 
