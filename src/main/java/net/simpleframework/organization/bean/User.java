@@ -199,6 +199,9 @@ public class User extends AbstractTextDescriptionBean
 	}
 
 	public String getNick() {
+		if (!StringUtils.hasText(nick)) {
+			return getText();
+		}
 		return nick;
 	}
 
