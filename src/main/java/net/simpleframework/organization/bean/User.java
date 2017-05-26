@@ -198,6 +198,15 @@ public class User extends AbstractTextDescriptionBean
 		this.postcode = postcode;
 	}
 
+	@Override
+	public String getText() {
+		String txt = super.getText();
+		if (!StringUtils.hasText(txt)) {
+			txt = _userService.getAccount(getId()).getName();
+		}
+		return txt;
+	}
+
 	public String getNick() {
 		if (!StringUtils.hasText(nick)) {
 			return getText();
