@@ -202,7 +202,10 @@ public class User extends AbstractTextDescriptionBean
 	public String getText() {
 		String txt = super.getText();
 		if (!StringUtils.hasText(txt)) {
-			txt = _userService.getAccount(getId()).getName();
+			final Account account = _userService.getAccount(getId());
+			if (account != null) {
+				txt = account.getName();
+			}
 		}
 		return txt;
 	}
