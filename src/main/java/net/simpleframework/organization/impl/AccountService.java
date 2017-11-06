@@ -264,7 +264,7 @@ public class AccountService extends AbstractOrganizationService<Account>
 	protected SQLValue toAccountsSQLValue(final Department dept, final int accountType,
 			final boolean account, final ColumnData[] orderCols) {
 		final StringBuilder sql = new StringBuilder();
-		final ArrayList<Object> params = new ArrayList<Object>();
+		final ArrayList<Object> params = new ArrayList<>();
 		sql.append("select ").append(account ? "a" : "u").append(".* from ")
 				.append(getTablename(Account.class)).append(" a ").append(account ? "left" : "right")
 				.append(" join ").append(getTablename(User.class)).append(" u on a.id=u.id where 1=1");
@@ -402,7 +402,7 @@ public class AccountService extends AbstractOrganizationService<Account>
 		}
 	}
 
-	private final Set<ID> _UPDATE_ASYNC = new HashSet<ID>();
+	private final Set<ID> _UPDATE_ASYNC = new HashSet<>();
 
 	@Override
 	public void onInit() throws Exception {
@@ -446,7 +446,7 @@ public class AccountService extends AbstractOrganizationService<Account>
 					final Account[] beans) throws Exception {
 				super.onAfterUpdate(service, columns, beans);
 
-				final Set<ID> _UPDATE_SYNC = new HashSet<ID>();
+				final Set<ID> _UPDATE_SYNC = new HashSet<>();
 				for (final Account account : beans) {
 					if (ArrayUtils.contains(columns, "status", true)) {
 						_UPDATE_SYNC.add(account.getId());
@@ -488,7 +488,7 @@ public class AccountService extends AbstractOrganizationService<Account>
 		if (set == null || set.size() == 0) {
 			return;
 		}
-		final ArrayList<User> users = new ArrayList<User>();
+		final ArrayList<User> users = new ArrayList<>();
 		for (final ID id : set) {
 			User user;
 			if ((user = getUser(id)) != null) {

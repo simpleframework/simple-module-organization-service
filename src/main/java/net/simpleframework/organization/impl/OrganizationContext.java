@@ -134,7 +134,7 @@ public abstract class OrganizationContext extends AbstractADOModuleContext
 
 	static Map<String, Class<? extends IRoleHandler>> rHandleRegistry;
 	static {
-		rHandleRegistry = new HashMap<String, Class<? extends IRoleHandler>>();
+		rHandleRegistry = new HashMap<>();
 	}
 
 	public static void registRoleHandler(final String role,

@@ -136,8 +136,8 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 	}
 
 	void updateStats(final User... users) {
-		final ArrayList<Object> depts = new ArrayList<Object>();
-		final ArrayList<Object> orgs = new ArrayList<Object>();
+		final ArrayList<Object> depts = new ArrayList<>();
+		final ArrayList<Object> orgs = new ArrayList<>();
 		for (final User user : users) {
 			// 同步统计
 			final ID deptId = user.getDepartmentId();
@@ -216,8 +216,8 @@ public class AccountStatService extends AbstractOrganizationService<AccountStat>
 			// 初始化
 			final IDataQuery<Department> dq = orgContext.getDepartmentService().queryAll();
 			Department oDept;
-			final ArrayList<Department> depts = new ArrayList<Department>();
-			final ArrayList<Department> orgs = new ArrayList<Department>();
+			final ArrayList<Department> depts = new ArrayList<>();
+			final ArrayList<Department> orgs = new ArrayList<>();
 			while ((oDept = dq.next()) != null) {
 				// 没有则创建
 				if (oDept.getDepartmentType() == EDepartmentType.department) {

@@ -50,7 +50,7 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember>
 		if (role == null || role.getRoleType() != ERoleType.normal) {
 			return CollectionUtils.EMPTY_MAP();
 		}
-		final Map<Department, Integer> stat = new HashMap<Department, Integer>();
+		final Map<Department, Integer> stat = new HashMap<>();
 		final StringBuilder sb = new StringBuilder("select deptid, count(*) as c from ")
 				.append(getTablename(RoleMember.class)).append(" where roleid=? group by deptid");
 		final IDbDataQuery<Map<String, Object>> dq = getEntityManager()
@@ -77,7 +77,7 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember>
 			return;
 		}
 
-		final ArrayList<RoleMember> beans = new ArrayList<RoleMember>();
+		final ArrayList<RoleMember> beans = new ArrayList<>();
 		member.setPrimaryRole(true);
 		beans.add(member);
 
@@ -101,7 +101,7 @@ public class RoleMemberService extends AbstractOrganizationService<RoleMember>
 						+ " where membertype=? and memberid=? group by deptid",
 				ERoleMemberType.user, getIdParam(user)));
 		Map<String, Object> data;
-		final List<Department> depts = new ArrayList<Department>();
+		final List<Department> depts = new ArrayList<>();
 		while ((data = dq.next()) != null) {
 			final Department dept = _deptService.getBean(data.get("deptid"));
 			if (dept != null) {

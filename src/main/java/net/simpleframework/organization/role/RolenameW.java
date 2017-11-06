@@ -23,8 +23,8 @@ public class RolenameW implements IApplicationStartupHandler {
 	public static final String ROLECHART_SYSTEM = "syschart";
 	public static final String ROLECHART_ORG_DEFAULT = "odefault";
 
-	private static final Map<String, ChartW> _charts = new HashMap<String, ChartW>();
-	private static final Map<String, RoleW> _roles = new HashMap<String, RoleW>();
+	private static final Map<String, ChartW> _charts = new HashMap<>();
+	private static final Map<String, RoleW> _roles = new HashMap<>();
 
 	public static void registChart(final String name, final String text, final String description,
 			final boolean org) {
