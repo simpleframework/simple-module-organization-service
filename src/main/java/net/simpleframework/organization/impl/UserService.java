@@ -99,8 +99,9 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 
 	@Override
 	public IDataQuery<User> queryUsers(final Department dept) {
-		return queryUsers(dept, dept.getDepartmentType() == EDepartmentType.organization
-				? Account.TYPE_ALL : Account.TYPE_DEPT);
+		return queryUsers(dept,
+				dept.getDepartmentType() == EDepartmentType.organization ? Account.TYPE_ALL
+						: Account.TYPE_DEPT);
 	}
 
 	@Override

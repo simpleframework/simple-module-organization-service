@@ -255,8 +255,10 @@ public class RoleService extends AbstractOrganizationService<Role> implements IR
 		// 是否包含角色成员
 		final boolean rolemember = Convert.toBool(variables.get("role-member"));
 		if (rolemember) {
-			final IDataQuery<RoleMember> dq2 = rolemember ? _rolemService
-					.query("membertype=? and deptid=?", ERoleMemberType.user, dept.getId()) : null;
+			final IDataQuery<RoleMember> dq2 = rolemember
+					? _rolemService.query("membertype=? and deptid=?", ERoleMemberType.user,
+							dept.getId())
+					: null;
 			return new AbstractIterator<User>() {
 				private final HashSet<ID> idSet = new HashSet<>();
 
