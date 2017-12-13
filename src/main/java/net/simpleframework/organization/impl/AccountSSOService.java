@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.organization.IAccountSSOService;
 import net.simpleframework.organization.bean.AccountSSO;
 
@@ -33,8 +34,18 @@ public class AccountSSOService extends AbstractOrganizationService<AccountSSO>
 	}
 
 	@Override
+	public AccountSSO getAccountSSO(final String openprovider, final String appId,
+			final String openid) {
+		if (StringUtils.hasText(appId)) {
+			return getBean("openprovider=? and appid=? and openid=?", openprovider, appId, openid);
+		} else {
+			return getBean("openprovider=? and openid=?", openprovider, openid);
+		}
+	}
+
+	@Override
 	public AccountSSO getAccountSSO(final String openprovider, final String openid) {
-		return getBean("openprovider=? and openid=?", openprovider, openid);
+		return getAccountSSO(openprovider, null, openid);
 	}
 
 	@Override

@@ -16,6 +16,8 @@ public class AccountSSO extends AbstractDateAwareBean {
 
 	/* 第三方帐号服务商 */
 	private String openprovider;
+	/* 开放平台appId */
+	private String appId;
 	/* 第三方帐号id */
 	private String openid;
 
@@ -33,6 +35,14 @@ public class AccountSSO extends AbstractDateAwareBean {
 
 	public void setOpenprovider(final String openprovider) {
 		this.openprovider = openprovider;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(final String appId) {
+		this.appId = appId;
 	}
 
 	public String getOpenid() {
