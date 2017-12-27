@@ -9,8 +9,7 @@ import net.simpleframework.organization.bean.AccountSSO;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885)
- *         https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
@@ -24,6 +23,16 @@ public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
 	 * @return
 	 */
 	AccountSSO addAccountSSO(ID accountId, String openprovider, String openid);
+
+	/**
+	 * 添加帐号单点对象
+	 * @param accountId
+	 * @param openprovider
+	 * @param appid 授权appid
+	 * @param openid
+	 * @return
+	 */
+	AccountSSO addAccountSSO(ID accountId, String openprovider, String appid, String openid);
 
 	/**
 	 * 获取帐号单点列表
