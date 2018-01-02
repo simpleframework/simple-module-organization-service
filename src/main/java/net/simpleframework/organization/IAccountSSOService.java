@@ -26,9 +26,11 @@ public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
 
 	/**
 	 * 添加帐号单点对象
+	 * 
 	 * @param accountId
 	 * @param openprovider
-	 * @param appid 授权appid
+	 * @param appid
+	 *        授权appid
 	 * @param openid
 	 * @return
 	 */
