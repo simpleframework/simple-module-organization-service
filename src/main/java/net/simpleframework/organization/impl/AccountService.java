@@ -149,7 +149,11 @@ public class AccountService extends AbstractOrganizationService<Account>
 
 	@Override
 	public boolean verifyPassword(final Account account, final String password) {
-		final String pass = Base64.decodeToString(password);
+		String pass = null;
+		try {
+			pass = Base64.decodeToString(password);
+		} catch (final Exception e) {
+		}
 		final String _pass = account.getPassword();
 		final boolean ret = _pass.equals(AlgorithmUtils.encryptPass(pass));
 		if (ret) {
