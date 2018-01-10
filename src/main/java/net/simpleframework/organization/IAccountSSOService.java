@@ -30,7 +30,7 @@ public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
 	 * @param accountId
 	 * @param openprovider
 	 * @param appid
-	 *        授权appid
+	 *           授权appid
 	 * @param openid
 	 * @return
 	 */
@@ -56,5 +56,22 @@ public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
 
 	AccountSSO getAccountSSO(String openprovider, String openid);
 
+	/**
+	 * 店铺的微信绑定
+	 * 
+	 * @param openprovider
+	 * @param appId
+	 * @param accountId
+	 * @return
+	 */
+	AccountSSO getAccountSSO(String openprovider, String appId, ID accountId);
+
+	/**
+	 * 平台的微信绑定
+	 * 
+	 * @param openprovider
+	 * @param accountId
+	 * @return
+	 */
 	AccountSSO getAccountSSO(String openprovider, ID accountId);
 }

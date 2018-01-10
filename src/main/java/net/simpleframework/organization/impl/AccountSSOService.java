@@ -14,8 +14,8 @@ import net.simpleframework.organization.bean.AccountSSO;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class AccountSSOService extends AbstractOrganizationService<AccountSSO>
-		implements IAccountSSOService {
+public class AccountSSOService extends AbstractOrganizationService<AccountSSO> implements
+		IAccountSSOService {
 	@Override
 	public AccountSSO addAccountSSO(final ID accountId, final String openprovider,
 			final String openid) {
@@ -55,8 +55,19 @@ public class AccountSSOService extends AbstractOrganizationService<AccountSSO>
 	}
 
 	@Override
-	public AccountSSO getAccountSSO(final String openprovider, final ID accountId) {
-		return getBean("openprovider=? and accountid=?", openprovider, accountId);
+	public AccountSSO getAccountSSO(final String openprovider, final String appId, final ID accountId) {
+		if (StringUtils.hasText(appId)) {
+			return getBean("openprovider=? and appId=? and accountid=?", openprovider, appId,
+					accountId);
+		} else {
+			return getBean("openprovider=? and appId is null and accountid=?", openprovider, accountId);
+		}
+
+	}
+
+	@Override
+	public AccountSSO getAccountSSO(String openprovider, ID accountId) {
+		return getAccountSSO(openprovider, null, accountId);
 	}
 
 }
