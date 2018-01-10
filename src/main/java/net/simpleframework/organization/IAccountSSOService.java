@@ -30,7 +30,7 @@ public interface IAccountSSOService extends IDbBeanService<AccountSSO> {
 	 * @param accountId
 	 * @param openprovider
 	 * @param appid
-	 *           授权appid
+	 *        授权appid
 	 * @param openid
 	 * @return
 	 */
