@@ -510,7 +510,7 @@ public class AccountService extends AbstractOrganizationService<Account>
 	}
 
 	@Override
-	public void sentBindingSMS(final String mobile) {
+	public void sentBindingSMS(final String from, final String mobile) {
 		throw NotImplementedException.of(getClass(), "sentBindingSMS");
 	}
 }

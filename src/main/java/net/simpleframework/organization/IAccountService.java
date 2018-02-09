@@ -181,5 +181,5 @@ public interface IAccountService extends IDbBeanService<Account> {
 	 */
 	IDataQuery<Account> queryAccounts(double lng, double lat, double dis, String sex);
 
-	void sentBindingSMS(String mobile);
+	void sentBindingSMS(String from, String mobile);
 }
