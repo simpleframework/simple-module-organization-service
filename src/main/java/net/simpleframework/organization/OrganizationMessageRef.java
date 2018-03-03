@@ -48,7 +48,7 @@ public class OrganizationMessageRef extends MessageRef {
 		if (MC_ACCOUNT_CREATED == null) {
 			return;
 		}
-		getNoticeMessagePlugin().sentMessage(account.getId(), MC_ACCOUNT_CREATED,
+		getNoticeMessagePlugin().sentMessage(account.getId(), null, MC_ACCOUNT_CREATED,
 				new KVMap().add("account", account));
 	}
 }
