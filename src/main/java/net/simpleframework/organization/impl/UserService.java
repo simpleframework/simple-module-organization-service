@@ -11,6 +11,7 @@ import net.simpleframework.ado.db.IDbEntityManager;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.organization.IUserService;
@@ -74,12 +75,12 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 
 	@Override
 	public User getUserByEmail(final String email) {
-		return getBean("email=?", email);
+		return StringUtils.hasText(email) ? getBean("email=?", email) : null;
 	}
 
 	@Override
 	public User getUserByMobile(final String mobile) {
-		return getBean("mobile=?", mobile);
+		return StringUtils.hasText(mobile) ? getBean("mobile=?", mobile) : null;
 	}
 
 	@Override
@@ -115,11 +116,11 @@ public class UserService extends AbstractOrganizationService<User> implements IU
 				super.onBeforeInsert(manager, beans);
 				for (final User user : beans) {
 					final String email = user.getEmail();
-					if (email != null && getUserByEmail(email) != null) {
+					if (getUserByEmail(email) != null) {
 						throw OrganizationException.of($m("UserService.0", email));
 					}
 					final String mobile = user.getMobile();
-					if (mobile != null && getUserByMobile(mobile) != null) {
+					if (getUserByMobile(mobile) != null) {
 						throw OrganizationException.of($m("UserService.1", mobile));
 					}
 				}
