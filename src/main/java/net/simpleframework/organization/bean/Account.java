@@ -7,6 +7,7 @@ import java.util.Date;
 import net.simpleframework.ado.ColumnMeta;
 import net.simpleframework.ado.bean.AbstractNameBean;
 import net.simpleframework.ado.db.common.EntityInterceptor;
+import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.permission.PermissionConst;
 
@@ -69,6 +70,9 @@ public class Account extends AbstractNameBean {
 
 	/* 帐号过期时间 */
 	private Date expireDate;
+
+	/* 推荐人id */
+	private ID refereeId;
 
 	@ColumnMeta(ignore = true)
 	public boolean isAdmin() {
@@ -202,6 +206,14 @@ public class Account extends AbstractNameBean {
 
 	public void setExpireDate(final Date expireDate) {
 		this.expireDate = expireDate;
+	}
+
+	public ID getRefereeId() {
+		return refereeId;
+	}
+
+	public void setRefereeId(final ID refereeId) {
+		this.refereeId = refereeId;
 	}
 
 	@Override
